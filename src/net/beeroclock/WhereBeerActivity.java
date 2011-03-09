@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class FindBeerActivity extends Activity
+public class WhereBeerActivity extends Activity
 {
     /** Called when the activity is first created. */
     @Override

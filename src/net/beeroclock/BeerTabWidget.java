@@ -27,7 +27,7 @@ public class BeerTabWidget extends TabActivity {
         Intent intent;  // Reusable Intent for each tab
 
         // Create an Intent to launch an Activity for the tab (to be reused)
-        intent = new Intent().setClass(this, FindBeerActivity.class);
+        intent = new Intent().setClass(this, WhereBeerActivity.class);
 
         // Initialize a TabSpec for each tab and add it to the TabHost
         spec = tabHost.newTabSpec("where").setIndicator(res.getString(R.string.tab_title_where),
