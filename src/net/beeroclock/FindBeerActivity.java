@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class BeerLocator extends Activity
+public class FindBeerActivity extends Activity
 {
     /** Called when the activity is first created. */
     @Override
@@ -13,6 +13,6 @@ public class BeerLocator extends Activity
         super.onCreate(savedInstanceState);
 //        TextView tv = new TextView(this);
 //        tv.setText("Hello Android");
-        setContentView(R.layout.main);
+        setContentView(R.layout.wherebeer);
     }
 }

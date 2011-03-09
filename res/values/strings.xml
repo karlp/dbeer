@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">BeerLocator</string>
-    <string name="bar_nearest">The nearest bar is:</string>
+    <string name="where_beer">The nearest bar is:</string>
+    <string name="add_beer">Let\'s add a beer!</string>
+
+    <string name="tab_title_where">Where\'s beer?</string>
+    <string name="tab_title_add">Add beer</string>
 </resources>
