@@ -1,24 +1,4 @@
 #!/usr/bin/env python
-## {{{ http://code.activestate.com/recipes/576779/ (r2)
-#coding:UTF-8
-"""
-  Python implementation of Haversine formula
-  Copyright (C) <2009>  Bartek Górny <bartek@gorny.edu.pl>
-
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
-
 import math
 
 def recalculate_coordinate(val,  _as=None):
@@ -50,33 +30,43 @@ def recalculate_coordinate(val,  _as=None):
   return deg,  min,  sec
       
 
-def points2distance(start,  end):
-  """
-    Calculate distance (in kilometers) between two points given as (long, latt) pairs
-    based on Haversine formula (http://en.wikipedia.org/wiki/Haversine_formula).
-    Implementation inspired by JavaScript implementation from 
-    http://www.movable-type.co.uk/scripts/latlong.html
-    Accepts coordinates as tuples (deg, min, sec), but coordinates can be given 
-    in any form - e.g. can specify only minutes:
-    (0, 3133.9333, 0) 
-    is interpreted as 
-    (52.0, 13.0, 55.998000000008687)
-    which, not accidentally, is the lattitude of Warsaw, Poland.
-  """
-  start_long = math.radians(recalculate_coordinate(start[0],  'deg'))
-  start_latt = math.radians(recalculate_coordinate(start[1],  'deg'))
-  end_long = math.radians(recalculate_coordinate(end[0],  'deg'))
-  end_latt = math.radians(recalculate_coordinate(end[1],  'deg'))
-  d_latt = end_latt - start_latt
-  d_long = end_long - start_long
-  a = math.sin(d_latt/2)**2 + math.cos(start_latt) * math.cos(end_latt) * math.sin(d_long/2)**2
-  c = 2 * math.atan2(math.sqrt(a),  math.sqrt(1-a))
-  return 6371 * c
+def point_at_distance(start, distance, bearing):
+    """
+    formula from: http://www.movable-type.co.uk/scripts/latlong.html
+var lat2 = Math.asin( Math.sin(lat1)*Math.cos(d/R) + 
+                      Math.cos(lat1)*Math.sin(d/R)*Math.cos(brng) );
+var lon2 = lon1 + Math.atan2(Math.sin(brng)*Math.sin(d/R)*Math.cos(lat1), 
+                             Math.cos(d/R)-Math.sin(lat1)*Math.sin(lat2));
+"""
+    start_long = math.radians(start[0])
+    start_latt = math.radians(start[1])
+
+    ad = distance * 1.0 / 6371  # angular distance
+    lat2 = math.asin(math.sin(start_latt) * math.cos(ad) +
+                     math.cos(start_latt) * math.sin(ad) * math.cos(bearing))
+    long2 = start_long + math.atan2(math.sin(bearing) * math.sin(ad) * math.cos(start_latt),
+                                    math.cos(ad) - math.sin(start_latt) * math.sin(lat2));
+
+    return (math.degrees(long2), math.degrees(lat2))
+
+def bbox(start, distance):
+    """
+    print out the bbox made by moving out distance m in each direction from start
+    for OSM, this is left, bottom, right, top, as long, lat, long, lat
+    """
+    
+    return (point_at_distance(start, distance, 270)[0],
+        point_at_distance(start, distance, 180)[1],
+        point_at_distance(start, distance, 90)[0],
+        point_at_distance(start, distance, 0)[1])
+        
 
 
 if __name__ == '__main__':
- warsaw = ((21,  0,  30),  (52, 13, 56))
- cracow = ((19, 56, 18),  (50, 3, 41))
- print points2distance(warsaw,  cracow)
+ home = (-21.9279, 64.1431)
+ # use this with: 
+ # wget "http://xapi.openstreetmap.org/api/0.6/node[amenity=pub][bbox=-21.935165024804999,64.132332101248991,-21.891040971878855,64.161086432118381]" -O -
+ # bbox= bits are straight out of this code...
+ print bbox(home, 1)
 
 
