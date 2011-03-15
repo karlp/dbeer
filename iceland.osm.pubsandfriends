@@ -1,0 +1,416 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version="0.6" generator="pbf2osm">
+	<node id="71617309" lat="64.1465577" lon="-21.9303364" version="4" changeset="6939505" user="Dabbi" uid="53579" timestamp="2011-01-11T18:19:21Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Celtic Cross" />
+	</node>
+	<node id="71617542" lat="64.1462384" lon="-21.9312295" version="6" changeset="6939505" user="Dabbi" uid="53579" timestamp="2011-01-11T18:19:21Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Bar 11" />
+	</node>
+	<node id="71617690" lat="64.1463987" lon="-21.9301754" version="5" changeset="6939505" user="Dabbi" uid="53579" timestamp="2011-01-11T18:19:21Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Faktorý" />
+	</node>
+	<node id="71618176" lat="64.1459542" lon="-21.9313261" version="5" changeset="6939505" user="Dabbi" uid="53579" timestamp="2011-01-11T18:19:22Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Kaffibarinn" />
+	</node>
+	<node id="71619236" lat="64.1455718" lon="-21.9309694" version="3" changeset="6939505" user="Dabbi" uid="53579" timestamp="2011-01-11T18:19:22Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Ölstofan" />
+	</node>
+	<node id="71619610" lat="64.1456871" lon="-21.9292467" version="5" changeset="958395" user="KarlP" uid="11585" timestamp="2009-04-25T21:24:30Z">
+		<tag k="amenity" v="pub" />
+		<tag k="created_by" v="Potlatch 0.10f" />
+		<tag k="name" v="Karamba" />
+	</node>
+	<node id="71620303" lat="64.1452984" lon="-21.9274827" version="3" changeset="634626" user="KarlP" uid="11585" timestamp="2007-11-27T20:02:58Z">
+		<tag k="amenity" v="pub" />
+		<tag k="created_by" v="Potlatch 0.5d" />
+		<tag k="name" v="Dillon" />
+	</node>
+	<node id="71620489" lat="64.1453556" lon="-21.9277092" version="2" changeset="414330" user="Tiny" uid="6124" timestamp="2007-11-05T12:14:23Z">
+		<tag k="amenity" v="pub" />
+		<tag k="created_by" v="Potlatch 0.4c" />
+		<tag k="name" v="Boston" />
+	</node>
+	<node id="71620894" lat="64.1478206" lon="-21.9372481" version="5" changeset="6515875" user="DaníelG" uid="21585" timestamp="2010-12-02T15:26:39Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Zimsen" />
+	</node>
+	<node id="71621484" lat="64.1484549" lon="-21.9409475" version="4" changeset="6515875" user="DaníelG" uid="21585" timestamp="2010-12-02T15:26:37Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Balthazar" />
+	</node>
+	<node id="71622238" lat="64.1481740" lon="-21.9403778" version="2" changeset="414330" user="Tiny" uid="6124" timestamp="2007-11-05T12:15:14Z">
+		<tag k="amenity" v="pub" />
+		<tag k="created_by" v="Potlatch 0.4c" />
+		<tag k="name" v="Dubliners" />
+	</node>
+	<node id="74080779" lat="64.1476730" lon="-21.9400459" version="5" changeset="7017105" user="gunnars" uid="397281" timestamp="2011-01-19T04:35:38Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Thorvaldssens" />
+	</node>
+	<node id="75973298" lat="64.1486056" lon="-21.9398160" version="3" changeset="6856743" user="DaníelG" uid="21585" timestamp="2011-01-04T00:58:27Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Cafe Amsterdam" />
+	</node>
+	<node id="75973496" lat="64.1486963" lon="-21.9402416" version="4" changeset="958395" user="KarlP" uid="11585" timestamp="2009-04-25T21:22:12Z">
+		<tag k="amenity" v="pub" />
+		<tag k="created_by" v="Potlatch 0.9c" />
+		<tag k="name" v="Sódoma Reykjavík" />
+	</node>
+	<node id="75973561" lat="64.1488177" lon="-21.9406183" version="3" changeset="7004803" user="KarlP" uid="11585" timestamp="2011-01-17T21:41:46Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Rísið" />
+	</node>
+	<node id="76481170" lat="64.1473301" lon="-21.9375437" version="9" changeset="6856743" user="DaníelG" uid="21585" timestamp="2011-01-04T00:58:27Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="internet_access" v="wlan" />
+		<tag k="name" v="Hressingarskálinn" />
+		<tag k="website" v="http://hressingarskalinn.is" />
+	</node>
+	<node id="76481217" lat="64.1465309" lon="-21.9335711" version="4" changeset="6939505" user="Dabbi" uid="53579" timestamp="2011-01-11T18:19:21Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Prikið" />
+	</node>
+	<node id="129958158" lat="64.0079624" lon="-22.5575591" version="4" changeset="640534" user="ulfl" uid="6975" timestamp="2008-09-14T22:21:57Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Cafe DUUS" />
+	</node>
+	<node id="192959093" lat="63.9374269" lon="-21.0003697" version="1" changeset="449974" user="DaníelG" uid="21585" timestamp="2007-12-28T01:24:20Z">
+		<tag k="amenity" v="pub" />
+		<tag k="created_by" v="JOSM" />
+		<tag k="name" v="Kaffi krús" />
+	</node>
+	<node id="253647985" lat="64.3098102" lon="-20.3013246" version="2" changeset="527639" user="the_blanz" uid="23808" timestamp="2009-04-14T22:12:09Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="created_by" v="Potlatch 0.7b" />
+		<tag k="information" v="office" />
+		<tag k="name" v="Geysir Center" />
+		<tag k="tourism" v="information" />
+	</node>
+	<node id="267059828" lat="65.6826659" lon="-18.0906943" version="1" changeset="530619" user="Bjarki" uid="25051" timestamp="2008-05-27T01:34:51Z">
+		<tag k="amenity" v="nightclub" />
+		<tag k="created_by" v="Potlatch 0.9b" />
+		<tag k="name" v="Cafe Amour" />
+	</node>
+	<node id="267059895" lat="65.6833516" lon="-18.0904368" version="1" changeset="530619" user="Bjarki" uid="25051" timestamp="2008-05-27T01:35:17Z">
+		<tag k="amenity" v="nightclub" />
+		<tag k="created_by" v="Potlatch 0.9b" />
+		<tag k="name" v="Kaffi Akureyri" />
+	</node>
+	<node id="267059950" lat="65.6844225" lon="-18.0910719" version="1" changeset="530619" user="Bjarki" uid="25051" timestamp="2008-05-27T01:35:45Z">
+		<tag k="amenity" v="nightclub" />
+		<tag k="created_by" v="Potlatch 0.9b" />
+		<tag k="name" v="Sjallinn" />
+	</node>
+	<node id="267060757" lat="65.6810386" lon="-18.0898997" version="4" changeset="5445769" user="staehler" uid="118856" timestamp="2010-08-09T16:44:07Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Te &#38; kaffi" />
+	</node>
+	<node id="279225242" lat="64.1475636" lon="-21.9392855" version="3" changeset="7017105" user="gunnars" uid="397281" timestamp="2011-01-19T04:35:38Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="The English Pub" />
+	</node>
+	<node id="288061021" lat="63.9334652" lon="-21.0126222" version="1" changeset="267112" user="DaníelG" uid="21585" timestamp="2008-08-15T03:01:15Z">
+		<tag k="amenity" v="nightclub" />
+		<tag k="name" v="800 Bar" />
+	</node>
+	<node id="296016551" lat="64.1427833" lon="-21.9234894" version="3" changeset="1947772" user="DaníelG" uid="21585" timestamp="2009-07-26T19:13:54Z">
+		<tag k="amenity" v="pub" />
+		<tag k="created_by" v="Potlatch 0.10b" />
+		<tag k="cuisine" v="burger" />
+		<tag k="food" v="yes" />
+		<tag k="name" v="Vitabar" />
+	</node>
+	<node id="298914063" lat="64.1311429" lon="-21.8678835" version="3" changeset="4409577" user="Hinrik Örn Sigurðsson" uid="263393" timestamp="2010-04-12T22:22:00Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Te &#38; Kaffi" />
+	</node>
+	<node id="300306611" lat="64.5647271" lon="-21.7640604" version="2" changeset="707523" user="Jóna Þórunn" uid="51842" timestamp="2008-09-27T14:35:42Z">
+		<tag k="amenity" v="pub" />
+		<tag k="created_by" v="Potlatch 0.10c" />
+		<tag k="name" v="Kollubar" />
+	</node>
+	<node id="303937564" lat="63.9971833" lon="-21.1874469" version="2" changeset="756975" user="the_blanz" uid="23808" timestamp="2008-11-16T10:52:50Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Kjörís" />
+	</node>
+	<node id="315158528" lat="64.1287825" lon="-21.8663741" version="5" changeset="4409577" user="Hinrik Örn Sigurðsson" uid="263393" timestamp="2010-04-12T22:22:01Z">
+		<tag k="amenity" v="pub" />
+		<tag k="billiard:pool" v="yes" />
+		<tag k="billiard:snooker" v="yes" />
+		<tag k="name" v="Billiardbarinn" />
+		<tag k="opening_hours" v="Mo-Th 11:00-01:00; Fr-Sa 11:00-03:00; Su 12:00-01:00" />
+		<tag k="sport" v="billiard" />
+	</node>
+	<node id="320983064" lat="65.6813465" lon="-18.0897981" version="1" changeset="549005" user="Ævar Arnfjörð Bjarmason" uid="24965" timestamp="2008-12-22T21:20:23Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Bláa Kannan" />
+	</node>
+	<node id="320983065" lat="65.6813778" lon="-18.0894604" version="1" changeset="549005" user="Ævar Arnfjörð Bjarmason" uid="24965" timestamp="2008-12-22T21:20:24Z">
+		<tag k="amenity" v="bar" />
+		<tag k="name" v="Græni hatturinn" />
+	</node>
+	<node id="320995599" lat="64.0483330" lon="-16.1798825" version="2" changeset="305030" user="Ævar Arnfjörð Bjarmason" uid="24965" timestamp="2009-02-09T12:14:11Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Jökulsárlón" />
+	</node>
+	<node id="322706375" lat="63.9479765" lon="-21.0107706" version="2" changeset="6547067" user="dagur" uid="300589" timestamp="2010-12-05T06:51:19Z">
+		<tag k="amenity" v="nightclub" />
+		<tag k="name" v="Hvítahúsið sportbar" />
+		<tag k="www" v="http://www.hvita.is/" />
+	</node>
+	<node id="326362757" lat="64.1052642" lon="-21.8150646" version="1" changeset="734736" user="Ævar Arnfjörð Bjarmason" uid="24965" timestamp="2009-01-05T02:30:15Z">
+		<tag k="amenity" v="bar" />
+		<tag k="name" v="Café Bar 8" />
+	</node>
+	<node id="338004482" lat="65.2615490" lon="-13.9979611" version="1" changeset="842281" user="JoernD" uid="94317" timestamp="2009-01-26T22:35:28Z">
+		<tag k="amenity" v="cafe" />
+	</node>
+	<node id="346739208" lat="64.1466180" lon="-21.9339828" version="3" changeset="6939505" user="Dabbi" uid="53579" timestamp="2011-01-11T18:19:22Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Kaffitár" />
+	</node>
+	<node id="356718803" lat="64.0577244" lon="-21.5024120" version="1" changeset="752932" user="bruce_mcadam" uid="59340" timestamp="2009-03-07T15:35:23Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="created_by" v="Potlatch 0.10f" />
+	</node>
+	<node id="376051241" lat="64.3255391" lon="-20.1291953" version="3" changeset="5283722" user="Cyclejakob" uid="148305" timestamp="2010-07-22T02:29:56Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Gullfosskaffi" />
+	</node>
+	<node id="377317255" lat="64.0796716" lon="-21.9459867" version="1" changeset="576843" user="Ævar Arnfjörð Bjarmason" uid="24965" timestamp="2009-04-16T01:36:12Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Dillon sportbar" />
+	</node>
+	<node id="384948686" lat="64.1487524" lon="-21.9403961" version="1" changeset="958395" user="KarlP" uid="11585" timestamp="2009-04-25T21:22:31Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="London" />
+	</node>
+	<node id="384949163" lat="64.1456235" lon="-21.9292724" version="1" changeset="958395" user="KarlP" uid="11585" timestamp="2009-04-25T21:24:38Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Barbara" />
+	</node>
+	<node id="445065517" lat="63.4420883" lon="-20.2696536" version="2" changeset="3994676" user="Ævar Arnfjörð Bjarmason" uid="24965" timestamp="2010-02-28T05:07:05Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Volcano Café" />
+	</node>
+	<node id="445114042" lat="63.4432002" lon="-20.2711633" version="1" changeset="1899762" user="the_blanz" uid="23808" timestamp="2009-07-21T22:29:35Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Kaffi Kró" />
+	</node>
+	<node id="448541798" lat="64.1458326" lon="-21.9293735" version="2" changeset="6939505" user="Dabbi" uid="53579" timestamp="2011-01-11T18:19:23Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Nýlenduvöruverslun Hemma og Valda" />
+	</node>
+	<node id="448541811" lat="64.1463659" lon="-21.9327316" version="2" changeset="6939505" user="Dabbi" uid="53579" timestamp="2011-01-11T18:19:25Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Kofi Tómasar frænda" />
+	</node>
+	<node id="451723478" lat="65.3739030" lon="-15.8837088" version="3" changeset="5915346" user="Ana Luisa" uid="131670" timestamp="2010-09-29T20:34:19Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Mödrudal a Fjöllum" />
+	</node>
+	<node id="452025537" lat="64.9244643" lon="-23.8194418" version="2" changeset="1987735" user="Axelf" uid="24897" timestamp="2009-07-30T19:39:00Z">
+		<tag k="amenity" v="cafe" />
+	</node>
+	<node id="452669059" lat="64.2507132" lon="-15.2045280" version="2" changeset="2066924" user="mgeiser" uid="14686" timestamp="2009-08-07T15:54:27Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Café Tulinius" />
+	</node>
+	<node id="452685569" lat="64.2545834" lon="-15.2087680" version="1" changeset="1998739" user="arnthorsnaer" uid="151975" timestamp="2009-07-31T22:33:47Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Kaffihornið" />
+	</node>
+	<node id="477367334" lat="64.7518194" lon="-23.6454667" version="1" changeset="2313011" user="sfs" uid="39468" timestamp="2009-08-30T13:43:02Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Fjöruhúsið" />
+	</node>
+	<node id="483740384" lat="65.1475780" lon="-13.6870623" version="3" changeset="2670757" user="the_blanz" uid="23808" timestamp="2009-09-28T21:59:07Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Nesbær" />
+	</node>
+	<node id="491115634" lat="64.1463823" lon="-21.9336621" version="2" changeset="5251801" user="KarlP" uid="11585" timestamp="2010-07-18T14:44:02Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Den Danske Kro" />
+	</node>
+	<node id="510134970" lat="63.8403037" lon="-22.4311843" version="1" changeset="2649486" user="OliverL" uid="12551" timestamp="2009-09-27T09:29:27Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Sportsbar, Burgers and such" />
+	</node>
+	<node id="516414254" lat="64.5647275" lon="-21.7640604" version="1" changeset="2702794" user="hasse_osm_korinthenkacker" uid="86259" timestamp="2009-10-01T18:17:36Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Kollubar" />
+	</node>
+	<node id="550006617" lat="64.1485584" lon="-21.9403213" version="1" changeset="3006961" user="briansuda" uid="9285" timestamp="2009-11-01T14:40:15Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Bakkus" />
+	</node>
+	<node id="613409730" lat="64.1460619" lon="-21.9288021" version="3" changeset="6939505" user="Dabbi" uid="53579" timestamp="2011-01-11T18:19:23Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Café Rosenberg" />
+	</node>
+	<node id="640477157" lat="65.0321802" lon="-14.2230169" version="1" changeset="3887421" user="the_blanz" uid="23808" timestamp="2010-02-15T21:46:43Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Café Kósý" />
+	</node>
+	<node id="656120081" lat="65.2611191" lon="-14.4050584" version="2" changeset="5217356" user="staehler" uid="118856" timestamp="2010-07-14T14:24:54Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Café Valný" />
+	</node>
+	<node id="676968966" lat="64.1475465" lon="-21.9404687" version="2" changeset="6529820" user="Ævar Arnfjörð Bjarmason" uid="24965" timestamp="2010-12-03T18:59:04Z">
+		<tag k="addr:housenumber" v="2" />
+		<tag k="addr:street" v="Thorvaldsenstraeti" />
+		<tag k="amenity" v="nightclub" />
+		<tag k="name" v="Nasa" />
+		<tag k="wheelchair" v="limited" />
+	</node>
+	<node id="722489251" lat="64.0525480" lon="-21.9796055" version="1" changeset="4613666" user="viddi87" uid="282788" timestamp="2010-05-05T14:57:20Z">
+		<tag k="amenity" v="cafe" />
+	</node>
+	<node id="815740255" lat="64.1460071" lon="-21.9012007" version="1" changeset="5212069" user="staehler" uid="118856" timestamp="2010-07-13T20:41:15Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Amokka Kaffihús" />
+	</node>
+	<node id="815775137" lat="64.1454547" lon="-21.9280850" version="1" changeset="5212305" user="staehler" uid="118856" timestamp="2010-07-13T21:03:56Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Te &#38; Kaffi" />
+	</node>
+	<node id="815775143" lat="64.1445834" lon="-21.9238130" version="2" changeset="5251801" user="KarlP" uid="11585" timestamp="2010-07-18T14:44:03Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Svarta Kaffið" />
+	</node>
+	<node id="815799522" lat="64.1432850" lon="-21.9161526" version="2" changeset="5251801" user="KarlP" uid="11585" timestamp="2010-07-18T14:44:03Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Studio 29" />
+	</node>
+	<node id="817319545" lat="64.1438951" lon="-21.9204217" version="1" changeset="5217356" user="staehler" uid="118856" timestamp="2010-07-14T14:24:10Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Gull" />
+	</node>
+	<node id="817319561" lat="65.1106371" lon="-21.7716985" version="2" changeset="5415759" user="staehler" uid="118856" timestamp="2010-08-06T11:03:36Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="information" v="office" />
+		<tag k="name" v="Leifsbúd" />
+		<tag k="tourism" v="information" />
+	</node>
+	<node id="817319602" lat="64.1775313" lon="-20.4523392" version="1" changeset="5217356" user="staehler" uid="118856" timestamp="2010-07-14T14:24:14Z">
+		<tag k="amenity" v="cafe" />
+	</node>
+	<node id="817319688" lat="64.1462874" lon="-21.9331343" version="1" changeset="5217356" user="staehler" uid="118856" timestamp="2010-07-14T14:24:18Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="cuisine" v="ice_cream" />
+		<tag k="name" v="ice cream" />
+	</node>
+	<node id="817319692" lat="64.1437551" lon="-21.9197892" version="3" changeset="5298128" user="KarlP" uid="11585" timestamp="2010-07-23T19:25:34Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Mónakó" />
+		<tag k="shop" v="gambling" />
+	</node>
+	<node id="817319695" lat="64.1457825" lon="-21.9298196" version="1" changeset="5217356" user="staehler" uid="118856" timestamp="2010-07-14T14:24:19Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Glaetan" />
+	</node>
+	<node id="817319708" lat="64.1468398" lon="-21.9344747" version="1" changeset="5217356" user="staehler" uid="118856" timestamp="2010-07-14T14:24:19Z">
+		<tag k="amenity" v="bar" />
+		<tag k="name" v="b5 bar - bistro" />
+	</node>
+	<node id="817319738" lat="64.1440670" lon="-21.9220681" version="1" changeset="5217356" user="staehler" uid="118856" timestamp="2010-07-14T14:24:20Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Valencia Tapas Bar" />
+	</node>
+	<node id="819239164" lat="63.9374090" lon="-20.9837192" version="2" changeset="6553157" user="DaníelG" uid="21585" timestamp="2010-12-05T16:51:49Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="cuisine" v="ice_cream" />
+		<tag k="name" v="Íslandus Ísbar" />
+	</node>
+	<node id="819330281" lat="64.6566966" lon="-14.2850515" version="1" changeset="5229125" user="staehler" uid="118856" timestamp="2010-07-15T18:42:03Z">
+		<tag k="amenity" v="pub" />
+	</node>
+	<node id="823269807" lat="64.1473573" lon="-21.9377303" version="2" changeset="6856743" user="DaníelG" uid="21585" timestamp="2011-01-04T00:58:24Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Bjarni Fel" />
+	</node>
+	<node id="823269812" lat="64.1473075" lon="-21.9385280" version="3" changeset="7017176" user="gunnars" uid="397281" timestamp="2011-01-19T05:04:39Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Íslenski Barinn" />
+	</node>
+	<node id="826578082" lat="65.5668569" lon="-17.0367552" version="1" changeset="5273361" user="staehler" uid="118856" timestamp="2010-07-20T19:05:09Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Kaffi Sel" />
+		<tag k="shop" v="gift" />
+	</node>
+	<node id="826578084" lat="65.5913939" lon="-16.9127442" version="2" changeset="5771207" user="staehler" uid="118856" timestamp="2010-09-13T16:33:34Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Dimmuborgir" />
+	</node>
+	<node id="826725084" lat="65.6812243" lon="-18.0897239" version="1" changeset="5274118" user="staehler" uid="118856" timestamp="2010-07-20T20:36:23Z">
+		<tag k="amenity" v="cafe" />
+	</node>
+	<node id="828393657" lat="65.6718914" lon="-18.0860355" version="1" changeset="5283636" user="Cyclejakob" uid="148305" timestamp="2010-07-22T01:39:38Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Kaffi Hus" />
+	</node>
+	<node id="828977638" lat="64.5412717" lon="-21.9086918" version="1" changeset="5288700" user="staehler" uid="118856" timestamp="2010-07-22T16:00:02Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Kaffihús" />
+	</node>
+	<node id="830502542" lat="64.1450886" lon="-21.9263338" version="1" changeset="5298128" user="KarlP" uid="11585" timestamp="2010-07-23T19:25:35Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Monte Carlo" />
+		<tag k="shop" v="gambling" />
+	</node>
+	<node id="844116945" lat="65.6592884" lon="-20.2840421" version="1" changeset="5384952" user="staehler" uid="118856" timestamp="2010-08-02T20:58:36Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Við Árbakann" />
+	</node>
+	<node id="845677382" lat="63.8388911" lon="-21.0541176" version="1" changeset="5396426" user="Torfason" uid="27011" timestamp="2010-08-04T07:39:56Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Töfragarðurinn" />
+	</node>
+	<node id="846980680" lat="64.2249404" lon="-20.7250841" version="1" changeset="5409067" user="staehler" uid="118856" timestamp="2010-08-05T15:07:32Z">
+		<tag k="amenity" v="cafe" />
+	</node>
+	<node id="851173968" lat="65.6450834" lon="-16.9143528" version="1" changeset="5445769" user="staehler" uid="118856" timestamp="2010-08-09T16:43:52Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Gamli Bærinn" />
+	</node>
+	<node id="851174106" lat="65.9722162" lon="-18.5318999" version="1" changeset="5445769" user="staehler" uid="118856" timestamp="2010-08-09T16:43:55Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Kaffihúsið Sogn" />
+	</node>
+	<node id="867229049" lat="64.1481422" lon="-21.9418217" version="1" changeset="5529369" user="falnetix" uid="110417" timestamp="2010-08-18T18:50:59Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Kvosin Bakery" />
+	</node>
+	<node id="951679923" lat="64.1475511" lon="-21.9385482" version="2" changeset="6567656" user="KarlP" uid="11585" timestamp="2010-12-06T19:40:55Z">
+		<tag k="amenity" v="nightclub" />
+		<tag k="name" v="Esja" />
+	</node>
+	<node id="971164355" lat="64.1378744" lon="-21.9134875" version="1" changeset="6234292" user="Morten Lange" uid="337846" timestamp="2010-10-30T23:47:33Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Kjarvalsstaðir" />
+	</node>
+	<node id="973646187" lat="64.1442211" lon="-21.9317591" version="1" changeset="6254251" user="Flother" uid="365608" timestamp="2010-11-01T12:27:46Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="C is for Cookie" />
+	</node>
+	<node id="989067933" lat="64.1480115" lon="-21.9375703" version="2" changeset="6515875" user="DaníelG" uid="21585" timestamp="2010-12-02T15:26:39Z">
+		<tag k="amenity" v="cafe" />
+		<tag k="name" v="Kaffi Rót" />
+	</node>
+	<node id="1025384826" lat="64.1463990" lon="-21.9395051" version="2" changeset="6761496" user="Dabbi" uid="53579" timestamp="2010-12-25T15:25:40Z">
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Vínbarinn" />
+	</node>
+	<node id="1108242463" lat="64.1475397" lon="-21.9391339" version="3" changeset="7017176" user="gunnars" uid="397281" timestamp="2011-01-19T05:04:39Z">
+		<tag k="addr:housenumber" v="12a" />
+		<tag k="addr:street" v="Austurstræti" />
+		<tag k="amenity" v="pub" />
+		<tag k="name" v="Hvíta Perlan" />
+		<tag k="name:en" v="The White Pearl" />
+	</node>
+	</osm>
