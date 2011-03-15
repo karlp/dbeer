@@ -11,15 +11,15 @@ class Bar:
     Just use locations as a lat/long tuple for now, and use haversines for now
     """
     def __init__(self, name, geo=None, osmid=None):
-        self._name = name
-        self._location_geo = geo
-        self._osmid= osmid
+        self.name = name
+        self.location_geo = geo
+        self.osmid= osmid
 
     def distance(self, somewhere_geo):
         """
         Use the haversine formula to work out the distance to another geographical point
         """
-        return self._hdistance(self._location_geo, somewhere_geo)
+        return self._hdistance(self.location_geo, somewhere_geo)
 
     def _hdistance(self, p1, p2):
         """
@@ -33,6 +33,11 @@ class Bar:
         a = math.sin(dLat/2) * math.sin(dLat/2) + math.cos(lat1) * math.cos(lat2) * math.sin(dLong/2) * math.sin(dLong/2)
         c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
         return R * c
+
+    def __repr__(self):
+        #print "hoho:", self.name
+        stringy = "Bar(name=%s, location=(%s))" % (self.name, self.location_geo)
+        return stringy
 
 
 
