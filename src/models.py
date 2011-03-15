@@ -5,6 +5,17 @@
 # oh yes, this does lots of calculations....
 
 import math
+import logging
+
+import pyosm
+
+
+class NullHandler(logging.Handler):
+    def emit(self, record):
+        pass
+
+h = NullHandler()
+logging.getLogger("dbeer.services.models").addHandler(h)
 
 class Bar:
     """
@@ -35,10 +46,22 @@ class Bar:
         return R * c
 
     def __repr__(self):
-        #print "hoho:", self.name
-        stringy = "Bar(name=%s, location=(%s))" % (self.name, self.location_geo)
-        return stringy
+        return "Bar(name=%s, location=(%s))" % (self.name, self.location_geo)
 
+
+class OSMData():
+    bars = []
+
+    def __init__(self, filename):
+        osm = pyosm.OSMXMLFile(filename=filename)
+
+        for barn in osm.nodes.values():
+            if 'name' not in barn.tags:
+                logging.warn("ignoring bar with no name: %s", barn)
+            else:
+                bar = Bar(barn.tags['name'].encode("utf-8"), geo=(float(barn.lon),  float(barn.lat)), osmid=barn.id)
+                logging.debug("Loaded in %s", bar)
+                self.bars.append(bar)
 
 
 
