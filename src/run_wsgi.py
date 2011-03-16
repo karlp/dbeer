@@ -30,12 +30,16 @@ def bars_nearest(num=3):
     if lat is None or lon is None:
         log.debug("Ignoring request without location")
         # TODO - this should raise a custom error page?
-        return
+        abort(500, "No location provided")
 
     num = int(num)
     # TODO - ensure these are still valid...
-    lat = float(lat)
-    lon = float(lon)
+    try:
+        lat = float(lat)
+        lon = float(lon)
+    except ValueError:
+        abort(500, "Invalid lat/lon values %s/%s" % (lat,lon))
+
     if (num > config['results_limit']):
         log.debug("Squashing request for %d bars down to %d", num, config['results_limit'])
         num = config['results_limit']
@@ -48,6 +52,7 @@ def bars_nearest(num=3):
         results.append({"bar" : v,
                 "distance" : v.distance((lon,lat)),
                 "prices" : { "beer" : random.randrange(500, 950, 50)}})
+    response.content_type = "application/javascript"
     return json.dumps(results, default=models.Bar.to_json)
 
 @route('/hello')
