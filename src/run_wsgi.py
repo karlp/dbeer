@@ -8,10 +8,10 @@ import json
 import logging
 import random
 
-from bottle import route, run, request, response, abort, debug
-
+from flask import Flask, request, abort, Response, render_template
 import models
 
+app = Flask(__name__)
 config = {
     'results_limit' : 20
 }
@@ -22,17 +22,17 @@ log = logging.getLogger("main")
 
 
 
-@route('/nearest.json/:num#[0-9]+#')
+@app.route('/nearest.json/<int:num>')
 def bars_nearest_json(num=3):
     return bars_nearest(num, tjson=True)
 
-@route('/nearest.xml/:num#[0-9]+#')
+@app.route('/nearest.xml/<int:num>')
 def bars_nearest_xml(num=3):
     return bars_nearest(num, txml=True)
 
 def bars_nearest(num=3, tjson=False, txml=False):
-    lat = request.GET.get("lat")
-    lon = request.GET.get("lon")
+    lat = request.args.get("lat")
+    lon = request.args.get("lon")
     if lat is None or lon is None:
         log.debug("Ignoring request without location")
         abort(500, "No location provided")
@@ -58,34 +58,14 @@ def bars_nearest(num=3, tjson=False, txml=False):
                 "prices" : { 1 : random.randrange(500, 950, 50)}})
 
     if tjson:
-        response.content_type = "application/javascript"
-        return json.dumps(results, default=models.Bar.to_json)
+        return Response(json.dumps(results, default=models.Bar.to_json), content_type="application/javascript")
     if txml:
-        response.content_type = "application/xml"
-        return bars_to_xml(results)
+        return Response(render_template("bars.tpl", bars=results), content_type="application/xml")
 
-# HACK TASTIC
-def bars_to_xml(bars):
-    ret = """<?xml version="1.0" encoding="UTF-8"?><bars>"""
-    for i,v in enumerate(bars):
-        ret += bar_to_xml(v['bar'], v['distance'], v['prices'])
-    return ret + "</bars>"
-
-def bar_to_xml(bar, distance, prices):
-    """
-    Return an xml representation of a bar.  Should perhaps include nice rest media links to more info..
-    """
-    q = """<bar lat="%f" lon="%f" osmid="%d"><name>%s</name><distance>%d</distance>%s</bar>"""
-    return q % (bar.location_geo[0], bar.location_geo[1], bar.osmid, bar.name, distance, prices_to_xml(prices))
-
-def prices_to_xml(prices):
-    ret = "<prices>"
-    for k,v in prices.items():
-        ret += """<price drinkid="%s">%s</price>""" % (k,v)
-    return ret + "</prices>"
 
 file = ("../iceland.pubsandfriends.osm")
 od = models.OSMData(filename = file)  ## should only load it once..
 
-debug(True)
-run(reloader=True)
+if __name__ == '__main__':
+    app.debug = True
+    app.run()

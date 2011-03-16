@@ -65,7 +65,7 @@ class OSMData():
             if 'name' not in barn.tags:
                 logging.warn("ignoring bar with no name: %s", barn)
             else:
-                bar = Bar(barn.tags['name'].encode("utf-8"), geo=(float(barn.lon),  float(barn.lat)), osmid=barn.id)
+                bar = Bar(unicode(barn.tags['name']), geo=(float(barn.lon),  float(barn.lat)), osmid=barn.id)
                 logging.debug("Loaded in %s", bar)
                 self.bars.append(bar)
 
