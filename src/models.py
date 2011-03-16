@@ -46,7 +46,13 @@ class Bar:
         return R * c
 
     def __repr__(self):
-        return "Bar(name=%s, location=(%s))" % (self.name, self.location_geo)
+        return "Bar(name=%s, location=%s)" % (self.name, self.location_geo)
+
+    @staticmethod
+    def to_json(pyobj):
+        if isinstance(pyobj, Bar):
+            return {"name" : pyobj.name, "location" : pyobj.location_geo, "osmid": pyobj.osmid}
+        return JSONEncoder.default(pyobj)
 
 
 class OSMData():
