@@ -55,15 +55,34 @@ def bars_nearest(num=3, tjson=False, txml=False):
     for i,v in enumerate(nearest[:num]):
         results.append({"bar" : v,
                 "distance" : v.distance((lon,lat)),
-                "prices" : { "beer" : random.randrange(500, 950, 50)}})
+                "prices" : { 1 : random.randrange(500, 950, 50)}})
 
     if tjson:
         response.content_type = "application/javascript"
         return json.dumps(results, default=models.Bar.to_json)
     if txml:
         response.content_type = "application/xml"
-        return "<notjsoan/>"
+        return bars_to_xml(results)
 
+# HACK TASTIC
+def bars_to_xml(bars):
+    ret = """<?xml version="1.0" encoding="UTF-8"?><bars>"""
+    for i,v in enumerate(bars):
+        ret += bar_to_xml(v['bar'], v['distance'], v['prices'])
+    return ret + "</bars>"
+
+def bar_to_xml(bar, distance, prices):
+    """
+    Return an xml representation of a bar.  Should perhaps include nice rest media links to more info..
+    """
+    q = """<bar lat="%f" lon="%f" osmid="%d"><name>%s</name><distance>%d</distance>%s</bar>"""
+    return q % (bar.location_geo[0], bar.location_geo[1], bar.osmid, bar.name, distance, prices_to_xml(prices))
+
+def prices_to_xml(prices):
+    ret = "<prices>"
+    for k,v in prices.items():
+        ret += """<price drinkid="%s">%s</price>""" % (k,v)
+    return ret + "</prices>"
 
 file = ("../iceland.pubsandfriends.osm")
 od = models.OSMData(filename = file)  ## should only load it once..
