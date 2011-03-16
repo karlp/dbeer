@@ -60,7 +60,7 @@ def bars_nearest(num=3, tjson=False, txml=False):
     if tjson:
         return Response(json.dumps(results, default=models.Bar.to_json), content_type="application/javascript")
     if txml:
-        return Response(render_template("bars.tpl", bars=results), content_type="application/xml")
+        return Response(render_template("bars.xml", bars=results), content_type="application/xml")
 
 
 file = ("../iceland.pubsandfriends.osm")
