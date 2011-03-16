@@ -8,8 +8,7 @@ import json
 import logging
 import random
 
-import bottle
-from bottle import route, run, request, response, abort
+from bottle import route, run, request, response, abort, debug
 
 import models
 
@@ -23,17 +22,22 @@ log = logging.getLogger("main")
 
 
 
-@route('/nearest/:num#[0-9]+#')
-def bars_nearest(num=3):
+@route('/nearest.json/:num#[0-9]+#')
+def bars_nearest_json(num=3):
+    return bars_nearest(num, tjson=True)
+
+@route('/nearest.xml/:num#[0-9]+#')
+def bars_nearest_xml(num=3):
+    return bars_nearest(num, txml=True)
+
+def bars_nearest(num=3, tjson=False, txml=False):
     lat = request.GET.get("lat")
     lon = request.GET.get("lon")
     if lat is None or lon is None:
         log.debug("Ignoring request without location")
-        # TODO - this should raise a custom error page?
         abort(500, "No location provided")
 
     num = int(num)
-    # TODO - ensure these are still valid...
     try:
         lat = float(lat)
         lon = float(lon)
@@ -52,20 +56,17 @@ def bars_nearest(num=3):
         results.append({"bar" : v,
                 "distance" : v.distance((lon,lat)),
                 "prices" : { "beer" : random.randrange(500, 950, 50)}})
-    response.content_type = "application/javascript"
-    return json.dumps(results, default=models.Bar.to_json)
 
-@route('/hello')
-def wopwop():
-    return "hi there!"
-
+    if tjson:
+        response.content_type = "application/javascript"
+        return json.dumps(results, default=models.Bar.to_json)
+    if txml:
+        response.content_type = "application/xml"
+        return "<notjsoan/>"
 
 
 file = ("../iceland.pubsandfriends.osm")
 od = models.OSMData(filename = file)  ## should only load it once..
 
-if __name__ == "__main__":
-    bottle.app().catchall = False
-    run()
-else:
-    application = bottle.default_app()
+debug(True)
+run(reloader=True)
