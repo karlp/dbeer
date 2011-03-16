@@ -59,15 +59,16 @@ class OSMData():
     bars = []
 
     def __init__(self, filename):
+        logging.debug("Starting to parse osm dump")
         osm = pyosm.OSMXMLFile(filename=filename)
+        logging.debug("Loaded osm dump")
 
+        ignored_bars = 0
         for barn in osm.nodes.values():
             if 'name' not in barn.tags:
-                logging.warn("ignoring bar with no name: %s", barn)
+                ignored_bars += 1
             else:
                 bar = Bar(unicode(barn.tags['name']), geo=(float(barn.lon),  float(barn.lat)), osmid=barn.id)
-                logging.debug("Loaded in %s", bar)
                 self.bars.append(bar)
 
-
-
+        logging.debug("loaded all bars... %d total, ignored %d that had no name", len(self.bars), ignored_bars)

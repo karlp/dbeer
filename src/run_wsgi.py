@@ -7,6 +7,7 @@ __date__ ="$Mar 15, 2011 7:24:21 PM$"
 import json
 import logging
 import random
+import time
 
 from flask import Flask, request, abort, Response, render_template
 import models
@@ -30,6 +31,16 @@ def bars_nearest_json(num=3):
 def bars_nearest_xml(num=3):
     return bars_nearest(num, txml=True)
 
+def print_timing(func):
+    def wrapper(*arg, **kwarg):
+        t1 = time.time()
+        res = func(*arg, **kwarg)
+        t2 = time.time()
+        log.debug("%s took %0.3f ms", func.func_name, (t2-t1)*1000)
+        return res
+    return wrapper
+
+@print_timing
 def bars_nearest(num=3, tjson=False, txml=False):
     lat = request.args.get("lat")
     lon = request.args.get("lon")
@@ -63,7 +74,8 @@ def bars_nearest(num=3, tjson=False, txml=False):
         return Response(render_template("bars.xml", bars=results), content_type="application/xml")
 
 
-file = ("../iceland.pubsandfriends.osm")
+#file = ("../iceland.pubsandfriends.osm")
+file = ("../europe.pubsandfriends.osm")
 od = models.OSMData(filename = file)  ## should only load it once..
 
 if __name__ == '__main__':
