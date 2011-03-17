@@ -1,35 +1,6 @@
 #!/usr/bin/env python
 import math
 
-def recalculate_coordinate(val,  _as=None):
-  """
-    Accepts a coordinate as a tuple (degree, minutes, seconds)
-    You can give only one of them (e.g. only minutes as a floating point number) 
-    and it will be duly recalculated into degrees, minutes and seconds.
-    Return value can be specified as 'deg', 'min' or 'sec'; default return value is 
-    a proper coordinate tuple.
-  """
-  deg,  min,  sec = val
-  # pass outstanding values from right to left
-  min = (min or 0) + int(sec) / 60
-  sec = sec % 60
-  deg = (deg or 0) + int(min) / 60
-  min = min % 60
-  # pass decimal part from left to right
-  dfrac,  dint = math.modf(deg)
-  min = min + dfrac * 60
-  deg = dint
-  mfrac,  mint = math.modf(min)
-  sec = sec + mfrac * 60
-  min = mint
-  if _as:
-    sec = sec + min * 60 + deg * 3600
-    if _as == 'sec': return sec
-    if _as == 'min': return sec / 60
-    if _as == 'deg': return sec / 3600
-  return deg,  min,  sec
-      
-
 def point_at_distance(start, distance, bearing):
     """
     formula from: http://www.movable-type.co.uk/scripts/latlong.html
