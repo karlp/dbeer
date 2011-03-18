@@ -73,25 +73,9 @@ public class WhereBeerActivity extends ListActivity {
         HttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(uu);
         try {
-            // BasicResponseHandler will not understand the encoding flag in the xml reply, unless the return headers include the encoding!
-            // note, this blindly assumes that it is in utf-8, but that's ok for now.
-            // This came from:
-            xmlr = client.execute(request, new ResponseHandler<String>() {
-                public String handleResponse(HttpResponse response) throws IOException {
-                    StatusLine statusLine = response.getStatusLine();
-                    if (statusLine.getStatusCode() >= 300) {
-                        throw new HttpResponseException(statusLine.getStatusCode(),
-                                statusLine.getReasonPhrase());
-                    }
-
-                    HttpEntity entity = response.getEntity();
-                    return entity == null ? null : EntityUtils.toString(entity, "UTF-8");
-                }
-            }
-            );
-
+            xmlr = client.execute(request, new BasicResponseHandler());
         } catch (IOException e) {
-            throw new IllegalStateException("hatred", e);
+            throw new IllegalStateException("Couldn't reach the server... FIXME handle this better");
         }
         Set<Bar> bars = Utils.parseBarXml(xmlr);
         BarArrayAdapter arrayAdapter = new BarArrayAdapter(this, R.layout.where_row_item, new ArrayList<Bar>(bars));
