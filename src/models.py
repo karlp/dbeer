@@ -68,7 +68,7 @@ class OSMData():
             if 'name' not in barn.tags:
                 ignored_bars += 1
             else:
-                bar = Bar(unicode(barn.tags['name']), geo=(float(barn.lon),  float(barn.lat)), osmid=barn.id)
+                bar = Bar(barn.tags['name'], geo=(float(barn.lon),  float(barn.lat)), osmid=barn.id)
                 self.bars.append(bar)
 
-        logging.debug("loaded all bars... %d total, ignored %d that had no name", len(self.bars), ignored_bars)
+        logging.debug("loaded %d bars, ignored %d that had no name", len(self.bars), ignored_bars)
