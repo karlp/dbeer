@@ -56,6 +56,7 @@ public class TestUtils {
         prices.add(new Price(1, 800));
         teOgKaffi.prices = prices;
         assertEquals("te & kaffi should decode properly", teOgKaffi, bars.toArray(new Bar[bars.size()])[1]);
+        assertEquals("names should be encoded properly", "Kjarvalsstaðir", bars.toArray(new Bar[bars.size()])[3].name);
     }
 
     @Test

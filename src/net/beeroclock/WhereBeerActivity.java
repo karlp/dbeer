@@ -12,10 +12,17 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 
 import java.io.*;
 import java.util.*;
@@ -66,11 +73,26 @@ public class WhereBeerActivity extends ListActivity {
         HttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(uu);
         try {
-            xmlr = client.execute(request, new BasicResponseHandler());
+            // BasicResponseHandler will not understand the encoding flag in the xml reply, unless the return headers include the encoding!
+            // note, this blindly assumes that it is in utf-8, but that's ok for now.
+            // This came from:
+            xmlr = client.execute(request, new ResponseHandler<String>() {
+                public String handleResponse(HttpResponse response) throws IOException {
+                    StatusLine statusLine = response.getStatusLine();
+                    if (statusLine.getStatusCode() >= 300) {
+                        throw new HttpResponseException(statusLine.getStatusCode(),
+                                statusLine.getReasonPhrase());
+                    }
+
+                    HttpEntity entity = response.getEntity();
+                    return entity == null ? null : EntityUtils.toString(entity, "UTF-8");
+                }
+            }
+            );
+
         } catch (IOException e) {
             throw new IllegalStateException("hatred", e);
         }
-
         Set<Bar> bars = Utils.parseBarXml(xmlr);
         BarArrayAdapter arrayAdapter = new BarArrayAdapter(this, R.layout.where_row_item, new ArrayList<Bar>(bars));
         ListView lv = getListView();
