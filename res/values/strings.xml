@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">BeerLocator</string>
-    <string name="where_beer">The nearest bar is:</string>
+    <string name="where_beer_empty">No nearest bars, probably still looking for a location?</string>
     <string name="add_beer">Let\'s add a beer!</string>
 
     <string name="tab_title_where">Where\'s beer?</string>
