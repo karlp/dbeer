@@ -1,5 +1,7 @@
 #!/usr/bin/env python
+# coding=utf-8
 # Expose our bar finder as a wsgi app
+
 
 __author__="karl"
 __date__ ="$Mar 15, 2011 7:24:21 PM$"
@@ -21,7 +23,9 @@ config = {
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(levelname)s %(name)s - %(message)s")
 log = logging.getLogger("main")
 
-
+@app.route("/status")
+def status():
+    return "OK"
 
 @app.route('/nearest.json/<int:num>')
 def bars_nearest_json(num=3):
@@ -69,15 +73,15 @@ def bars_nearest(num=3, tjson=False, txml=False):
                 "prices" : { 1 : random.randrange(500, 950, 50)}})
 
     if tjson:
-        return Response(json.dumps(results, default=models.Bar.to_json), content_type="application/javascript")
+        return Response(json.dumps(results, default=models.Bar.to_json), content_type="application/javascript; charset=utf-8")
     if txml:
-        return Response(render_template("bars.xml", bars=results), content_type="application/xml")
+        return Response(render_template("bars.xml", bars=results), content_type="application/xml; charset=utf-8", )
 
 
-#file = ("../iceland.pubsandfriends.osm")
-file = ("../europe.pubsandfriends.osm")
+file = ("../iceland.pubsandfriends.osm")
+#file = ("../europe.pubsandfriends.osm")
 od = models.OSMData(filename = file)  ## should only load it once..
 
 if __name__ == '__main__':
     app.debug = True
-    app.run()
+    app.run(host='0.0.0.0')
