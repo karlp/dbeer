@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bar lat="{{bar.location_geo[1]}}" lon="{{bar.location_geo[0]}}" osmid="{{bar.osmid}}">
+    <name>{{bar.name}}</name>
+    <prices>
+        {%- for price in prices -%}
+        <price drinkid="{{price}}">{{prices[price]}}</price>
+        {%- endfor -%}
+    </prices>
+</bar>

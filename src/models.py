@@ -72,3 +72,9 @@ class OSMData():
                 self.bars.append(bar)
 
         logging.debug("loaded %d bars, ignored %d that had no name", len(self.bars), ignored_bars)
+
+    def by_osmid(self, osmid):
+        for barn in self.bars:
+            if barn.osmid == osmid:
+                return barn
+        return None
