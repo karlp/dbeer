@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -98,6 +99,48 @@ public class WhereBeerActivity extends ListActivity {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
 
+    class BarServiceFetcher extends AsyncTask<Location, Void, Set<Bar>> {
+        Location location;
+
+        @Override
+        protected Set<Bar> doInBackground(Location... locations) {
+            if (locations.length == 0) {
+                return new TreeSet<Bar>();
+            }
+            if (locations.length > 1) {
+                Log.w(TAG, "ignoring request to fetch multiple locations!");
+            }
+            location = locations[0];
+            String xmlr;
+            String host = "tera.beeroclock.net";
+
+            Log.i(TAG, "Fetching nearest bar details from: " + host);
+            String uu = String.format("http://%s/nearest.xml/%d?lat=%f&lon=%f", host, 10, location.getLatitude(), location.getLongitude());
+
+            HttpClient client = new DefaultHttpClient();
+            HttpGet request = new HttpGet(uu);
+            try {
+                xmlr = client.execute(request, new BasicResponseHandler());
+            } catch (IOException e) {
+                // FIXME - this is not really very pretty...
+                tvStatus.setText(R.string.where_beer_http_error);
+                Log.e(TAG, "Http connection error: " + e.getMessage(), e);
+                return new TreeSet<Bar>();
+            }
+            return Utils.parseBarXml(xmlr);
+        }
+
+        @Override
+        protected void onPostExecute(Set<Bar> bars) {
+            super.onPostExecute(bars);
+            BarArrayAdapter arrayAdapter = new BarArrayAdapter(WhereBeerActivity.this, R.layout.where_row_item, location, new ArrayList<Bar>(bars));
+            ListView lv = getListView();
+            lv.setAdapter(arrayAdapter);
+            String s = getResources().getString(R.string.where_beer_last_update);
+            tvStatus.setText(s + " " + new Date());
+        }
+    }
+
     private boolean isViable(Location location, Date d) {
         if (location == null) {
             return false;
@@ -123,28 +166,7 @@ public class WhereBeerActivity extends ListActivity {
             }
         }
         lastLocation = location;
-        String xmlr;
-        String host = "tera.beeroclock.net";
-//        String host = "192.168.149.34:5000";
-
-        String uu = "http://" + host + "/nearest.xml/10?lat=" + location.getLatitude() + "&lon=" + location.getLongitude();
-
-        HttpClient client = new DefaultHttpClient();
-        HttpGet request = new HttpGet(uu);
-        try {
-            xmlr = client.execute(request, new BasicResponseHandler());
-        } catch (IOException e) {
-            // FIXME - this is not really very pretty...
-            tvStatus.setText(R.string.where_beer_http_error);
-            Log.e(TAG, "Http connection error: " + e.getMessage(), e);
-            return;
-        }
-        Set<Bar> bars = Utils.parseBarXml(xmlr);
-        BarArrayAdapter arrayAdapter = new BarArrayAdapter(this, R.layout.where_row_item, location, new ArrayList<Bar>(bars));
-        ListView lv = getListView();
-        lv.setAdapter(arrayAdapter);
-        String s = this.getResources().getString(R.string.where_beer_last_update);
-        tvStatus.setText(s + " " + new Date());
+        new BarServiceFetcher().execute(location);
     }
 
     public class BarArrayAdapter extends ArrayAdapter<Bar> {
