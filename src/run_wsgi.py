@@ -133,7 +133,7 @@ def bars_nearest(num=3, tjson=False, txml=False):
     for i,v in enumerate(nearest[:num]):
         results.append({"bar" : v,
                 "distance" : v.distance((lon,lat)),
-                "prices" : get_avg_prices(v.osmid)
+                "prices" : get_avg_prices(v)
                 })
 
     if tjson:
