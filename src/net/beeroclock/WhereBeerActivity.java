@@ -32,6 +32,8 @@ public class WhereBeerActivity extends ListActivity {
 
     public static final String TAG = "WhereBeerActivity";
     private TextView tvStatus;
+    private Location lastLocation;
+    private static final float DISTANCE_JITTER = 30.0f;
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -112,6 +114,15 @@ public class WhereBeerActivity extends ListActivity {
     }
 
     private void makeUseOfNewLocation(Location location) {
+        if (lastLocation != null) {
+            float newDelta = lastLocation.distanceTo(location);
+            if ( newDelta < DISTANCE_JITTER) {
+                // FIXME - this should do some checking on accuracy, and provider of the new location too...
+                Log.d(TAG, "Ignoring new location, it's too close to the old one: " + newDelta);
+                return;
+            }
+        }
+        lastLocation = location;
         String xmlr;
         String host = "tera.beeroclock.net";
 //        String host = "192.168.149.34:5000";
