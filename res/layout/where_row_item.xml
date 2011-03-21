@@ -1,43 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- from http://developer.android.com/resources/articles/layout-tricks-efficiency.html -->
-<RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
-                a:layout_width="fill_parent"
-                a:layout_height="wrap_content">
 
-    <!-- put a bar icon here?
-<ImageView
-        android:id="@+id/icon"
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+              a:orientation="horizontal"
+              a:layout_width="fill_parent"
+              a:layout_height="fill_parent">
 
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="6dip"
-
-        android:src="@drawable/icon" />
--->
+    <!-- put an icon for a bar here? -->
 
     <TextView a:id="@+id/bar_name"
-        a:layout_width="wrap_content"
-        a:layout_height="wrap_content"
-        a:singleLine="true"
-        a:ellipsize="marquee"
-        a:gravity="left"
-        a:text="Bar name goes here" />
+            a:layout_width="wrap_content"
+            a:layout_height="fill_parent"
+            a:layout_weight="1"
+            />
 
     <TextView a:id="@+id/bar_distance"
-        a:layout_width="wrap_content"
-        a:layout_height="wrap_content"
-        a:layout_toRightOf="@id/bar_name"
-        a:gravity="right"
-        a:text="XXX meters" />
+            a:layout_width="wrap_content"
+            a:layout_height="fill_parent"
+            />
+
+    <!-- put a spinny arrow here, showing the direction of thebar? like in osmand? -->
 
     <TextView a:id="@+id/bar_price"
-        a:layout_width="wrap_content"
-        a:layout_height="wrap_content"
-        a:layout_toRightOf="@id/bar_distance"
-        a:gravity="right"
-        a:text="XXX" />
+            a:layout_width="wrap_content"
+            a:layout_height="fill_parent"
+            />
 
-</RelativeLayout>
+</LinearLayout>
