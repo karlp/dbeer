@@ -11,11 +11,13 @@
             a:layout_width="wrap_content"
             a:layout_height="fill_parent"
             a:layout_weight="1"
+            a:textSize="15sp"
             />
 
     <TextView a:id="@+id/bar_distance"
             a:layout_width="wrap_content"
             a:layout_height="fill_parent"
+            a:padding="2sp"
             />
 
     <!-- put a spinny arrow here, showing the direction of thebar? like in osmand? -->
@@ -23,6 +25,7 @@
     <TextView a:id="@+id/bar_price"
             a:layout_width="wrap_content"
             a:layout_height="fill_parent"
+            a:padding="2sp"
             />
 
 </LinearLayout>
