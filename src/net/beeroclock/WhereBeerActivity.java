@@ -2,6 +2,7 @@ package net.beeroclock;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -31,6 +32,17 @@ public class WhereBeerActivity extends ListActivity {
 
     public static final String TAG = "WhereBeerActivity";
     private TextView tvStatus;
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);    //To change body of overridden methods use File | Settings | File Templates.
+        Intent i = new Intent(this, BarDetailActivity.class);
+        Bar b = (Bar) v.getTag(R.id.tag_bar);
+        // TODO - we should be able to send/save the whole bar here, rather than just refetching it?!
+        i.putExtra("barname", b.name);
+        startActivity(i);
+    }
+
     /**
      * Called when the activity is first created.
      */
@@ -46,6 +58,7 @@ public class WhereBeerActivity extends ListActivity {
 
         // First off, use the cached location, to get something up and running...
         // If either of them are too old, or too inaccurate, toss them..
+        // TODO - this should not be in the main UI thread!
         Location cLocNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         Location cLocGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         Date d = new Date();
@@ -168,7 +181,7 @@ public class WhereBeerActivity extends ListActivity {
                 }
 
             }
-
+            view.setTag(R.id.tag_bar, bar);
             return view;
         }
     }

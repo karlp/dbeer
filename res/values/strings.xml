@@ -8,4 +8,5 @@
 
     <string name="tab_title_where">Where\'s beer?</string>
     <string name="tab_title_add">Add beer</string>
+    <string name="bar_detail_get_directions">Get directions</string>
 </resources>
