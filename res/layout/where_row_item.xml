@@ -21,6 +21,12 @@
             />
 
     <!-- put a spinny arrow here, showing the direction of thebar? like in osmand? -->
+    <ImageView a:id="@+id/bar_direction"
+               a:layout_width="24sp"
+               a:layout_height="24sp"
+               a:scaleType="fitCenter"
+               a:src="@drawable/ic_menu_goto"
+            />
 
     <TextView a:id="@+id/bar_price"
             a:layout_width="wrap_content"

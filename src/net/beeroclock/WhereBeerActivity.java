@@ -2,6 +2,11 @@ package net.beeroclock;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -11,19 +16,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.HttpResponseException;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 
 import java.io.*;
 import java.util.*;
@@ -117,7 +116,7 @@ public class WhereBeerActivity extends ListActivity {
             return;
         }
         Set<Bar> bars = Utils.parseBarXml(xmlr);
-        BarArrayAdapter arrayAdapter = new BarArrayAdapter(this, R.layout.where_row_item, new ArrayList<Bar>(bars));
+        BarArrayAdapter arrayAdapter = new BarArrayAdapter(this, R.layout.where_row_item, location, new ArrayList<Bar>(bars));
         ListView lv = getListView();
         lv.setAdapter(arrayAdapter);
         String s = this.getResources().getString(R.string.where_beer_last_update);
@@ -127,11 +126,13 @@ public class WhereBeerActivity extends ListActivity {
     public class BarArrayAdapter extends ArrayAdapter<Bar> {
         private Context context;
         private ArrayList<Bar> items;
+        private Location here;
 
-        public BarArrayAdapter(Context context, int textViewResourceId, ArrayList<Bar> objects) {
+        public BarArrayAdapter(Context context, int textViewResourceId, Location here, ArrayList<Bar> objects) {
             super(context, textViewResourceId, objects);
             this.context = context;
             this.items = objects;
+            this.here = here;
         }
 
         @Override
@@ -161,9 +162,35 @@ public class WhereBeerActivity extends ListActivity {
                     // FIXME - should really use per user preferences on what they consider a price of note.
                     priceView.setText(String.valueOf(bar.prices.iterator().next().avgPrice));
                 }
+                ImageView arrowView = (ImageView) view.findViewById(R.id.bar_direction);
+                if (arrowView != null) {
+                    arrowView.setImageDrawable(makeArrowToBar(here, bar));
+                }
+
             }
 
             return view;
         }
+    }
+
+    private Drawable makeArrowToBar(Location here, Bar bar) {
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_menu_goto);
+        // Getting width & height of the given image.
+        int w1 = bmp.getWidth();
+        int h1 = bmp.getHeight();
+        // Setting post rotate to 90
+        Matrix mtx = new Matrix();
+        // TODO - this doesn't take into account the current heading of the phone. :(
+        mtx.postRotate(getDirection(here, bar) - 135); // image is naturally pointing to 135
+        // Rotating Bitmap
+        Bitmap rotatedBMP = Bitmap.createBitmap(bmp, 0, 0, w1, h1, mtx, true);
+        return new BitmapDrawable(rotatedBMP);
+    }
+
+    private float getDirection(Location here, Bar bar) {
+        Location l = new Location("local");
+        l.setLatitude(bar.lat);
+        l.setLongitude(bar.lon);
+        return here.bearingTo(l);
     }
 }
