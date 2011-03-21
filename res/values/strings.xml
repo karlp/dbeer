@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">BeerLocator</string>
-    <string name="where_beer_empty">No nearest bars, probably still looking for a location?</string>
+    <string name="where_beer_location_search">Trying to find our current position...</string>
+    <string name="where_beer_http_error">Oops, couldn\'t reach the beer server!</string>
+    <string name="where_beer_last_update">Last update at: </string>
     <string name="add_beer">Let\'s add a beer!</string>
 
     <string name="tab_title_where">Where\'s beer?</string>

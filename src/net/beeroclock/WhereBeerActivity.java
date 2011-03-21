@@ -6,6 +6,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,9 @@ import java.io.*;
 import java.util.*;
 
 public class WhereBeerActivity extends ListActivity {
+
+    public static final String TAG = "WhereBeerActivity";
+    private TextView tvStatus;
     /**
      * Called when the activity is first created.
      */
@@ -36,8 +40,24 @@ public class WhereBeerActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wherebeer);
 
+        tvStatus = (TextView) findViewById(R.id.where_status);
+
         // Acquire a reference to the system Location Manager
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        // First off, use the cached location, to get something up and running...
+        // If either of them are too old, or too inaccurate, toss them..
+        Location cLocNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        Location cLocGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Date d = new Date();
+        if (isViable(cLocGPS, d)) {
+            makeUseOfNewLocation(cLocGPS);
+        } else if (isViable(cLocNetwork, d)) {
+            makeUseOfNewLocation(cLocNetwork);
+        } else {
+            // oh well, nothing viable...  FIXME - should update this periodically, letting them know we're still trying...
+            tvStatus.setText(R.string.where_beer_location_search);
+        }
 
         List l = locationManager.getAllProviders();
         // Define a listener that responds to location updates
@@ -58,9 +78,25 @@ public class WhereBeerActivity extends ListActivity {
         };
 
         // Register the listener with the Location Manager to receive location updates
-//        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        // Register for both!
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         // emulator has gps, but no network?!
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+    }
+
+    private boolean isViable(Location location, Date d) {
+        if (location == null) {
+            return false;
+        }
+        if (location.getAccuracy() > 1500) {
+            Log.d(TAG, "Tossing out location due to poor accuracy:" + location);
+            return false;
+        }
+        if (location.getTime() < d.getTime() - 60 * 60 * 1000) {
+            Log.d(TAG, "Tossing out location due to old age:" + location);
+            return false;
+        }
+        return true;
     }
 
     private void makeUseOfNewLocation(Location location) {
@@ -75,12 +111,17 @@ public class WhereBeerActivity extends ListActivity {
         try {
             xmlr = client.execute(request, new BasicResponseHandler());
         } catch (IOException e) {
-            throw new IllegalStateException("Couldn't reach the server... FIXME handle this better");
+            // FIXME - this is not really very pretty...
+            tvStatus.setText(R.string.where_beer_http_error);
+            Log.e(TAG, "Http connection error: " + e.getMessage(), e);
+            return;
         }
         Set<Bar> bars = Utils.parseBarXml(xmlr);
         BarArrayAdapter arrayAdapter = new BarArrayAdapter(this, R.layout.where_row_item, new ArrayList<Bar>(bars));
         ListView lv = getListView();
         lv.setAdapter(arrayAdapter);
+        String s = this.getResources().getString(R.string.where_beer_last_update);
+        tvStatus.setText(s + " " + new Date());
     }
 
     public class BarArrayAdapter extends ArrayAdapter<Bar> {
@@ -114,6 +155,11 @@ public class WhereBeerActivity extends ListActivity {
                 TextView nameView = (TextView) view.findViewById(R.id.bar_name);
                 if (nameView != null) {
                     nameView.setText(bar.name);
+                }
+                TextView priceView = (TextView) view.findViewById(R.id.bar_price);
+                if (priceView != null) {
+                    // FIXME - should really use per user preferences on what they consider a price of note.
+                    priceView.setText(String.valueOf(bar.prices.iterator().next().avgPrice));
                 }
             }
 

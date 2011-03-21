@@ -33,4 +33,11 @@
         a:gravity="right"
         a:text="XXX meters" />
 
+    <TextView a:id="@+id/bar_price"
+        a:layout_width="wrap_content"
+        a:layout_height="wrap_content"
+        a:layout_toRightOf="@id/bar_distance"
+        a:gravity="right"
+        a:text="XXX" />
+
 </RelativeLayout>
