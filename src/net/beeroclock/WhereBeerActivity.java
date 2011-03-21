@@ -101,8 +101,8 @@ public class WhereBeerActivity extends ListActivity {
 
     private void makeUseOfNewLocation(Location location) {
         String xmlr;
-        //String host = "tera.beeroclock.net";
-        String host = "192.168.149.34:5000";
+        String host = "tera.beeroclock.net";
+//        String host = "192.168.149.34:5000";
 
         String uu = "http://" + host + "/nearest.xml/10?lat=" + location.getLatitude() + "&lon=" + location.getLongitude();
 
