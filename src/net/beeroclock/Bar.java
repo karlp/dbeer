@@ -22,6 +22,8 @@ public class Bar implements Comparable<Bar> {
     public Set<Price> prices = new TreeSet<Price>();
 
     public static final String OSM_ID = "osm_id";
+    public static final String LONGITUDE = "longitude";
+    public static final String LATITUDE = "latitude";
 
     public Bar() {
     }

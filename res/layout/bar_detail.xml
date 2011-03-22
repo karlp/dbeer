@@ -13,6 +13,7 @@
             a:layout_height="wrap_content"
             a:layout_width="wrap_content"
             a:text="@string/bar_detail_get_directions"
+            a:enabled="false"
             />
     <Button a:id="@+id/bar_show_on_map_btn"
             a:layout_height="wrap_content"

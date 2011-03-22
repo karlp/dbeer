@@ -2,6 +2,7 @@ package net.beeroclock;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,8 @@ import java.util.ArrayList;
  * Date: 3/21/11
  * Time: 6:07 PM
  */
-public class BarDetailActivity extends ListActivity {
+public class BarDetailActivity extends ListActivity implements View.OnClickListener {
+    Bar bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +34,7 @@ public class BarDetailActivity extends ListActivity {
             fail_go_boom();
             return;
         }
-        Bar bar = pinty.getBar(barId);
+        bar = pinty.getBar(barId);
         if (bar == null) {
             fail_go_boom();
             return;
@@ -40,12 +42,20 @@ public class BarDetailActivity extends ListActivity {
 
         tvBarName.setText(bar.name);
 
-
         PriceArrayAdapter arrayAdapter = new PriceArrayAdapter(this, R.layout.price_row_item, new ArrayList<Price>(bar.prices));
         ListView lv = getListView();
         lv.setAdapter(arrayAdapter);
 
+        Button b = (Button)findViewById(R.id.bar_show_on_map_btn);
+        b.setOnClickListener(this);
     }
+
+    public void onClick(View view) {
+        Intent i = new Intent(this, ActivityGoogleMap.class);
+        i.putExtra(Bar.OSM_ID, bar.osmid);
+        startActivity(i);
+    }
+
 
     private void fail_go_boom() {
         Toast t = Toast.makeText(getApplicationContext(), R.string.toast_wtf, Toast.LENGTH_SHORT);
