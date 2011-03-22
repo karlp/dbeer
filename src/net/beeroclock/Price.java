@@ -5,11 +5,11 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * Created by IntelliJ IDEA.
- * User: karl
+ * Represents our (android client side) view of a bar's pricing.  Only the type of drink, and the current average.
+ * More details stats are server side only
+ * @author karl
  * Date: 3/16/11
  * Time: 8:59 PM
- * To change this template use File | Settings | File Templates.
  */
 public class Price implements Comparable<Price> {
     public long id;

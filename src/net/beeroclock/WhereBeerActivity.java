@@ -41,8 +41,7 @@ public class WhereBeerActivity extends ListActivity {
         super.onListItemClick(l, v, position, id);    //To change body of overridden methods use File | Settings | File Templates.
         Intent i = new Intent(this, BarDetailActivity.class);
         Bar b = (Bar) v.getTag(R.id.tag_bar);
-        // TODO - we should be able to send/save the whole bar here, rather than just refetching it?!
-        i.putExtra("barname", b.name);
+        i.putExtra(Bar.OSM_ID, b.osmid);
         startActivity(i);
     }
 
@@ -61,7 +60,6 @@ public class WhereBeerActivity extends ListActivity {
 
         // First off, use the cached location, to get something up and running...
         // If either of them are too old, or too inaccurate, toss them..
-        // TODO - this should not be in the main UI thread!
         Location cLocNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         Location cLocGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         Date d = new Date();
@@ -123,7 +121,7 @@ public class WhereBeerActivity extends ListActivity {
                 xmlr = client.execute(request, new BasicResponseHandler());
             } catch (IOException e) {
                 // FIXME - this is not really very pretty...
-                tvStatus.setText(R.string.where_beer_http_error);
+                // FIXME - how to notify the user here?
                 Log.e(TAG, "Http connection error: " + e.getMessage(), e);
                 return new TreeSet<Bar>();
             }
@@ -138,7 +136,12 @@ public class WhereBeerActivity extends ListActivity {
             lv.setAdapter(arrayAdapter);
             String s = getResources().getString(R.string.where_beer_last_update);
             tvStatus.setText(s + " " + new Date());
-            // Could add proximity alerts here for each bar?
+
+            // save the bars to our application's current set of bars...
+            PintyApp pinty = (PintyApp)getApplication();
+            pinty.getKnownBars().addAll(bars);
+
+            // TODO - Could add proximity alerts here for each bar?
         }
     }
 

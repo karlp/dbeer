@@ -8,11 +8,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * Created by IntelliJ IDEA.
- * User: karl
+ * Provides our client side model of a bar
+ * @author karl
  * Date: 3/16/11
  * Time: 8:58 PM
- * To change this template use File | Settings | File Templates.
  */
 public class Bar implements Comparable<Bar> {
     public String name;
@@ -21,6 +20,8 @@ public class Bar implements Comparable<Bar> {
     public double lon;
     public Double distance;
     public Set<Price> prices = new TreeSet<Price>();
+
+    public static final String OSM_ID = "osm_id";
 
     public Bar() {
     }
