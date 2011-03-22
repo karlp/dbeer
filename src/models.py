@@ -21,10 +21,11 @@ class Bar:
     """
     Just use locations as a lat/long tuple for now, and use haversines for now
     """
-    def __init__(self, name, geo=None, osmid=None):
+    def __init__(self, name, geo=None, osmid=None, type=None):
         self.name = name
         self.location_geo = geo
-        self.osmid= osmid
+        self.osmid = osmid
+        self.type = type
 
     def distance(self, somewhere_geo):
         """
@@ -46,12 +47,12 @@ class Bar:
         return R * c
 
     def __repr__(self):
-        return "Bar(name=%s, location=%s)" % (self.name, self.location_geo)
+        return "Bar(name=%s, location=%s, type=%s)" % (self.name, self.location_geo, self.type)
 
     @staticmethod
     def to_json(pyobj):
         if isinstance(pyobj, Bar):
-            return {"name" : pyobj.name, "location" : pyobj.location_geo, "osmid": pyobj.osmid}
+            return {"name" : pyobj.name, "location" : pyobj.location_geo, "osmid": pyobj.osmid, "type" : pyobj.type}
         return JSONEncoder.default(pyobj)
 
 
@@ -68,7 +69,7 @@ class OSMData():
             if 'name' not in barn.tags:
                 ignored_bars += 1
             else:
-                bar = Bar(barn.tags['name'], geo=(float(barn.lon),  float(barn.lat)), osmid=barn.id)
+                bar = Bar(barn.tags['name'], geo=(float(barn.lon),  float(barn.lat)), osmid=barn.id, type=barn.tags['amenity'])
                 self.bars.append(bar)
 
         logging.debug("loaded %d bars, ignored %d that had no name", len(self.bars), ignored_bars)
