@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:a="http://schemas.android.com/apk/res/android"
           package="net.beeroclock"
-          android:versionCode="1"
-          android:versionName="1.0">
-    <application android:label="dbeer" android:icon="@drawable/icon" android:debuggable="true" android:name=".PintyApp">
-        <activity android:name=".WhereBeerActivity"/>
-        <activity android:name=".AddBeerActivity"/>
-        <activity android:name=".BarDetailActivity"/>
-        <activity android:name=".ActivityGoogleMap" android:theme="@android:style/Theme.NoTitleBar"/>
-        <activity android:name=".BeerTabWidget" android:label="@string/app_name"
-                  android:theme="@android:style/Theme.NoTitleBar">
+          a:versionCode="1"
+          a:versionName="1.0">
+    <application a:label="dbeer" a:icon="@drawable/icon" a:debuggable="true" a:name=".PintyApp">
+        <activity a:name=".WhereBeerActivity"/>
+        <activity a:name=".AddBeerActivity"/>
+        <activity a:name=".BarDetailActivity"/>
+        <activity a:name=".ActivityGoogleMap" a:theme="@android:style/Theme.NoTitleBar"/>
+        <activity a:name=".BeerTabWidget" a:label="@string/app_name"
+                  a:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action a:name="android.intent.action.MAIN"/>
+                <category a:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <uses-library android:name="com.google.android.maps" />
+        <uses-library a:name="com.google.android.maps" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission a:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission a:name="android.permission.ACCESS_MOCK_LOCATION"/>
+    <uses-permission a:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission a:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <uses-permission a:name="android.permission.INTERNET"/>
 
 </manifest>
