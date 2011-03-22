@@ -1,6 +1,8 @@
 package net.beeroclock;
 
+import android.location.Location;
 import android.os.Build;
+import android.util.Log;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
@@ -14,6 +16,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.StringReader;
+import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -24,6 +27,8 @@ import java.util.TreeSet;
  * Time: 9:05 PM
  */
 public class Utils {
+
+    private static final String TAG = "beeroclock.Utils";
 
     /**
      * Parse a hopefully fairly open ended blob of xml that looks like what the beer service supplies.
@@ -38,6 +43,22 @@ public class Utils {
             return parseBarXml_ugly(xmlr);
         }
     }
+
+    public static boolean isViable(Location location, Date d) {
+        if (location == null) {
+            return false;
+        }
+        if (location.getAccuracy() > 1500) {
+            Log.d(TAG, "Tossing out location due to poor accuracy:" + location);
+            return false;
+        }
+        if (location.getTime() < d.getTime() - 60 * 60 * 1000) {
+            Log.d(TAG, "Tossing out location due to old age:" + location);
+            return false;
+        }
+        return true;
+    }
+
 
     private static Set<Bar> parseBarXml_ugly(String xmlr) {
         // fuck.

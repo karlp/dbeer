@@ -65,9 +65,9 @@ public class WhereBeerActivity extends ListActivity {
         Location cLocNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         Location cLocGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         Date d = new Date();
-        if (isViable(cLocGPS, d)) {
+        if (Utils.isViable(cLocGPS, d)) {
             makeUseOfNewLocation(cLocGPS);
-        } else if (isViable(cLocNetwork, d)) {
+        } else if (Utils.isViable(cLocNetwork, d)) {
             makeUseOfNewLocation(cLocNetwork);
         } else {
             // oh well, nothing viable...  FIXME - should update this periodically, letting them know we're still trying...
@@ -138,22 +138,8 @@ public class WhereBeerActivity extends ListActivity {
             lv.setAdapter(arrayAdapter);
             String s = getResources().getString(R.string.where_beer_last_update);
             tvStatus.setText(s + " " + new Date());
+            // Could add proximity alerts here for each bar?
         }
-    }
-
-    private boolean isViable(Location location, Date d) {
-        if (location == null) {
-            return false;
-        }
-        if (location.getAccuracy() > 1500) {
-            Log.d(TAG, "Tossing out location due to poor accuracy:" + location);
-            return false;
-        }
-        if (location.getTime() < d.getTime() - 60 * 60 * 1000) {
-            Log.d(TAG, "Tossing out location due to old age:" + location);
-            return false;
-        }
-        return true;
     }
 
     private void makeUseOfNewLocation(Location location) {
