@@ -1,0 +1,6 @@
+local.properties
+.idea/workspace.xml
+gen/
+out/
+libs/*-javadoc.jar
+libs/*-sources.jar
