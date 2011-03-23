@@ -24,4 +24,7 @@
     <uses-permission a:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
     <uses-permission a:name="android.permission.INTERNET"/>
 
+    <!-- only use this if you are doing perf tracing, on 2.1 or lower... -->
+    <!--<uses-permission a:name="android.permission.WRITE_EXTERNAL_STORAGE"/>-->
+
 </manifest>
