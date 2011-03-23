@@ -21,12 +21,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.text.NumberFormat;
 import java.util.*;
 
 public class WhereBeerActivity extends ListActivity {
@@ -110,13 +117,20 @@ public class WhereBeerActivity extends ListActivity {
             }
             location = locations[0];
             String xmlr;
-            String host = "tera.beeroclock.net";
-
-            Log.i(TAG, "Fetching nearest bar details from: " + host);
-            String uu = String.format("http://%s/nearest.xml/%d?lat=%f&lon=%f", host, 10, location.getLatitude(), location.getLongitude());
 
             HttpClient client = new DefaultHttpClient();
-            HttpGet request = new HttpGet(uu);
+            List<NameValuePair> qparams = new ArrayList<NameValuePair>();
+            qparams.add(new BasicNameValuePair("lat", String.valueOf(location.getLatitude())));
+            qparams.add(new BasicNameValuePair("lon", String.valueOf(location.getLongitude())));
+            URI uri = null;
+            try {
+                uri = URIUtils.createURI("http", "tera.beeroclock.net", -1, "/nearest.xml/10", URLEncodedUtils.format(qparams, "UTF-8"), null);
+            } catch (URISyntaxException e) {
+                Log.e(TAG, "how did this happen?!", e);
+                throw new IllegalStateException("You shouldn't be able to get here!", e);
+            }
+            HttpGet request = new HttpGet(uri);
+
             try {
                 xmlr = client.execute(request, new BasicResponseHandler());
             } catch (IOException e) {
@@ -162,12 +176,14 @@ public class WhereBeerActivity extends ListActivity {
         private Context context;
         private ArrayList<Bar> items;
         private Location here;
+        private NumberFormat integerInstance;
 
         public BarArrayAdapter(Context context, int textViewResourceId, Location here, ArrayList<Bar> objects) {
             super(context, textViewResourceId, objects);
             this.context = context;
             this.items = objects;
             this.here = here;
+            integerInstance = NumberFormat.getIntegerInstance();
         }
 
         @Override
@@ -186,7 +202,9 @@ public class WhereBeerActivity extends ListActivity {
             if (bar != null) {
                 TextView distanceView = (TextView) view.findViewById(R.id.bar_distance);
                 if (distanceView != null) {
-                    distanceView.setText(String.format("%4.1fm", bar.distance));
+                    // Don't use string format on android, just truncate distance to whole meters
+                    // TODO - could use a custom number formatter to display km instead of m?  (geeky overload)
+                    distanceView.setText(integerInstance.format(bar.distance));
                 }
                 TextView nameView = (TextView) view.findViewById(R.id.bar_name);
                 if (nameView != null) {
@@ -208,6 +226,14 @@ public class WhereBeerActivity extends ListActivity {
         }
     }
 
+    /**
+     * Create a drawable pointed in the heading from "here" to the bar.
+     * Ignores the orientation of the device.
+     * This is actually not the performance hog you'd think.  Tested with traceview...
+     * @param here where we are
+     * @param bar the bar of interest
+     * @return a correctly oriented iamge
+     */
     private Drawable makeArrowToBar(Location here, Bar bar) {
         Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_menu_goto);
         // Getting width & height of the given image.
