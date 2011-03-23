@@ -56,6 +56,7 @@ public class ActivityGoogleMap extends MapActivity {
         barOverlay.addBar(bar);
         existingMapOverlays.add(barOverlay);
         mapView.getController().animateTo(makeGeoPoint(bar));
+        mapView.getController().setZoom(16);  // this seems reasonable?
     }
 
     private GeoPoint makeGeoPoint(Bar bar) {
