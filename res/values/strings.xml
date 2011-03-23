@@ -4,7 +4,8 @@
     <string name="where_beer_location_search">Trying to find our current position...</string>
     <string name="where_beer_http_error">Oops, couldn\'t reach the beer server!</string>
     <string name="where_beer_last_update">Last update at: </string>
-    <string name="add_beer">Let\'s add a beer!</string>
+    <string name="add_beer_introduction">Adding a beer helps keep the pricing information up to date for everyone!
+    Just choose a drink, and enter the price in the local currency, and we\'ll handle the rest :)</string>
 
     <string name="tab_title_where">Where\'s beer?</string>
     <string name="tab_title_add">Add beer</string>
@@ -12,4 +13,17 @@
     <string name="bar_detail_show_on_map">Show on map</string>
 
     <string name="toast_wtf">Something\'s wrong, hope you didn\'t see this :(</string>
+    <string name="choose_correct_bar_instructions">You\'re really close to more than one bar! Where are you?</string>
+    <string name="toast_add_price_thanks">Done! Thanks!</string>
+    <string name="add_pricing_price_label">price</string>
+    <string name="add_pricing_instructions_initial">Choose the drink, and enter a price!</string>
+    <string name="add_beer_btn_confirm">Send pricing!</string>
+    <string-array name="drink_options">
+        <!-- I really want this to have ids as well, not rely on preserving the order here to have the keys, later! -->
+        <item>Basic large beer (tap)</item>
+        <item>Premium large beer (tap)</item>
+        <item>Basic shot</item>
+        <item>Basic bottled beer (small)</item>
+        <item>Premium bottled beer (small)</item>
+    </string-array>
 </resources>

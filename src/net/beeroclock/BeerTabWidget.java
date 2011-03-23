@@ -36,7 +36,7 @@ public class BeerTabWidget extends TabActivity {
         tabHost.addTab(spec);
 
         // Do the same for the other tabs
-        intent = new Intent().setClass(this, AddBeerActivity.class);
+        intent = new Intent().setClass(this, ConfirmBarActivity.class);
         spec = tabHost.newTabSpec("add").setIndicator(res.getString(R.string.tab_title_add),
                 res.getDrawable(R.drawable.ic_tab_addbeer))
                 .setContent(intent);

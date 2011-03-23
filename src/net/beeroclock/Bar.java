@@ -1,5 +1,6 @@
 package net.beeroclock;
 
+import android.location.Location;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -24,6 +25,7 @@ public class Bar implements Comparable<Bar> {
     public static final String OSM_ID = "osm_id";
     public static final String LONGITUDE = "longitude";
     public static final String LATITUDE = "latitude";
+    public static final String OSM_ID_SET = "osm_id_set";
 
     public Bar() {
     }
@@ -87,5 +89,12 @@ public class Bar implements Comparable<Bar> {
                 ", distance=" + distance +
                 ", prices=" + prices +
                 '}';
+    }
+
+    public Location toLocation() {
+        Location l = new Location("bar.auto");
+        l.setLatitude(this.lat);
+        l.setLongitude(this.lon);
+        return l;
     }
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+              a:layout_width="fill_parent"
+              a:layout_height="fill_parent"
+              a:orientation="vertical"
+        >
+    <TextView a:id="@+id/add_pricing_instructions"
+              a:layout_height="wrap_content"
+              a:layout_width="fill_parent"
+              a:text="@string/add_pricing_instructions_initial"
+              a:textSize="20sp"
+              a:textStyle="bold"
+            />
+    <Spinner a:id="@+id/add_pricing_drink_spinner"
+             a:layout_height="wrap_content"
+             a:layout_width="fill_parent"
+            />
+    <EditText a:id="@+id/add_pricing_price"
+              a:layout_height="wrap_content"
+              a:layout_width="fill_parent"
+              a:inputType="numberDecimal"
+            />
+    <Button a:id="@+id/add_pricing_btn_confirm"
+            a:layout_width="fill_parent"
+            a:layout_height="wrap_content"
+            a:gravity="center"
+            a:text="@string/add_beer_btn_confirm"
+            a:onClick="submitPrice"
+            />
+</LinearLayout>

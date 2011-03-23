@@ -1,8 +1,8 @@
 package net.beeroclock;
 
 import android.app.Application;
+import android.location.Location;
 
-import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -18,6 +18,7 @@ public class PintyApp extends Application {
 
     // Probably should become a map, or at least provide ways of getting certain bars back out again...
     private Set<Bar> knownBars;
+    private Location lastLocation;
 
     public PintyApp() {
         this.knownBars = new TreeSet<Bar>();
@@ -34,5 +35,13 @@ public class PintyApp extends Application {
             }
         }
         return null;
+    }
+
+    public Location getLastLocation() {
+        return lastLocation;
+    }
+
+    public void setLastLocation(Location lastLocation) {
+        this.lastLocation = lastLocation;
     }
 }

@@ -13,14 +13,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -40,11 +38,12 @@ public class WhereBeerActivity extends ListActivity {
 
     public static final String TAG = "WhereBeerActivity";
     private TextView tvStatus;
-    private Location lastLocation;
+    PintyApp pinty;
     private static final float DISTANCE_JITTER = 30.0f;
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
+//        Debug.stopMethodTracing();
         super.onListItemClick(l, v, position, id);    //To change body of overridden methods use File | Settings | File Templates.
         Intent i = new Intent(this, BarDetailActivity.class);
         Bar b = (Bar) v.getTag(R.id.tag_bar);
@@ -57,13 +56,14 @@ public class WhereBeerActivity extends ListActivity {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+//        Debug.startMethodTracing("wherebeer");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wherebeer);
-
+        pinty = (PintyApp)getApplication();
         tvStatus = (TextView) findViewById(R.id.where_status);
 
         // Acquire a reference to the system Location Manager
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
 
         // First off, use the cached location, to get something up and running...
         // If either of them are too old, or too inaccurate, toss them..
@@ -84,6 +84,8 @@ public class WhereBeerActivity extends ListActivity {
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 // Called when a new location is found by the network location provider.
+                Toast t = Toast.makeText(WhereBeerActivity.this, "wba.loc update: " + location.getProvider(), Toast.LENGTH_LONG);
+                t.show();
                 makeUseOfNewLocation(location);
             }
 
@@ -152,7 +154,6 @@ public class WhereBeerActivity extends ListActivity {
             tvStatus.setText(s + " " + new Date());
 
             // save the bars to our application's current set of bars...
-            PintyApp pinty = (PintyApp)getApplication();
             pinty.getKnownBars().addAll(bars);
 
             // TODO - Could add proximity alerts here for each bar?
@@ -160,15 +161,15 @@ public class WhereBeerActivity extends ListActivity {
     }
 
     private void makeUseOfNewLocation(Location location) {
-        if (lastLocation != null) {
-            float newDelta = lastLocation.distanceTo(location);
+        if (pinty.getLastLocation() != null) {
+            float newDelta = pinty.getLastLocation().distanceTo(location);
             if ( newDelta < DISTANCE_JITTER) {
                 // FIXME - this should do some checking on accuracy, and provider of the new location too...
                 Log.d(TAG, "Ignoring new location, it's too close to the old one: " + newDelta);
                 return;
             }
         }
-        lastLocation = location;
+        pinty.setLastLocation(location);
         new BarServiceFetcher().execute(location);
     }
 
