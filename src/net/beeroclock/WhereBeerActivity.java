@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIUtils;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -135,10 +136,13 @@ public class WhereBeerActivity extends ListActivity {
 
             try {
                 xmlr = client.execute(request, new BasicResponseHandler());
+            } catch (HttpResponseException e) {
+                Log.e(TAG, e.getStatusCode() + "-" + e.getMessage(), e);
+                return new TreeSet<Bar>();
             } catch (IOException e) {
                 // FIXME - this is not really very pretty...
                 // FIXME - how to notify the user here?
-                Log.e(TAG, "Http connection error: " + e.getMessage(), e);
+                Log.e(TAG, "Crazy error" + e.getMessage(), e);
                 return new TreeSet<Bar>();
             }
             return Utils.parseBarXml(xmlr);
