@@ -2,13 +2,12 @@
 <manifest xmlns:a="http://schemas.android.com/apk/res/android"
           package="net.beeroclock.dbeer"
           a:versionCode="1"
-          a:versionName="1.0">
+          a:versionName="0.2">
     <application a:label="@string/app_name" a:icon="@drawable/icon" a:debuggable="true" a:name=".PintyApp">
         <activity a:name=".activities.BarDetailActivity"/>
         <activity a:name=".activities.AddPricingActivity"/>
         <activity a:name=".activities.ActivityGoogleMap" a:theme="@android:style/Theme.NoTitleBar"/>
-        <activity a:name=".activities.WhereBeerActivity" a:label="@string/app_name"
-                  a:theme="@android:style/Theme.NoTitleBar">
+        <activity a:name=".activities.WhereBeerActivity" a:label="@string/app_name">
             <intent-filter>
                 <action a:name="android.intent.action.MAIN"/>
                 <category a:name="android.intent.category.LAUNCHER"/>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Beer Finder</string>
+    <string name="where_beer_header">Bars nearby</string>
     <string name="where_beer_location_search">No idea where we are right now, waiting for better information on our location.</string>
     <string name="where_beer_http_error">Oops, couldn\'t reach the beer server!</string>
     <string name="where_beer_last_update">Last update at: </string>
@@ -11,12 +12,14 @@
 
     <string name="toast_wtf">Something\'s wrong, hope you didn\'t see this :(</string>
     <string name="toast_add_price_thanks">Done! Thanks!</string>
+
     <string name="add_pricing_instructions_initial">Adding a beer helps keep the pricing information up to date for everyone!</string>
     <string name="add_beer_btn_confirm">Send pricing!</string>
     <string name="add_beer_btn_retry">Retry</string>
     <string name="add_pricing_price_label">Price\n(local currency)</string>
     <string name="add_pricing_spinner_label">Drink</string>
     <string name="add_price_failure">Epic fail...:(</string>
+
     <string-array name="drink_options_raw">
         <!--
          Don't fuck with the numbers before the ; !! those match up with drink descriptions on the server and so on.
