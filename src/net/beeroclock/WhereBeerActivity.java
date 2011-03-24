@@ -251,7 +251,11 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
      * @param bars the bars to display, assumed to be in increasing order of distance from "here"
      */
     private void displayBarsForLocation(Location location, Set<Bar> bars) {
-        BarArrayAdapter arrayAdapter = new BarArrayAdapter(this, R.layout.where_row_item, location, new ArrayList<Bar>(bars));
+        ArrayList<Bar> sortedBars = new ArrayList<Bar>(bars);
+        // This is probably bogus, it doesn't update the distance based on here, just sorts on where they were...
+        // (Which gets updated every time we get a web request, so that's ok?
+        Collections.sort(sortedBars, Bar.makeDistanceComparator());
+        BarArrayAdapter arrayAdapter = new BarArrayAdapter(this, R.layout.where_row_item, location, sortedBars);
         ListView lv = getListView();
         lv.setAdapter(arrayAdapter);
         String s = getResources().getString(R.string.where_beer_last_update);

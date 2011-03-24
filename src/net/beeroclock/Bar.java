@@ -95,7 +95,7 @@ public class Bar implements Comparable<Bar> {
      * you'll get very unhappy results, (like throwing out anything that has the same distance)
      * @return a distance only sorter for bars
      */
-    public Comparator<Bar> makeDistanceComparator() {
+    public static Comparator<Bar> makeDistanceComparator() {
         return new Comparator<Bar>() {
             public int compare(Bar bar, Bar bar1) {
                 return bar.distance.compareTo(bar1.distance);
