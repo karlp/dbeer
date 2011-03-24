@@ -40,6 +40,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
 
     public static final String TAG = "WhereBeerActivity";
     private TextView tvStatus;
+    private ImageView headerImage;
     PintyApp pinty;
     LocationManager locationManager;
 
@@ -63,6 +64,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         setContentView(R.layout.wherebeer);
         pinty = (PintyApp)getApplication();
         tvStatus = (TextView) findViewById(R.id.where_status);
+        headerImage = (ImageView) findViewById(R.id.where_image);
 
         // Acquire a reference to the system Location Manager
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
@@ -229,6 +231,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         @Override
         protected void onPostExecute(Set<Bar> bars) {
             super.onPostExecute(bars);
+            headerImage.setImageDrawable(getResources().getDrawable(R.drawable.emo_im_happy));
             displayBarsForLocation(location, bars);
 
             // TODO - Could add proximity alerts here for each bar?
@@ -262,6 +265,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     private void useGoodNewLocation(Location location) {
         Log.i(TAG, "updating location and fetching for:" + location);
         pinty.setLastLocation(location);
+
         new BarServiceFetcher().execute(location);
     }
 
