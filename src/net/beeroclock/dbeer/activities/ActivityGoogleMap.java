@@ -1,12 +1,14 @@
-package net.beeroclock;
+package net.beeroclock.dbeer.activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.os.Bundle;
 import android.widget.Toast;
 import com.google.android.maps.*;
+import net.beeroclock.dbeer.models.Bar;
+import net.beeroclock.dbeer.PintyApp;
+import net.beeroclock.dbeer.R;
 
 import java.util.ArrayList;
 import java.util.List;

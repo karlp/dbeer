@@ -1,7 +1,8 @@
-package net.beeroclock;
+package net.beeroclock.dbeer;
 
 import android.app.Application;
 import android.location.Location;
+import net.beeroclock.dbeer.models.Bar;
 
 import java.util.ArrayList;
 import java.util.Set;

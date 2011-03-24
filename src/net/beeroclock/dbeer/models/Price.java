@@ -1,4 +1,4 @@
-package net.beeroclock;
+package net.beeroclock.dbeer.models;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.EqualsBuilder;

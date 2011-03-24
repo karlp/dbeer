@@ -1,4 +1,4 @@
-package net.beeroclock;
+package net.beeroclock.dbeer.activities;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -19,6 +19,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import net.beeroclock.dbeer.models.Bar;
+import net.beeroclock.dbeer.PintyApp;
+import net.beeroclock.dbeer.R;
+import net.beeroclock.dbeer.Utils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -227,6 +231,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
             try {
                 xmlr = client.execute(request, new BasicResponseHandler());
             } catch (HttpResponseException e) {
+                // TODO - should invalidate the position somehow, so it gets refetched?
                 Log.e(TAG, e.getStatusCode() + "-" + e.getMessage(), e);
                 return new TreeSet<Bar>();
             } catch (IOException e) {

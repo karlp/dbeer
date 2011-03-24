@@ -1,4 +1,4 @@
-package net.beeroclock;
+package net.beeroclock.dbeer.models;
 
 import android.location.Location;
 import org.apache.commons.lang.builder.CompareToBuilder;

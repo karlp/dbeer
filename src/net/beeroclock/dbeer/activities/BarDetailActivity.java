@@ -1,4 +1,4 @@
-package net.beeroclock;
+package net.beeroclock.dbeer.activities;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -8,6 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import net.beeroclock.dbeer.models.Bar;
+import net.beeroclock.dbeer.PintyApp;
+import net.beeroclock.dbeer.models.Price;
+import net.beeroclock.dbeer.R;
 
 import java.util.ArrayList;
 

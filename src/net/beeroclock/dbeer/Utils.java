@@ -1,6 +1,8 @@
-package net.beeroclock;
+package net.beeroclock.dbeer;
 
 import android.os.Build;
+import net.beeroclock.dbeer.models.Bar;
+import net.beeroclock.dbeer.models.Price;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;

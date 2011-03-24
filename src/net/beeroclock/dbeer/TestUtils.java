@@ -1,9 +1,9 @@
-package net.beeroclock;
+package net.beeroclock.dbeer;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import net.beeroclock.dbeer.models.Bar;
+import net.beeroclock.dbeer.models.Price;
 import org.junit.Test;
 
-import java.net.URLDecoder;
 import java.util.Set;
 import java.util.TreeSet;
 

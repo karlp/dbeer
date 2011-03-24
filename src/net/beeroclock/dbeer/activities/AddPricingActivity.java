@@ -1,10 +1,13 @@
-package net.beeroclock;
+package net.beeroclock.dbeer.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
+import net.beeroclock.dbeer.models.Bar;
+import net.beeroclock.dbeer.PintyApp;
+import net.beeroclock.dbeer.R;
 import org.apache.commons.lang.StringUtils;
 
 /**
