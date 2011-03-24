@@ -3,6 +3,7 @@ package net.beeroclock;
 import android.app.Application;
 import android.location.Location;
 
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -19,6 +20,10 @@ public class PintyApp extends Application {
     // Probably should become a map, or at least provide ways of getting certain bars back out again...
     private Set<Bar> knownBars;
     private Location lastLocation;
+    // These are really a double array of constants, that match the remote server.
+    // but android's resource model only gives us single arrays.
+    public ArrayList<String> drinkNames;
+    public ArrayList<Integer> drinkExternalIds;
 
     public PintyApp() {
         this.knownBars = new TreeSet<Bar>();

@@ -15,12 +15,17 @@
     <string name="add_beer_btn_confirm">Send pricing!</string>
     <string name="add_pricing_price_label">Price\n(local currency)</string>
     <string name="add_pricing_spinner_label">Drink</string>
-    <string-array name="drink_options">
-        <!-- I really want this to have ids as well, not rely on preserving the order here to have the keys, later! -->
-        <item>Basic large beer (tap)</item>
-        <item>Premium large beer (tap)</item>
-        <item>Basic shot</item>
-        <item>Basic bottled beer (small)</item>
-        <item>Premium bottled beer (small)</item>
+    <string-array name="drink_options_raw">
+        <!--
+         Don't fuck with the numbers before the ; !! those match up with drink descriptions on the server and so on.
+         This let's new drinks be added, and orders changed, and users to remove certain choices altogether.
+         We parse this list a bootup and then just keep it...
+         (TODO, could we... just keep it in preferences?...)
+         -->
+        <item>1;Basic large beer (tap)</item>
+        <item>2;Premium large beer (tap)</item>
+        <item>3;Basic shot</item>
+        <item>4;Basic bottled beer (small)</item>
+        <item>5;Premium bottled beer (small)</item>
     </string-array>
 </resources>

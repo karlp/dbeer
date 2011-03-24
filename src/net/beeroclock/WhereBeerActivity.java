@@ -73,6 +73,16 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 5, this);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 5, this);
         tvStatus.setText(R.string.where_beer_location_search);
+
+        // Parse raw drink options... may need to push this to a background task...
+        String[] raw_drink_options = getResources().getStringArray(R.array.drink_options_raw);
+        pinty.drinkNames = new ArrayList<String>();
+        pinty.drinkExternalIds = new ArrayList<Integer>();
+        for (String row : raw_drink_options) {
+            String[] bits = row.split(";", 2);  // allow drinks to contain ; if they really want.
+            pinty.drinkExternalIds.add(Integer.valueOf(bits[0]));
+            pinty.drinkNames.add(bits[1]);
+        }
     }
 
     @Override
