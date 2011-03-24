@@ -5,6 +5,7 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -19,7 +20,7 @@ public class Bar implements Comparable<Bar> {
     public long osmid;
     public double lat;
     public double lon;
-    public Double distance;
+    public Double distance;  // The whole idea of this distance being reliable is INSANE!
     public Set<Price> prices = new TreeSet<Price>();
 
     public static final String OSM_ID = "osm_id";
@@ -37,6 +38,7 @@ public class Bar implements Comparable<Bar> {
         this.osmid = osmid;
     }
 
+    // Compare on the physical aspects of the bar, ie, not on distance or price details, which change
     @Override
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder();
@@ -44,10 +46,10 @@ public class Bar implements Comparable<Bar> {
         hcb.append(osmid);
         hcb.append(lat);
         hcb.append(lon);
-        hcb.append(distance);
         return hcb.toHashCode();
     }
 
+    // Compare on the physical aspects of the bar, ie, not on distance or price details, which change
     @Override
     public boolean equals(Object o) {
         if (o instanceof Bar) {
@@ -57,25 +59,22 @@ public class Bar implements Comparable<Bar> {
             eb.append(this.osmid, that.osmid);
             eb.append(this.lat, that.lat);
             eb.append(this.lon, that.lon);
-            eb.append(this.distance, that.distance);
             return eb.isEquals();
         }
         return false;
     }
 
     /**
-     * Sorts on distance first!
+     * Compare on the physical aspects of the bar, ie, not on distance or price details, which change
      * @param bar the other bar
      * @return you know, what compareTo normally does!
      */
     public int compareTo(Bar bar) {
         CompareToBuilder ctb = new CompareToBuilder();
-        ctb.append(this.distance, bar.distance);
         ctb.append(this.name, bar.name);
         ctb.append(this.osmid, bar.osmid);
         ctb.append(this.lat, bar.lat);
         ctb.append(this.lon, bar.lon);
-        // XXX skip the prices?
         return ctb.toComparison();
     }
 
@@ -89,6 +88,19 @@ public class Bar implements Comparable<Bar> {
                 ", distance=" + distance +
                 ", prices=" + prices +
                 '}';
+    }
+
+    /**
+     * A Comparator to sort _only_ on distance. DO NOT use this to sort things in a set,
+     * you'll get very unhappy results, (like throwing out anything that has the same distance)
+     * @return a distance only sorter for bars
+     */
+    public Comparator<Bar> makeDistanceComparator() {
+        return new Comparator<Bar>() {
+            public int compare(Bar bar, Bar bar1) {
+                return bar.distance.compareTo(bar1.distance);
+            }
+        };
     }
 
     public Location toLocation() {
