@@ -24,7 +24,7 @@ public class PintyApp extends Application {
     // These are really a double array of constants, that match the remote server.
     // but android's resource model only gives us single arrays.
     public ArrayList<String> drinkNames;
-    public ArrayList<Integer> drinkExternalIds;
+    public ArrayList<Long> drinkExternalIds;
 
     public PintyApp() {
         this.knownBars = new TreeSet<Bar>();
