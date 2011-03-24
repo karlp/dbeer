@@ -11,9 +11,10 @@
 
     <string name="toast_wtf">Something\'s wrong, hope you didn\'t see this :(</string>
     <string name="toast_add_price_thanks">Done! Thanks!</string>
-    <string name="add_pricing_instructions_initial">Adding a beer helps keep the pricing information up to date for everyone!\n\n
-    Just choose a drink, and enter the price in the local currency, and we\'ll handle the rest :)</string>
+    <string name="add_pricing_instructions_initial">Adding a beer helps keep the pricing information up to date for everyone!</string>
     <string name="add_beer_btn_confirm">Send pricing!</string>
+    <string name="add_pricing_price_label">Price\n(local currency)</string>
+    <string name="add_pricing_spinner_label">Drink</string>
     <string-array name="drink_options">
         <!-- I really want this to have ids as well, not rely on preserving the order here to have the keys, later! -->
         <item>Basic large beer (tap)</item>

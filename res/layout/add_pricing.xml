@@ -11,17 +11,38 @@
               a:text="@string/add_pricing_instructions_initial"
               a:textSize="20sp"
               a:textStyle="bold"
+              a:padding="5sp"
             />
-    <Spinner a:id="@+id/add_pricing_drink_spinner"
-             a:layout_height="wrap_content"
-             a:layout_width="fill_parent"
-            />
-    <EditText a:id="@+id/add_pricing_price"
-              a:layout_height="wrap_content"
-              a:layout_width="fill_parent"
-              a:inputType="numberDecimal"
-              a:imeOptions="actionDone"
-            />
+    <RelativeLayout a:layout_height="wrap_content" a:layout_width="fill_parent">
+        <TextView a:id="@+id/add_pricing_spinner_label"
+                  a:layout_height="wrap_content"
+                  a:layout_width="wrap_content"
+                  a:text="@string/add_pricing_spinner_label"
+                  a:padding="2sp"
+                  a:gravity="center"
+                />
+        <Spinner a:id="@+id/add_pricing_drink_spinner"
+                 a:layout_height="wrap_content"
+                 a:layout_width="fill_parent"
+                 a:layout_toRightOf="@id/add_pricing_spinner_label"
+                />
+    </RelativeLayout>
+    <RelativeLayout a:layout_height="wrap_content" a:layout_width="fill_parent">
+        <TextView a:id="@+id/add_pricing_price_label"
+                  a:layout_height="wrap_content"
+                  a:layout_width="wrap_content"
+                  a:text="@string/add_pricing_price_label"
+                  a:padding="2sp"
+                  a:gravity="center"
+                />
+        <EditText a:id="@+id/add_pricing_price"
+                  a:layout_height="wrap_content"
+                  a:layout_width="fill_parent"
+                  a:layout_toRightOf="@id/add_pricing_price_label"
+                  a:inputType="numberDecimal"
+                  a:imeOptions="actionDone"
+                />
+    </RelativeLayout>
     <Button a:id="@+id/add_pricing_btn_confirm"
             a:layout_width="fill_parent"
             a:layout_height="wrap_content"
