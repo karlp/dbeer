@@ -42,7 +42,6 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     private TextView tvStatus;
     PintyApp pinty;
     LocationManager locationManager;
-    private static final float DISTANCE_JITTER = 30.0f;
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -71,6 +70,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         // Register ourselves for any sort of location update
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 5, this);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 5, this);
+        tvStatus.setText(R.string.where_beer_location_search);
     }
 
     @Override
@@ -106,10 +106,6 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     }
 
     public void onLocationChanged(Location location) {
-        // Called when a new location is found by the network location provider.
-        Toast t = Toast.makeText(WhereBeerActivity.this, "wba.loc update: " + location.getProvider(), Toast.LENGTH_SHORT);
-        t.show();
-
         // TODO - Need to have some sort of decision on whether this is a useful location or not?
         // no point in continually fetching web resources?
         // As long as we're good enough at maintaining our local state, shouldn't be any reason to refetch, unless we've actually moved....
@@ -207,7 +203,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
             List<NameValuePair> qparams = new ArrayList<NameValuePair>();
             qparams.add(new BasicNameValuePair("lat", String.valueOf(location.getLatitude())));
             qparams.add(new BasicNameValuePair("lon", String.valueOf(location.getLongitude())));
-            URI uri = null;
+            URI uri;
             try {
                 uri = URIUtils.createURI("http", "tera.beeroclock.net", -1, "/nearest.xml/10", URLEncodedUtils.format(qparams, "UTF-8"), null);
             } catch (URISyntaxException e) {
