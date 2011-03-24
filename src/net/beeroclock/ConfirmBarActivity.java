@@ -64,7 +64,7 @@ public class ConfirmBarActivity extends Activity {
             // redirect them to osm to add the bar?  (that's what I want)
             // allow them to report a price anyway, and I just keep it
             // I do _not_ want to get into auto adding data to OSM
-            Toast t = Toast.makeText(this, "You don't seem to be in a bar right now?", Toast.LENGTH_SHORT);
+            Toast t = Toast.makeText(this, R.string.toast_not_in_a_bar, Toast.LENGTH_SHORT);
             t.show();
             // show the nearest bars list again? (by intenting back to the where beers tab)
             // or do I want to give them an option to add a price if there is a bar within X * 2 m? (for when our radius is off?)

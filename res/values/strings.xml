@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Beer Finder</string>
-    <string name="where_beer_location_search">Trying to find our current position...</string>
+    <string name="where_beer_location_search">No idea where we are right now, waiting for better information on our location.</string>
     <string name="where_beer_http_error">Oops, couldn\'t reach the beer server!</string>
     <string name="where_beer_last_update">Last update at: </string>
     <string name="add_beer_introduction">Adding a beer helps keep the pricing information up to date for everyone!
@@ -18,6 +18,7 @@
     <string name="add_pricing_price_label">price</string>
     <string name="add_pricing_instructions_initial">Choose the drink, and enter a price!</string>
     <string name="add_beer_btn_confirm">Send pricing!</string>
+    <string name="toast_not_in_a_bar">You don\'t seem to be in a bar right now?</string>
     <string-array name="drink_options">
         <!-- I really want this to have ids as well, not rely on preserving the order here to have the keys, later! -->
         <item>Basic large beer (tap)</item>

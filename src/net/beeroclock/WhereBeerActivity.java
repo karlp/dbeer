@@ -13,12 +13,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Debug;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
@@ -35,11 +36,12 @@ import java.net.URISyntaxException;
 import java.text.NumberFormat;
 import java.util.*;
 
-public class WhereBeerActivity extends ListActivity {
+public class WhereBeerActivity extends ListActivity implements LocationListener {
 
     public static final String TAG = "WhereBeerActivity";
     private TextView tvStatus;
     PintyApp pinty;
+    LocationManager locationManager;
     private static final float DISTANCE_JITTER = 30.0f;
 
     @Override
@@ -64,48 +66,128 @@ public class WhereBeerActivity extends ListActivity {
         tvStatus = (TextView) findViewById(R.id.where_status);
 
         // Acquire a reference to the system Location Manager
-        LocationManager locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
 
-        // First off, use the cached location, to get something up and running...
-        // If either of them are too old, or too inaccurate, toss them..
-        Location cLocNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        Location cLocGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        Date d = new Date();
-        if (Utils.isViable(cLocGPS, d)) {
-            makeUseOfNewLocation(cLocGPS);
-        } else if (Utils.isViable(cLocNetwork, d)) {
-            makeUseOfNewLocation(cLocNetwork);
-        } else {
-            // oh well, nothing viable...  FIXME - should update this periodically, letting them know we're still trying...
-            tvStatus.setText(R.string.where_beer_location_search);
+        // Register ourselves for any sort of location update
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 5, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 5, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // do we already know sort of where we are?
+        // if we do, make sure to update our display!
+        if (pinty.getLastLocation() != null && !pinty.getKnownBars().isEmpty()) {
+            Log.i(TAG, "resuming and reusing cached location and bars");
+            displayBarsForLocation(pinty.getLastLocation(), pinty.getKnownBars());
+            return;
         }
 
-        List l = locationManager.getAllProviders();
-        // Define a listener that responds to location updates
-        LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                // Called when a new location is found by the network location provider.
-                Toast t = Toast.makeText(WhereBeerActivity.this, "wba.loc update: " + location.getProvider(), Toast.LENGTH_LONG);
-                t.show();
-                makeUseOfNewLocation(location);
-            }
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-
-            public void onProviderEnabled(String provider) {
-            }
-
-            public void onProviderDisabled(String provider) {
-            }
-        };
-
-        // Register the listener with the Location Manager to receive location updates
-        // Register for both!
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-        // emulator has gps, but no network?!
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        // if not,  work out where we are, and try to update our list of bars!
+        Location cLocNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        Location cLocGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (isBetterLocation(cLocGPS, null)) {
+            useGoodNewLocation(cLocGPS);
+        } else if (isBetterLocation(cLocNetwork, cLocGPS)) {
+            useGoodNewLocation(cLocNetwork);
+        } else {
+            // oh well, nothing viable...  FIXME - should update this periodically, letting them know we're still trying...
+            // Can we even do that? we're registered for updates, that's about as good as we can do!
+            tvStatus.setText(R.string.where_beer_location_search);
+        }
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        locationManager.removeUpdates(this);
+        // keep pinty.knownBars though, we can fetch it again if we are killed, and there's no reason to remove bars once we learn of them....
+    }
+
+    public void onLocationChanged(Location location) {
+        // Called when a new location is found by the network location provider.
+        Toast t = Toast.makeText(WhereBeerActivity.this, "wba.loc update: " + location.getProvider(), Toast.LENGTH_SHORT);
+        t.show();
+
+        // TODO - Need to have some sort of decision on whether this is a useful location or not?
+        // no point in continually fetching web resources?
+        // As long as we're good enough at maintaining our local state, shouldn't be any reason to refetch, unless we've actually moved....
+        // if our app has been killed, we'll get the first one here, which _will_ update
+        // android isn't very good really at only sending us updates when it's moved more than 5m.
+        // ...at least with the network provider, works for the gps provider
+        Location lastLocation = pinty.getLastLocation();
+        if (isBetterLocation(location, lastLocation)) {
+            useGoodNewLocation(location);
+        } else {
+            Log.i(TAG, "ignoring new location, it's not as good as the old one: " + location);
+        }
+    }
+
+    /**
+     * Straight from google docs...
+     * http://developer.android.com/guide/topics/location/obtaining-user-location.html
+     * Determines whether one Location reading is better than the current Location fix
+     * (Added a check for new location == null)
+     * @param location  The new Location that you want to evaluate
+     * @param currentBestLocation  The current Location fix, to which you want to compare the new one
+     * @return true if the new location should be considered "better"
+     */
+    protected boolean isBetterLocation(Location location, Location currentBestLocation) {
+        if (location == null) {
+            // no location is never worthwhile
+            return false;
+        }
+
+        if (currentBestLocation == null) {
+            // A new location is always better than no location
+            return true;
+        }
+
+        // Check whether the new location fix is newer or older
+        long timeDelta = location.getTime() - currentBestLocation.getTime();
+        boolean isSignificantlyNewer = timeDelta > 2 * DateUtils.MINUTE_IN_MILLIS;
+        boolean isSignificantlyOlder = timeDelta < -2 * DateUtils.MINUTE_IN_MILLIS;
+        boolean isNewer = timeDelta > 0;
+
+        // If it's been more than two minutes since the current location, use the new location
+        // because the user has likely moved
+        if (isSignificantlyNewer) {
+            return true;
+            // If the new location is more than two minutes older, it must be worse
+        } else if (isSignificantlyOlder) {
+            return false;
+        }
+
+        // Check whether the new location fix is more or less accurate
+        int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+        boolean isLessAccurate = accuracyDelta > 0;
+        boolean isMoreAccurate = accuracyDelta < 0;
+        boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+
+        // Check if the old and new location are from the same provider
+        boolean isFromSameProvider = StringUtils.equals(location.getProvider(), currentBestLocation.getProvider());
+
+        // Determine location quality using a combination of timeliness and accuracy
+        if (isMoreAccurate) {
+            return true;
+        } else if (isNewer && !isLessAccurate) {
+            return true;
+        } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+            return true;
+        }
+        return false;
+    }
+
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
+
+    public void onProviderEnabled(String provider) {
+    }
+
+    public void onProviderDisabled(String provider) {
+    }
+
 
     class BarServiceFetcher extends AsyncTask<Location, Void, Set<Bar>> {
         Location location;
@@ -151,28 +233,34 @@ public class WhereBeerActivity extends ListActivity {
         @Override
         protected void onPostExecute(Set<Bar> bars) {
             super.onPostExecute(bars);
-            BarArrayAdapter arrayAdapter = new BarArrayAdapter(WhereBeerActivity.this, R.layout.where_row_item, location, new ArrayList<Bar>(bars));
-            ListView lv = getListView();
-            lv.setAdapter(arrayAdapter);
-            String s = getResources().getString(R.string.where_beer_last_update);
-            tvStatus.setText(s + " " + new Date());
-
-            // save the bars to our application's current set of bars...
-            pinty.getKnownBars().addAll(bars);
+            displayBarsForLocation(location, bars);
 
             // TODO - Could add proximity alerts here for each bar?
+            // save the bars to our application's current set of bars...
+            // TODO Remember, we have to resort the set of bars, based on our current location!
+            // Still want a set, so I don't get duplicate bars, but probably should resort it a lot more often
+            pinty.getKnownBars().addAll(bars);
         }
+
     }
 
-    private void makeUseOfNewLocation(Location location) {
-        if (pinty.getLastLocation() != null) {
-            float newDelta = pinty.getLastLocation().distanceTo(location);
-            if ( newDelta < DISTANCE_JITTER) {
-                // FIXME - this should do some checking on accuracy, and provider of the new location too...
-                Log.d(TAG, "Ignoring new location, it's too close to the old one: " + newDelta);
-                return;
-            }
-        }
+    /**
+     * Fill the list with the given set of bars, as if we were at the given location.
+     * TODO distance in each bar object might not be up to date?
+     * @param location "here"
+     * @param bars the bars to display, assumed to be in increasing order of distance from "here"
+     */
+    private void displayBarsForLocation(Location location, Set<Bar> bars) {
+        BarArrayAdapter arrayAdapter = new BarArrayAdapter(this, R.layout.where_row_item, location, new ArrayList<Bar>(bars));
+        ListView lv = getListView();
+        lv.setAdapter(arrayAdapter);
+        String s = getResources().getString(R.string.where_beer_last_update);
+        tvStatus.setText(s + " " + new Date());
+    }
+
+
+    private void useGoodNewLocation(Location location) {
+        Log.i(TAG, "updating location and fetching for:" + location);
         pinty.setLastLocation(location);
         new BarServiceFetcher().execute(location);
     }
