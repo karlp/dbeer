@@ -75,4 +75,17 @@ public class PintyApp extends Application {
         }
         return null;
     }
+
+    /**
+     * Because we're dealing with these ugly dual arrays, we need a way to pull right thing out of the names based on the foreign key
+     * @param id external id of the drink name we're looking for
+     * @return drink name
+     */
+    public String getDrinkNameForExternalId(long id) {
+        int i = drinkExternalIds.indexOf(id);
+        if (i == -1) {
+            return null;
+        }
+        return this.drinkNames.get(i);
+    }
 }
