@@ -3,6 +3,8 @@ package net.beeroclock.dbeer;
 import android.app.Application;
 import android.location.Location;
 import net.beeroclock.dbeer.models.Bar;
+import net.beeroclock.dbeer.models.Price;
+import net.beeroclock.dbeer.models.PricingReport;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -49,5 +51,28 @@ public class PintyApp extends Application {
 
     public void setLastLocation(Location lastLocation) {
         this.lastLocation = lastLocation;
+    }
+
+    // simplistically handle updating our local price averages...
+    public void addPricingReport(PricingReport report) {
+        Bar b = getBar(report.barOsmId);
+        Price pp = findPrice(b.prices, report.drinkExternalId);
+        if (pp == null) {
+            pp = new Price(report.drinkExternalId, report.priceInLocalCurrency.doubleValue());
+            b.prices.add(pp);
+        } else {
+            // simplistic average...
+            pp.avgPrice += report.priceInLocalCurrency.doubleValue();
+            pp.avgPrice /= 2;
+        }
+    }
+
+    private Price findPrice(Set<Price> prices, long drinkExternalId) {
+        for (Price p : prices) {
+            if (p.id == drinkExternalId) {
+                return p;
+            }
+        }
+        return null;
     }
 }

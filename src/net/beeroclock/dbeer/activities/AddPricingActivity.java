@@ -121,6 +121,7 @@ public class AddPricingActivity extends Activity {
                 Log.e(TAG, "Crazy error" + e.getMessage(), e);
                 return new ReportStatus(false, e.getMessage());
             }
+            pinty.addPricingReport(report);
             return new ReportStatus(true, xmlr);
         }
 
