@@ -9,18 +9,29 @@
               a:layout_width="fill_parent"
               a:textSize="20sp"
             />
-    <Button a:id="@+id/bar_get_directions_btn"
-            a:layout_height="wrap_content"
-            a:layout_width="wrap_content"
-            a:text="@string/bar_detail_get_directions"
-            a:enabled="false"
-            />
-    <Button a:id="@+id/bar_show_on_map_btn"
-            a:layout_height="wrap_content"
-            a:layout_width="wrap_content"
-            a:text="@string/bar_detail_show_on_map"
-            />
-
+    <RelativeLayout a:layout_height="wrap_content" a:layout_width="wrap_content">
+        <Button a:id="@+id/bar_get_directions_btn"
+                a:layout_height="wrap_content"
+                a:layout_width="wrap_content"
+                a:text="@string/bar_detail_btn_get_directions"
+                a:enabled="false"
+                />
+        <Button a:id="@+id/bar_show_on_map_btn"
+                a:layout_height="wrap_content"
+                a:layout_width="wrap_content"
+                a:layout_toRightOf="@id/bar_get_directions_btn"
+                a:text="@string/bar_detail_btn_show_on_map"
+                a:onClick="onClick_showOnMap"
+                />
+        <Button a:id="@+id/bar_add_price_btn"
+                a:layout_height="wrap_content"
+                a:layout_width="wrap_content"
+                a:layout_toRightOf="@id/bar_show_on_map_btn"
+                a:text="@string/bar_detail_btn_add_pricing"
+                a:enabled="false"
+                a:onClick="onClick_addPrice"
+                />
+    </RelativeLayout>
     <ListView a:id="@+id/android:list"
               a:layout_height="wrap_content"
               a:layout_width="fill_parent"

@@ -4,13 +4,10 @@
           a:versionCode="1"
           a:versionName="1.0">
     <application a:label="dbeer" a:icon="@drawable/icon" a:debuggable="true" a:name=".PintyApp">
-        <activity a:name=".WhereBeerActivity"/>
-        <activity a:name=".ConfirmBarActivity"/>
         <activity a:name=".BarDetailActivity"/>
-        <activity a:name=".ChooseCorrectBarActivity"/>
         <activity a:name=".AddPricingActivity"/>
         <activity a:name=".ActivityGoogleMap" a:theme="@android:style/Theme.NoTitleBar"/>
-        <activity a:name=".BeerTabWidget" a:label="@string/app_name"
+        <activity a:name=".WhereBeerActivity" a:label="@string/app_name"
                   a:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action a:name="android.intent.action.MAIN"/>
@@ -20,13 +17,9 @@
 
         <uses-library a:name="com.google.android.maps" />
     </application>
-    <uses-permission a:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission a:name="android.permission.ACCESS_MOCK_LOCATION"/>
     <uses-permission a:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission a:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
     <uses-permission a:name="android.permission.INTERNET"/>
-
-    <!-- only use this if you are doing perf tracing, on 2.1 or lower... -->
-    <!--<uses-permission a:name="android.permission.WRITE_EXTERNAL_STORAGE"/>-->
 
 </manifest>

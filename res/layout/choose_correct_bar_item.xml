@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<TextView xmlns:a="http://schemas.android.com/apk/res/android"
-          a:id="@+id/choose_correct_bar_item_label"
-              a:layout_width="fill_parent"
-              a:layout_height="fill_parent"
-              a:textSize="20sp"
-              a:gravity="center"
-        />

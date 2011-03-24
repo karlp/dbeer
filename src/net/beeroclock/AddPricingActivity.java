@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.*;
 
 /**
- * To change this template use File | Settings | File Templates.
+ * Handles taking in pricing details, packaging it up for the server, and posting it off.
  *
  * @author Karl Palsson, 2011
  *         Date: 2011-03-23
@@ -19,7 +19,7 @@ public class AddPricingActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);    //To change body of overridden methods use File | Settings | File Templates.
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.add_pricing);
 
         Long barId = getIntent().getExtras().getLong(Bar.OSM_ID);
@@ -48,17 +48,9 @@ public class AddPricingActivity extends Activity {
     }
 
     public void submitPrice(View v) {
-        Toast t = Toast.makeText(this, "hoho, adding a price!", Toast.LENGTH_SHORT);
-        t.show();
-        // now, go allll the way back to nearby bars...
-        // (or, back to add pricing view, let them add another price?)
-        // maybe?
-        // FIXME - This works, but it tosses out the nearby bar list in the application...
-        // Actually, it doesn't seem to, but wherebeeractivity probably doesn't have the right lifecycle to handle it properly
-        Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
-        startActivity(i);
+        // Could get an intent here and add info to return with..
+        setResult(RESULT_OK);
+        finish();
     }
 
 }

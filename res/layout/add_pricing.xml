@@ -20,6 +20,7 @@
               a:layout_height="wrap_content"
               a:layout_width="fill_parent"
               a:inputType="numberDecimal"
+              a:imeOptions="actionDone"
             />
     <Button a:id="@+id/add_pricing_btn_confirm"
             a:layout_width="fill_parent"

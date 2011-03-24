@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent" android:orientation="vertical">
-    <TextView android:id="@+id/where_status"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"/>
-    <ListView android:id="@+id/android:list"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"/>
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+              a:layout_width="fill_parent"
+              a:layout_height="fill_parent" a:orientation="vertical">
+    <ImageView a:id="@+id/where_image"
+               a:layout_height="wrap_content"
+               a:layout_width="wrap_content"
+               a:layout_gravity="center"
+               a:src="@drawable/ic_tab_where_selected"
+               />
+    <TextView a:id="@+id/where_status"
+            a:layout_height="wrap_content"
+            a:layout_width="wrap_content"/>
+    <ListView a:id="@+id/android:list"
+              a:layout_width="fill_parent"
+              a:layout_height="wrap_content"
+            />
 </LinearLayout>
