@@ -15,14 +15,13 @@ from flask import request, abort, Response, render_template
 from dbeer import app
 import models
 
+log = logging.getLogger("dbeer.views")
+
 config = {
     'results_limit' : 20
 }
 
 full_prices = {}
-
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(levelname)s %(name)s - %(message)s")
-log = logging.getLogger("main")
 
 @app.route("/status")
 def status():
@@ -142,6 +141,6 @@ def bars_nearest(num=3, tjson=False, txml=False):
         return Response(render_template("bars.xml", bars=results), content_type="application/xml; charset=utf-8", )
 
 
-file = ("iceland.pubsandfriends.osm")
+#file = ("iceland.pubsandfriends.osm")
 file = ("europe.pubsandfriends.osm")
 od = models.OSMData(filename = file)  ## should only load it once..

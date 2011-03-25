@@ -9,13 +9,7 @@ import logging
 
 import pyosm
 
-
-class NullHandler(logging.Handler):
-    def emit(self, record):
-        pass
-
-h = NullHandler()
-logging.getLogger("dbeer.services.models").addHandler(h)
+log = logging.getLogger("dbeer.models")
 
 class Bar:
     """
@@ -60,9 +54,9 @@ class OSMData():
     bars = []
 
     def __init__(self, filename):
-        logging.debug("Starting to parse osm dump")
+        log.debug("Starting to parse osm dump")
         osm = pyosm.OSMXMLFile(filename=filename)
-        logging.debug("Loaded osm dump")
+        log.debug("Loaded osm dump")
 
         ignored_bars = 0
         for barn in osm.nodes.values():
@@ -72,7 +66,7 @@ class OSMData():
                 bar = Bar(barn.tags['name'], geo=(float(barn.lon),  float(barn.lat)), osmid=barn.id, type=barn.tags['amenity'])
                 self.bars.append(bar)
 
-        logging.debug("loaded %d bars, ignored %d that had no name", len(self.bars), ignored_bars)
+        log.debug("loaded %d bars, ignored %d that had no name", len(self.bars), ignored_bars)
 
     def by_osmid(self, osmid):
         for barn in self.bars:
