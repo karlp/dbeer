@@ -6,16 +6,21 @@
 __author__="karl"
 __date__ ="$Mar 15, 2011 7:24:21 PM$"
 
-import json
 import logging
+log = logging.getLogger("dbeer.views")
+
 import random
 import time
+
+## python 2.5 workarounds (works for GAE 1.4.2+ as well)
+try:
+    import json
+except:
+    import simplejson as json
 
 from flask import request, abort, Response, render_template
 from dbeer import app
 import models
-
-log = logging.getLogger("dbeer.views")
 
 config = {
     'results_limit' : 20
@@ -140,7 +145,6 @@ def bars_nearest(num=3, tjson=False, txml=False):
     if txml:
         return Response(render_template("bars.xml", bars=results), content_type="application/xml; charset=utf-8", )
 
-
-#file = ("iceland.pubsandfriends.osm")
-file = ("europe.pubsandfriends.osm")
+file = ("iceland.pubsandfriends.osm")
+#file = ("europe.pubsandfriends.osm")
 od = models.OSMData(filename = file)  ## should only load it once..

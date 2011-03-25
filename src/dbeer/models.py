@@ -55,7 +55,11 @@ class OSMData():
 
     def __init__(self, filename):
         log.debug("Starting to parse osm dump")
-        osm = pyosm.OSMXMLFile(filename=filename)
+        try:
+            osm = pyosm.OSMXMLFile(filename=filename)
+        except IOError, exx:
+            log.error("EPIC FAIL: couldn't parse the osm file %s" % exx)
+            return
         log.debug("Loaded osm dump")
 
         ignored_bars = 0
