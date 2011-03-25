@@ -1,9 +1,13 @@
 from flask import Flask
 import models
+import logging
 
-def load_files():
-    file = ("iceland.pubsandfriends.osm")
-    return models.OSMData(filename = file)  ## should only load it once..
+log = logging.getLogger("dbeer.app")
+
+def load_file(input_od, filename):
+    log.info("Loading %s...", filename)
+    input_od.add_file(filename)
+    log.info("Finished loading %s, now have %d bars", filename, len(input_od.bars))
 
 config = {
     'results_limit' : 20
@@ -12,6 +16,11 @@ config = {
 app = Flask("dbeer-services")
 app.debug = True
 
-od = load_files()
+od = models.OSMData()
+load_file(od, "europe.pubsandfriends.osm.001")
+load_file(od, "europe.pubsandfriends.osm.002")
+load_file(od, "europe.pubsandfriends.osm.003")
+load_file(od, "europe.pubsandfriends.osm.004")
+load_file(od, "europe.pubsandfriends.osm.005")
 
 import views

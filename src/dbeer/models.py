@@ -53,8 +53,12 @@ class Bar:
 class OSMData():
     bars = []
 
-    def __init__(self, filename):
-        log.debug("Starting to parse osm dump")
+    def __init__(self, filename=None):
+        if filename is not None:
+            self.add_file(filename)
+
+    def add_file(self, filename):
+        log.debug("Starting to parse osm dump: %s", filename)
         try:
             osm = pyosm.OSMXMLFile(filename=filename)
         except IOError, exx:
@@ -69,8 +73,7 @@ class OSMData():
             else:
                 bar = Bar(barn.tags['name'], geo=(float(barn.lon),  float(barn.lat)), osmid=barn.id, type=barn.tags['amenity'])
                 self.bars.append(bar)
-
-        log.debug("loaded %d bars, ignored %d that had no name", len(self.bars), ignored_bars)
+        log.debug("loaded %d bars, ignored %d that had no name", len(osm.nodes), ignored_bars)
 
     def by_osmid(self, osmid):
         for barn in self.bars:
