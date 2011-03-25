@@ -57,6 +57,10 @@ class OSMData():
         if filename is not None:
             self.add_file(filename)
 
+    def add_files(self, files):
+        for file in files:
+            self.add_file(file)
+
     def add_file(self, filename):
         log.debug("Starting to parse osm dump: %s", filename)
         try:
