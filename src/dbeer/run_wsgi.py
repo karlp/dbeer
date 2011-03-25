@@ -11,10 +11,10 @@ import logging
 import random
 import time
 
-from flask import Flask, request, abort, Response, render_template
+from flask import request, abort, Response, render_template
+from dbeer import app
 import models
 
-app = Flask(__name__)
 config = {
     'results_limit' : 20
 }
@@ -142,10 +142,6 @@ def bars_nearest(num=3, tjson=False, txml=False):
         return Response(render_template("bars.xml", bars=results), content_type="application/xml; charset=utf-8", )
 
 
-file = ("../iceland.pubsandfriends.osm")
-#file = ("../europe.pubsandfriends.osm")
+file = ("iceland.pubsandfriends.osm")
+file = ("europe.pubsandfriends.osm")
 od = models.OSMData(filename = file)  ## should only load it once..
-
-if __name__ == '__main__':
-    app.debug = True
-    app.run(host='0.0.0.0')
