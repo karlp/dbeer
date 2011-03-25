@@ -19,12 +19,8 @@ except:
     import simplejson as json
 
 from flask import request, abort, Response, render_template
-from dbeer import app
+from dbeer import app, od, config
 import models
-
-config = {
-    'results_limit' : 20
-}
 
 full_prices = {}
 
@@ -144,7 +140,3 @@ def bars_nearest(num=3, tjson=False, txml=False):
         return Response(json.dumps(results, default=models.Bar.to_json), content_type="application/javascript; charset=utf-8")
     if txml:
         return Response(render_template("bars.xml", bars=results), content_type="application/xml; charset=utf-8", )
-
-file = ("iceland.pubsandfriends.osm")
-#file = ("europe.pubsandfriends.osm")
-od = models.OSMData(filename = file)  ## should only load it once..
