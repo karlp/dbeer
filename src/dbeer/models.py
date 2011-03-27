@@ -7,11 +7,14 @@
 import math
 import decimal
 import logging
+import time
 log = logging.getLogger("dbeer.models")
 
 from google.appengine.ext import db
 import geo.geomodel
 import pyosm
+
+BUCKET_SIZE = 18
 
 class DecimalProperty(db.Property):
     """
@@ -33,18 +36,22 @@ class DecimalProperty(db.Property):
             return decimal.Decimal(value)
         raise db.BadValueError("Property %s must be a Decimal or string." % self.name)
 
-class Bar(geo.geomodel.GeoModel):
+class Bar(db.Model):
     name = db.StringProperty(required=True)
     type = db.StringProperty()
     # we allow people to add bars that are not in OSM
     bar_osm_id = db.IntegerProperty()
+    lat = db.FloatProperty(required=True)
+    lon = db.FloatProperty(required=True)
+    # bucketize longitude into X Degree segments.
+    lon_bucket = db.IntegerProperty(required=True)
 
 
     def distance(self, somewhere_geo):
         """
         Use the haversine formula to work out the distance to another geographical point
         """
-        return self._hdistance(self.location, somewhere_geo)
+        return self._hdistance(db.GeoPt(self.lat, self.lon), somewhere_geo)
 
     def _hdistance(self, p1, p2):
         """
@@ -60,7 +67,7 @@ class Bar(geo.geomodel.GeoModel):
         return R * c
 
     def __repr__(self):
-        return "Bar(name=%s, location=%s, type=%s)" % (self.name, self.location, self.type)
+        return "Bar(name=%s, lat=%f, lon=%f, type=%s)" % (self.name, self.lat, self.lon, self.type)
 
     @staticmethod
     def to_json(pyobj):
@@ -82,33 +89,29 @@ class Bar(geo.geomodel.GeoModel):
         log.debug("Loaded osm dump")
 
         ignored_bars = 0
-        new_bars = 0
-        updated_bars = 0
+        new_bars = []
         for barn in osm.nodes.values():
             if 'name' not in barn.tags:
                 ignored_bars += 1
             else:
-                bar = Bar.by_osmid(barn.id)
-                if bar is None:
-                    # totally new bar
-                    bar = Bar(name = barn.tags["name"],
-                        location = db.GeoPt(barn.lat, barn.lon),
-                        bar_osm_id = barn.id,
-                        type = barn.tags["amenity"])
-                    bar.update_location()
-                    new_bars += 1
-                    bar.put()
-                else:
-                    # bar already exists, same osm id, likely changes are location corrections, name changes, etc.
-                    # We consider OSM authoritative..
-                    bar.name = barn.tags["name"]
-                    bar.location = db.GeoPt(barn.lat, barn.lon)
-                    bar.bar_osm_id = barn.id
-                    bar.type = barn.tags["amenity"]
-                    updated_bars += 1
-                    bar.update_location()
-                    bar.put()
-        log.info("loaded %d bars, ignored %d nameless, created %d new bars, updated %d bars", len(osm.nodes), ignored_bars, new_bars, updated_bars)
+                # Always updated, but use a key to make sure that we never make a duplicate.
+                # this _may_ cause some problems with ODBL? it makes it more of a derivative than a collection?
+                # Using my own key, and looking for bars by osm id first works too, but it's much much much slower....
+                ts = time.time()
+                bar = Bar(key_name = "dbeer_%d" % barn.id,
+                    name = barn.tags["name"],
+                    lat = float(barn.lat),
+                    lon = float(barn.lon),
+                    lon_bucket = int(round(float(barn.lon) / BUCKET_SIZE)),
+                    bar_osm_id = barn.id,
+                    type = barn.tags["amenity"])
+                new_bars.append(bar)
+
+        ts = time.time()
+        db.put(new_bars)
+        tt = time.time() - ts
+        log.debug("took %f to put %d new", tt, len(new_bars))
+        log.info("loaded %d bars, ignored %d nameless, created/updated %d bars", len(osm.nodes), ignored_bars, len(new_bars))
 
     @staticmethod
     def by_osmid(osmid):

@@ -127,12 +127,14 @@ def bars_nearest(num=3, tjson=False, txml=False):
         log.debug("Squashing request for %d bars down to %d", num, config['results_limit'])
         num = config['results_limit']
 
-    nearest = models.Bar.proximity_fetch(models.Bar.all(), db.GeoPt(lat, lon), max_results=num, max_distance=0)
+    # TODO - this should consider how close to the edge of a lon_bucket we are, and fetch the adjacent one if we're "close"
+    slice = models.Bar.all().filter("lon_bucket =", int(round(lon / models.BUCKET_SIZE))).filter("lat >", lat-1).filter("lat <", lat+1)
+    nearest = sorted(slice, key=lambda b: b.distance(db.GeoPt(lat, lon)))
+
     results = []
     # TODO - we should return a nicer datatype here, with "links" to more info...
     # look at the rest media types docs you have
-    for i,v in enumerate(nearest):
-        log.debug("i,v= %s,%s", i, v)
+    for i,v in enumerate(nearest[:num]):
         results.append({"bar" : v,
                 "distance" : v.distance(db.GeoPt(lat,lon)),
                 "prices" : get_avg_prices(v)
