@@ -91,7 +91,7 @@ class Bar(db.Model):
         ignored_bars = 0
         new_bars = []
         for barn in osm.nodes.values():
-            if 'name' not in barn.tags:
+            if 'name' not in barn.tags or barn.tags["name"] == "":
                 ignored_bars += 1
             else:
                 # Always updated, but use a key to make sure that we never make a duplicate.
