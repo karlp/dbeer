@@ -20,7 +20,7 @@ except:
     import simplejson as json
 
 from flask import request, abort, Response, render_template
-from dbeer import app, od, config
+from dbeer import app, config
 import models
 from google.appengine.ext import db
 
@@ -32,7 +32,7 @@ def status():
 
 @app.route('/upload', methods=['POST'])
 def add_raw_dump():
-    od.add_file(request.files['osmfile'])
+    models.Bar.add_file(request.files['osmfile'])
     return "OK"
 
 @app.route('/nearest.json/<int:num>')
@@ -45,13 +45,11 @@ def bars_nearest_xml(num=3):
 
 @app.route('/bar/<int:osmid>.xml', methods=['GET'])
 def bar_detail(osmid):
-    bar = od.by_osmid(osmid)
+    bar = models.Bar.by_osmid(osmid)
     if bar is None:
         abort(404)
 
     prices = get_avg_prices(osmid)
-    bar = models.Bar("some fake bar for now")
-
     return Response(render_template("bar.xml", bar=bar, prices=prices), content_type="application/xml; charset=utf-8", )
 
 # FIXME - test with PUT too
@@ -59,7 +57,7 @@ def bar_detail(osmid):
 def bar_add_price(osmid):
 
     ## Make sure we have this bar in the datastore?
-    bar = od.by_osmid(osmid)
+    bar = models.Bar.by_osmid(osmid)
     if bar is None:
         abort(404)
     pp = request.form.get('price')
@@ -75,14 +73,14 @@ def bar_add_price(osmid):
     orig_date = datetime.utcfromtimestamp(float(orig_date))
 
     log.debug("Adding price %s for bar %s on %s", pp, osmid, orig_date)
-    add_price(osmid, pp, price_type, orig_date, lat, lon)
+    add_price(bar, pp, price_type, orig_date, lat, lon)
     return "OK"
 
-def add_price(osmid, price, price_type, date, lat, lon):
+def add_price(bar, price, price_type, date, lat, lon):
     """
     Just stuff it into the database!
     """
-    pp = models.Pricing(bar_osm_id=osmid, location=db.GeoPt(lat, lon), drink_type=price_type, price=price, report_date=date)
+    pp = models.Pricing(bar=bar, location=db.GeoPt(lat, lon), drink_type=price_type, price=price, report_date=date)
     db.put(pp)
 
 
@@ -90,11 +88,9 @@ def get_avg_prices(osmid):
     """
     Look up the full set of price history for this bar, and squish down to averages by drink type
     """
-    # hehe, this will do for now...
-    pp = db.GqlQuery("select * from Pricing where bar_osm_id = :1", osmid)
-
+    bar = models.Bar.by_osmid(osmid)
     prices = {}
-    for p in pp:
+    for p in bar.pricing_set:
         bleh = prices.get(p.drink_type, [])
         bleh.append(p.price)
         prices[p.drink_type] = bleh
@@ -139,7 +135,7 @@ def bars_nearest(num=3, tjson=False, txml=False):
     for i,v in enumerate(nearest[:num]):
         results.append({"bar" : v,
                 "distance" : v.distance((lon,lat)),
-                "prices" : get_avg_prices(v.osmid)
+                "prices" : get_avg_prices(v)
                 })
 
     if tjson:

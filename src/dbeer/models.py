@@ -32,26 +32,13 @@ class DecimalProperty(db.Property):
             return decimal.Decimal(value)
         raise db.BadValueError("Property %s must be a Decimal or string." % self.name)
 
-class Pricing(db.Model):
-    bar_osm_id = db.IntegerProperty(required=True)
+class Bar(db.Model):
+    name = db.StringProperty(required=True)
     location = db.GeoPtProperty(required=True)
-    drink_type = db.IntegerProperty(required=True)
-    price = DecimalProperty(required=True)
-    report_date = db.DateTimeProperty(required=True)
+    type = db.StringProperty()
+    # we allow people to add bars that are not in OSM
+    bar_osm_id = db.IntegerProperty()
 
-    def __repr__(self):
-        return "Pricing(bar=%d, location=%s, type=%s, price=%f, date=%s)" % (self.bar_osm_id, self.location, self.drink_type, self.price, self.report_date)
-
-
-class Bar:
-    """
-    Just use locations as a lat/long tuple for now, and use haversines for now
-    """
-    def __init__(self, name, geo=None, osmid=None, type=None):
-        self.name = name
-        self.location_geo = geo
-        self.osmid = osmid
-        self.type = type
 
     def distance(self, somewhere_geo):
         """
@@ -73,7 +60,7 @@ class Bar:
         return R * c
 
     def __repr__(self):
-        return "Bar(name=%s, location=%s, type=%s)" % (self.name, self.location_geo, self.type)
+        return "Bar(name=%s, location=%s, type=%s)" % (self.name, self.location, self.type)
 
     @staticmethod
     def to_json(pyobj):
@@ -81,19 +68,11 @@ class Bar:
             return {"name" : pyobj.name, "location" : pyobj.location_geo, "osmid": pyobj.osmid, "type" : pyobj.type}
         return JSONEncoder.default(pyobj)
 
-
-class OSMData():
-    bars = []
-
-    def __init__(self, filename=None):
-        if filename is not None:
-            self.add_file(filename)
-
-    def add_files(self, files):
-        for file in files:
-            self.add_file(file)
-
-    def add_file(self, filename):
+    @staticmethod
+    def add_file(filename):
+        """
+        Parse an osm dump file, and load it into the data store, updating or creating as need be
+        """
         log.debug("Starting to parse osm dump: %s", filename)
         try:
             osm = pyosm.OSMXMLFile(filename=filename)
@@ -103,16 +82,43 @@ class OSMData():
         log.debug("Loaded osm dump")
 
         ignored_bars = 0
+        new_bars = 0
+        updated_bars = 0
         for barn in osm.nodes.values():
             if 'name' not in barn.tags:
                 ignored_bars += 1
             else:
-                bar = Bar(barn.tags['name'], geo=(float(barn.lon),  float(barn.lat)), osmid=barn.id, type=barn.tags['amenity'])
-                self.bars.append(bar)
-        log.debug("loaded %d bars, ignored %d that had no name", len(osm.nodes), ignored_bars)
+                bar = Bar.by_osmid(barn.id)
+                if bar is None:
+                    # totally new bar
+                    bar = Bar(name = barn.tags["name"],
+                        location = db.GeoPt(barn.lat, barn.lon),
+                        bar_osm_id = barn.id,
+                        type = barn.tags["amenity"])
+                    new_bars += 1
+                    bar.put()
+                else:
+                    # bar already exists, same osm id, likely changes are location corrections, name changes, etc.
+                    # We consider OSM authoritative..
+                    bar.name = barn.tags
+                    bar.location = db.GeoPt(barn.lat, barn.lon)
+                    bar.bar_osm_id = barn.id
+                    bar.type = barn.tags["amenity"]
+                    updated_bars += 1
+                    bar.put()
+        log.info("loaded %d bars, ignored %d nameless, created %d new bars, updated %d bars", len(osm.nodes), ignored_bars, new_bars, updated_bars)
 
-    def by_osmid(self, osmid):
-        for barn in self.bars:
-            if barn.osmid == osmid:
-                return barn
-        return None
+    @staticmethod
+    def by_osmid(osmid):
+        return db.GqlQuery("select from Bar where bar_osm_id = :1", osmid).get()
+
+class Pricing(db.Model):
+    bar = db.ReferenceProperty(Bar)
+    location = db.GeoPtProperty(required=True)
+    drink_type = db.IntegerProperty(required=True)
+    price = DecimalProperty(required=True)
+    report_date = db.DateTimeProperty(required=True)
+
+    def __repr__(self):
+        return "Pricing(bar=%d, location=%s, type=%s, price=%f, date=%s)" % (self.bar, self.location, self.drink_type, self.price, self.report_date)
+

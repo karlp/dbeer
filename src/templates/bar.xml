@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bar lat="{{bar.location_geo[1]}}" lon="{{bar.location_geo[0]}}" osmid="{{bar.osmid}}">
+<bar lat="{{bar.location.lat}}" lon="{{bar.location.lon}}" osmid="{{bar.bar_osm_id}}">
     <name>{{bar.name}}</name>
     <type>{{bar.type}}</type>
     <prices>
