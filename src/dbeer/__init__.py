@@ -19,7 +19,7 @@ files = [ "europe.pubsandfriends.osm.001",
     "europe.pubsandfriends.osm.005",
 ]
 
-od.add_files(files)
+#od.add_files(files)
 log.info("Bootup complete, working with %d bars", len(od.bars))
 
 import views

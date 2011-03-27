@@ -10,6 +10,7 @@ import logging
 log = logging.getLogger("dbeer.views")
 
 import random
+from datetime import datetime
 import time
 
 ## python 2.5 workarounds (works for GAE 1.4.2+ as well)
@@ -21,6 +22,7 @@ except:
 from flask import request, abort, Response, render_template
 from dbeer import app, od, config
 import models
+from google.appengine.ext import db
 
 full_prices = {}
 
@@ -38,65 +40,64 @@ def bars_nearest_xml(num=3):
 
 @app.route('/bar/<int:osmid>.xml', methods=['GET'])
 def bar_detail(osmid):
-    bar = od.by_osmid(osmid)
-    if bar is None:
-        abort(404)
+    #bar = od.by_osmid(osmid)
+    #if bar is None:
+    #    abort(404)
 
-    prices = get_avg_prices(bar)
+    prices = get_avg_prices(osmid)
+    bar = models.Bar("some fake bar for now")
 
     return Response(render_template("bar.xml", bar=bar, prices=prices), content_type="application/xml; charset=utf-8", )
 
 # FIXME - test with PUT too
 @app.route('/bar/<int:osmid>.xml', methods=['POST', 'PUT'])
 def bar_add_price(osmid):
-    bar = od.by_osmid(osmid)
-    if bar is None:
-        abort(404)
+
+    ## Make sure we have this bar in the datastore?
+    #bar = od.by_osmid(osmid)
+    #if bar is None:
+    #    abort(404)
     pp = request.form.get('price')
-    price_type = request.form.get('price_type', 1) # default to beer.. TODO - is this fair?
+    price_type = int(request.form.get('price_type', 1)) # default to beer.. TODO - is this fair?
     # we want the time from the user, because that will be the _local_ time,
     # which is more relevant for beer pricing than server time.
     orig_date = request.form.get('price_date')
     if pp is None or orig_date is None:
-        abort(500, "price and original date are required")
+        abort(500, "price and price_date are required")
 
-    # FIXME - validate orig_date is a date of some sort...
-    # Just use seconds since the epoch?
-    log.debug("Adding price %s for bar %s on %s", pp, bar, orig_date)
-    add_price(bar, pp, price_type, orig_date)
+    lat = request.form.get("recordedLat")
+    lon = request.form.get("recordedLon")
+    orig_date = datetime.utcfromtimestamp(float(orig_date))
+
+    log.debug("Adding price %s for bar %s on %s", pp, osmid, orig_date)
+    add_price(osmid, pp, price_type, orig_date, lat, lon)
     return "OK"
 
-def add_price(bar, price, price_type, date):
+def add_price(osmid, price, price_type, date, lat, lon):
     """
-    This is ok for now, but it's way too hacky for real use.
-    Problems:
-        Doesn't track numbers of price samples, simply always a moving window of the last averge, plus the new one
-        All in memory!
+    Just stuff it into the database!
     """
-    pp = full_prices.get(bar.osmid)
-    if pp is None:
-        log.debug("No existing prices for this bar, creating")
-        full_prices[bar.osmid] = {}
-    this_price = full_prices[bar.osmid].get(price_type)
-    if this_price is None:
-        # First record of a price for this drink type
-        log.debug("first pricing of this type: %s", price_type)
-        full_prices[bar.osmid][price_type] = int(price)
-    else:
-        log.debug("old average: %s, adding new price %s", this_price, price)
-        full_prices[bar.osmid][price_type] = (this_price + int(price)) / 2
+    pp = models.Pricing(bar_osm_id=osmid, location=db.GeoPt(lat, lon), drink_type=price_type, price=price, report_date=date)
+    db.put(pp)
 
 
-def get_avg_prices(bar):
+def get_avg_prices(osmid):
     """
     Look up the full set of price history for this bar, and squish down to averages by drink type
     """
     # hehe, this will do for now...
-    pp = full_prices.get(bar.osmid)
-    if pp is None:
-        log.debug("defaulting prices, as we have no current data")
-        pp = { 1 : random.randrange(500, 950, 50)}
-    return pp
+    pp = db.GqlQuery("select * from Pricing where bar_osm_id = :1", osmid)
+
+    prices = {}
+    for p in pp:
+        bleh = prices.get(p.drink_type, [])
+        bleh.append(p.price)
+        prices[p.drink_type] = bleh
+
+    averages = {}
+    for drink_type in prices:
+        averages[drink_type] = sum(prices[drink_type]) / len(prices[drink_type])
+    return averages
 
 def print_timing(func):
     def wrapper(*arg, **kwarg):
