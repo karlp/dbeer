@@ -10,6 +10,7 @@ import logging
 log = logging.getLogger("dbeer.models")
 
 from google.appengine.ext import db
+import geo.geomodel
 import pyosm
 
 class DecimalProperty(db.Property):
@@ -32,9 +33,8 @@ class DecimalProperty(db.Property):
             return decimal.Decimal(value)
         raise db.BadValueError("Property %s must be a Decimal or string." % self.name)
 
-class Bar(db.Model):
+class Bar(geo.geomodel.GeoModel):
     name = db.StringProperty(required=True)
-    location = db.GeoPtProperty(required=True)
     type = db.StringProperty()
     # we allow people to add bars that are not in OSM
     bar_osm_id = db.IntegerProperty()
@@ -44,16 +44,16 @@ class Bar(db.Model):
         """
         Use the haversine formula to work out the distance to another geographical point
         """
-        return self._hdistance(self.location_geo, somewhere_geo)
+        return self._hdistance(self.location, somewhere_geo)
 
     def _hdistance(self, p1, p2):
         """
         From http://www.movable-type.co.uk/scripts/latlong.html
         """
         R = 6371 * 1000
-        lat1 = math.radians(p1[1])
-        lat2 = math.radians(p2[1])
-        dLong = math.radians(p2[0] - p1[0])
+        lat1 = math.radians(p1.lat)
+        lat2 = math.radians(p2.lat)
+        dLong = math.radians(p2.lon - p1.lon)
         dLat = lat2 - lat1
         a = math.sin(dLat/2) * math.sin(dLat/2) + math.cos(lat1) * math.cos(lat2) * math.sin(dLong/2) * math.sin(dLong/2)
         c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
@@ -95,16 +95,18 @@ class Bar(db.Model):
                         location = db.GeoPt(barn.lat, barn.lon),
                         bar_osm_id = barn.id,
                         type = barn.tags["amenity"])
+                    bar.update_location()
                     new_bars += 1
                     bar.put()
                 else:
                     # bar already exists, same osm id, likely changes are location corrections, name changes, etc.
                     # We consider OSM authoritative..
-                    bar.name = barn.tags
+                    bar.name = barn.tags["name"]
                     bar.location = db.GeoPt(barn.lat, barn.lon)
                     bar.bar_osm_id = barn.id
                     bar.type = barn.tags["amenity"]
                     updated_bars += 1
+                    bar.update_location()
                     bar.put()
         log.info("loaded %d bars, ignored %d nameless, created %d new bars, updated %d bars", len(osm.nodes), ignored_bars, new_bars, updated_bars)
 
@@ -113,6 +115,9 @@ class Bar(db.Model):
         return db.GqlQuery("select from Bar where bar_osm_id = :1", osmid).get()
 
 class Pricing(db.Model):
+    """
+    We don't need to search pricings based on geo data, so it can just be a normal model
+    """
     bar = db.ReferenceProperty(Bar)
     location = db.GeoPtProperty(required=True)
     drink_type = db.IntegerProperty(required=True)

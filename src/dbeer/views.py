@@ -49,7 +49,7 @@ def bar_detail(osmid):
     if bar is None:
         abort(404)
 
-    prices = get_avg_prices(osmid)
+    prices = get_avg_prices(bar)
     return Response(render_template("bar.xml", bar=bar, prices=prices), content_type="application/xml; charset=utf-8", )
 
 # FIXME - test with PUT too
@@ -84,11 +84,10 @@ def add_price(bar, price, price_type, date, lat, lon):
     db.put(pp)
 
 
-def get_avg_prices(osmid):
+def get_avg_prices(bar):
     """
     Look up the full set of price history for this bar, and squish down to averages by drink type
     """
-    bar = models.Bar.by_osmid(osmid)
     prices = {}
     for p in bar.pricing_set:
         bleh = prices.get(p.drink_type, [])
@@ -128,13 +127,14 @@ def bars_nearest(num=3, tjson=False, txml=False):
         log.debug("Squashing request for %d bars down to %d", num, config['results_limit'])
         num = config['results_limit']
 
-    nearest = sorted(od.bars, key=lambda b: b.distance((lon, lat)))
+    nearest = models.Bar.proximity_fetch(models.Bar.all(), db.GeoPt(lat, lon), max_results=num, max_distance=0)
     results = []
     # TODO - we should return a nicer datatype here, with "links" to more info...
     # look at the rest media types docs you have
-    for i,v in enumerate(nearest[:num]):
+    for i,v in enumerate(nearest):
+        log.debug("i,v= %s,%s", i, v)
         results.append({"bar" : v,
-                "distance" : v.distance((lon,lat)),
+                "distance" : v.distance(db.GeoPt(lat,lon)),
                 "prices" : get_avg_prices(v)
                 })
 
