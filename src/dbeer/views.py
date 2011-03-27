@@ -30,6 +30,11 @@ full_prices = {}
 def status():
     return "OK"
 
+@app.route('/upload', methods=['POST'])
+def add_raw_dump():
+    od.add_file(request.files['osmfile'])
+    return "OK"
+
 @app.route('/nearest.json/<int:num>')
 def bars_nearest_json(num=3):
     return bars_nearest(num, tjson=True)
@@ -40,9 +45,9 @@ def bars_nearest_xml(num=3):
 
 @app.route('/bar/<int:osmid>.xml', methods=['GET'])
 def bar_detail(osmid):
-    #bar = od.by_osmid(osmid)
-    #if bar is None:
-    #    abort(404)
+    bar = od.by_osmid(osmid)
+    if bar is None:
+        abort(404)
 
     prices = get_avg_prices(osmid)
     bar = models.Bar("some fake bar for now")
@@ -54,9 +59,9 @@ def bar_detail(osmid):
 def bar_add_price(osmid):
 
     ## Make sure we have this bar in the datastore?
-    #bar = od.by_osmid(osmid)
-    #if bar is None:
-    #    abort(404)
+    bar = od.by_osmid(osmid)
+    if bar is None:
+        abort(404)
     pp = request.form.get('price')
     price_type = int(request.form.get('price_type', 1)) # default to beer.. TODO - is this fair?
     # we want the time from the user, because that will be the _local_ time,
@@ -134,7 +139,7 @@ def bars_nearest(num=3, tjson=False, txml=False):
     for i,v in enumerate(nearest[:num]):
         results.append({"bar" : v,
                 "distance" : v.distance((lon,lat)),
-                "prices" : get_avg_prices(v)
+                "prices" : get_avg_prices(v.osmid)
                 })
 
     if tjson:
