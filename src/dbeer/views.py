@@ -23,8 +23,18 @@ from flask import request, abort, Response, render_template
 from dbeer import app, config
 import models
 from google.appengine.ext import db
+from google.appengine.api import quota
 
 full_prices = {}
+
+def print_timing(func):
+    def wrapper(*arg, **kwarg):
+        t1 = time.time()
+        res = func(*arg, **kwarg)
+        t2 = time.time()
+        log.debug("%s took %0.3f ms", func.func_name, (t2-t1)*1000)
+        return res
+    return wrapper
 
 @app.route("/status")
 def status():
@@ -44,8 +54,12 @@ def bars_nearest_xml(num=3):
     return bars_nearest(num, txml=True)
 
 @app.route('/bar/<int:osmid>.xml', methods=['GET'])
+@print_timing
 def bar_detail(osmid):
+    ts = time.time()
     bar = models.Bar.by_osmid(osmid)
+    tt = time.time() - ts
+    log.debug("fetch by osmid took %f", tt)
     if bar is None:
         abort(404)
 
@@ -99,15 +113,6 @@ def get_avg_prices(bar):
         averages[drink_type] = sum(prices[drink_type]) / len(prices[drink_type])
     return averages
 
-def print_timing(func):
-    def wrapper(*arg, **kwarg):
-        t1 = time.time()
-        res = func(*arg, **kwarg)
-        t2 = time.time()
-        log.debug("%s took %0.3f ms", func.func_name, (t2-t1)*1000)
-        return res
-    return wrapper
-
 @print_timing
 def bars_nearest(num=3, tjson=False, txml=False):
     lat = request.args.get("lat")
@@ -128,15 +133,25 @@ def bars_nearest(num=3, tjson=False, txml=False):
         num = config['results_limit']
 
     # TODO - this should consider how close to the edge of a lon_bucket we are, and fetch the adjacent one if we're "close"
+    ts = time.time()
     slice = models.Bar.all().filter("lon_bucket =", int(round(lon / models.BUCKET_SIZE))).filter("lat >", lat-1).filter("lat <", lat+1)
-    nearest = sorted(slice, key=lambda b: b.distance(db.GeoPt(lat, lon)))
+    tt = time.time() - ts
+    log.debug("slice fetch took %f", tt)
+    #ts = time.time()
+    start = quota.get_request_cpu_usage()
+    nearest = sorted(slice, key=lambda b: b.distance(lat, lon))
+    end = quota.get_request_cpu_usage()
+    log.info("slice sort took %d megacycles for %d entries", end - start, len(nearest))
+    #tt = time.time() - ts
+    #log.debug("slice sort took %f for %d entries", tt, len(nearest))
 
     results = []
     # TODO - we should return a nicer datatype here, with "links" to more info...
     # look at the rest media types docs you have
     for i,v in enumerate(nearest[:num]):
         results.append({"bar" : v,
-                "distance" : v.distance(db.GeoPt(lat,lon)),
+                # danger! FIXME - this _recalculates_ the distance!
+                "distance" : v.distance(lat,lon),
                 "prices" : get_avg_prices(v)
                 })
 

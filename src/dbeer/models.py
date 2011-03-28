@@ -15,6 +15,7 @@ import geo.geomodel
 import pyosm
 
 BUCKET_SIZE = 18
+R = 6371000
 
 class DecimalProperty(db.Property):
     """
@@ -46,21 +47,14 @@ class Bar(db.Model):
     # bucketize longitude into X Degree segments.
     lon_bucket = db.IntegerProperty(required=True)
 
-
-    def distance(self, somewhere_geo):
+    def distance(self, p2lat, p2lon):
         """
         Use the haversine formula to work out the distance to another geographical point
-        """
-        return self._hdistance(db.GeoPt(self.lat, self.lon), somewhere_geo)
-
-    def _hdistance(self, p1, p2):
-        """
         From http://www.movable-type.co.uk/scripts/latlong.html
         """
-        R = 6371 * 1000
-        lat1 = math.radians(p1.lat)
-        lat2 = math.radians(p2.lat)
-        dLong = math.radians(p2.lon - p1.lon)
+        lat1 = math.radians(self.lat)
+        lat2 = math.radians(p2lat)
+        dLong = math.radians(p2lon - self.lon)
         dLat = lat2 - lat1
         a = math.sin(dLat/2) * math.sin(dLat/2) + math.cos(lat1) * math.cos(lat2) * math.sin(dLong/2) * math.sin(dLong/2)
         c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
@@ -72,7 +66,7 @@ class Bar(db.Model):
     @staticmethod
     def to_json(pyobj):
         if isinstance(pyobj, Bar):
-            return {"name" : pyobj.name, "location" : pyobj.location_geo, "osmid": pyobj.osmid, "type" : pyobj.type}
+            return {"name" : pyobj.name, "lat" : pyobj.lat, "lon": pyobj.lon, "osmid": pyobj.bar_osm_id, "type" : pyobj.type}
         return JSONEncoder.default(pyobj)
 
     @staticmethod
@@ -116,6 +110,9 @@ class Bar(db.Model):
     @staticmethod
     def by_osmid(osmid):
         return db.GqlQuery("select from Bar where bar_osm_id = :1", osmid).get()
+        #bar =  db.GqlQuery("select from Bar where bar_osm_id = :1", osmid).get()
+        #log.debug("bar key is %s", bar.key())
+        #return bar
 
 class Pricing(db.Model):
     """
