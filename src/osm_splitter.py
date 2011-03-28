@@ -19,7 +19,7 @@ def read_file(filename):
 
     file_count = 0
     node_count = 0
-    nodes_per_file = 25000
+    nodes_per_file = 1000
     new_file = None
     head = None
     for node in root:
