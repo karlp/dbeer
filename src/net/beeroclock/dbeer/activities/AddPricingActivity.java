@@ -105,7 +105,7 @@ public class AddPricingActivity extends Activity {
             qparams.add(new BasicNameValuePair("price", String.valueOf(report.priceInLocalCurrency)));
             qparams.add(new BasicNameValuePair("price_date", String.valueOf(report.dateRecorded.getTime())));
 
-            HttpPut request = new HttpPut("http://tera.beeroclock.net/bar/" + report.barOsmId + ".xml");
+            HttpPut request = new HttpPut("http://" + PintyApp.DBEER_SERVICES_HOST + "/bar/" + report.barOsmId + ".xml");
             try {
                 request.setEntity(new UrlEncodedFormEntity(qparams, "UTF-8"));
             } catch (UnsupportedEncodingException e) {

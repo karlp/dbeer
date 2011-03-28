@@ -23,6 +23,7 @@ import net.beeroclock.dbeer.models.Bar;
 import net.beeroclock.dbeer.PintyApp;
 import net.beeroclock.dbeer.R;
 import net.beeroclock.dbeer.Utils;
+import net.beeroclock.dbeer.models.Price;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -221,7 +222,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
             qparams.add(new BasicNameValuePair("lon", String.valueOf(location.getLongitude())));
             URI uri;
             try {
-                uri = URIUtils.createURI("http", "tera.beeroclock.net", -1, "/nearest.xml/10", URLEncodedUtils.format(qparams, "UTF-8"), null);
+                uri = URIUtils.createURI("http", PintyApp.DBEER_SERVICES_HOST, -1, "/nearest.xml/10", URLEncodedUtils.format(qparams, "UTF-8"), null);
             } catch (URISyntaxException e) {
                 Log.e(TAG, "how did this happen?!", e);
                 throw new IllegalStateException("You shouldn't be able to get here!", e);
@@ -325,7 +326,17 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
                 TextView priceView = (TextView) view.findViewById(R.id.bar_price);
                 if (priceView != null) {
                     // FIXME - should really use per user preferences on what they consider a price of note.
-                    priceView.setText(String.valueOf(bar.prices.iterator().next().avgPrice));
+                    int desiredPriceType = 1;
+                    boolean done = false;
+                    for (Price p : bar.prices) {
+                        if (p.id == desiredPriceType) {
+                            priceView.setText(String.valueOf(p.avgPrice));
+                            done = true;
+                        }
+                    }
+                    if (!done) {
+                        priceView.setText("???");
+                    }
                 }
                 ImageView arrowView = (ImageView) view.findViewById(R.id.bar_direction);
                 if (arrowView != null) {
