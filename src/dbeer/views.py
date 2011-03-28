@@ -69,10 +69,8 @@ def bar_detail(osmid):
 
 def memget2(raw_keys):
     keys = map(str, raw_keys)
-    log.debug("trying to fetch %d from memcache", len(keys))
     dd = memcache.get_multi(keys)
     if len(dd) != len(keys):
-        log.debug("Only got %d back, trying to update..", len(dd))
         dd = db.get(raw_keys)
         toset = dict(zip(keys, dd))
         memcache.set_multi(toset)
@@ -156,23 +154,9 @@ def bars_nearest(num=3, tjson=False, txml=False):
         num = config['results_limit']
 
     # TODO - this should consider how close to the edge of a lon_bucket we are, and fetch the adjacent one if we're "close"
-    ts = time.time()
     slice = models.Bar.all(keys_only=True).filter("lon_bucket =", int(round(lon / models.BUCKET_SIZE))).filter("lat >", lat-1).filter("lat <", lat+1)
-    tt = time.time() - ts
-    log.debug("slice fetch (keys) took %f", tt)
-    #ts = time.time()
-    start = quota.get_request_cpu_usage()
     bb = memget2(slice)
-    end = quota.get_request_cpu_usage()
-    log.info("_true_ slice fetch (mem) took %d megacycles for %d entries", end - start, len(bb))
-
-    start = quota.get_request_cpu_usage()
     nearest = sorted(bb, key=lambda b: b.distance(lat, lon))
-    end = quota.get_request_cpu_usage()
-    log.info("slice sort took %d megacycles for %d entries", end - start, len(nearest))
-
-    #tt = time.time() - ts
-    #log.debug("slice sort took %f for %d entries", tt, len(nearest))
 
     results = []
     # TODO - we should return a nicer datatype here, with "links" to more info...
