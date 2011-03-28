@@ -11,7 +11,6 @@ import time
 log = logging.getLogger("dbeer.models")
 
 from google.appengine.ext import db
-import geo.geomodel
 import pyosm
 
 BUCKET_SIZE = 18
