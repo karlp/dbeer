@@ -24,6 +24,7 @@ from dbeer import app, config
 import models
 from google.appengine.ext import db
 from google.appengine.api import quota
+from google.appengine.api import memcache
 
 full_prices = {}
 
@@ -65,6 +66,15 @@ def bar_detail(osmid):
 
     prices = get_avg_prices(bar)
     return Response(render_template("bar.xml", bar=bar, prices=prices), content_type="application/xml; charset=utf-8", )
+
+def memget(raw_key):
+    key = str(raw_key)
+    d = memcache.get(key)
+    if d is not None:
+        return d
+    d = db.get(raw_key)
+    memcache.add(key, d, 60)
+    return d
 
 # FIXME - test with PUT too
 @app.route('/bar/<int:osmid>.xml', methods=['POST', 'PUT'])
@@ -134,14 +144,20 @@ def bars_nearest(num=3, tjson=False, txml=False):
 
     # TODO - this should consider how close to the edge of a lon_bucket we are, and fetch the adjacent one if we're "close"
     ts = time.time()
-    slice = models.Bar.all().filter("lon_bucket =", int(round(lon / models.BUCKET_SIZE))).filter("lat >", lat-1).filter("lat <", lat+1)
+    slice = models.Bar.all(keys_only=True).filter("lon_bucket =", int(round(lon / models.BUCKET_SIZE))).filter("lat >", lat-1).filter("lat <", lat+1)
     tt = time.time() - ts
-    log.debug("slice fetch took %f", tt)
+    log.debug("slice fetch (keys) took %f", tt)
     #ts = time.time()
     start = quota.get_request_cpu_usage()
-    nearest = sorted(slice, key=lambda b: b.distance(lat, lon))
+    bb = map(memget, slice)
+    end = quota.get_request_cpu_usage()
+    log.info("_true_ slice fetch (mem) took %d megacycles for %d entries", end - start, len(bb))
+
+    start = quota.get_request_cpu_usage()
+    nearest = sorted(bb, key=lambda b: b.distance(lat, lon))
     end = quota.get_request_cpu_usage()
     log.info("slice sort took %d megacycles for %d entries", end - start, len(nearest))
+
     #tt = time.time() - ts
     #log.debug("slice sort took %f for %d entries", tt, len(nearest))
 
