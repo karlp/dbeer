@@ -67,6 +67,19 @@ def bar_detail(osmid):
     prices = get_avg_prices(bar)
     return Response(render_template("bar.xml", bar=bar, prices=prices), content_type="application/xml; charset=utf-8", )
 
+def memget2(raw_keys):
+    keys = map(str, raw_keys)
+    log.debug("trying to fetch %d from memcache", len(keys))
+    dd = memcache.get_multi(keys)
+    if len(dd) != len(keys):
+        log.debug("Only got %d back, trying to update..", len(dd))
+        dd = db.get(raw_keys)
+        toset = dict(zip(keys, dd))
+        memcache.set_multi(toset)
+        return dd
+    else:
+        return dd.values()
+
 def memget(raw_key):
     key = str(raw_key)
     d = memcache.get(key)
@@ -149,7 +162,7 @@ def bars_nearest(num=3, tjson=False, txml=False):
     log.debug("slice fetch (keys) took %f", tt)
     #ts = time.time()
     start = quota.get_request_cpu_usage()
-    bb = map(memget, slice)
+    bb = memget2(slice)
     end = quota.get_request_cpu_usage()
     log.info("_true_ slice fetch (mem) took %d megacycles for %d entries", end - start, len(bb))
 
