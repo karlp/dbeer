@@ -42,7 +42,7 @@ def status():
 
 @app.route('/upload', methods=['POST'])
 def add_raw_dump():
-    models.Bar.add_file(request.files['osmfile'])
+    db.add_file(request.files['osmfile'])
     return "OK"
 
 @app.route('/nearest.json/<int:num>')
@@ -123,7 +123,7 @@ def get_avg_prices(bar):
     Look up the full set of price history for this bar, and squish down to averages by drink type
     """
     prices = {}
-    for p in bar.pricing_set:
+    for p in bar.pricing_set():
         bleh = prices.get(p.drink_type, [])
         bleh.append(p.price)
         prices[p.drink_type] = bleh

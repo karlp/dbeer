@@ -74,6 +74,7 @@ class Db():
         log.debug("Loaded osm dump")
 
         ignored_bars = 0
+        updated_bars = 0
         conn = sqlite3.connect(config['dbfile'])
         c = conn.cursor()
         for barn in osm.nodes.values():
@@ -83,26 +84,28 @@ class Db():
                 # Always updated, but use a key to make sure that we never make a duplicate.
                 # this _may_ cause some problems with ODBL? it makes it more of a derivative than a collection?
                 # Using my own key, and looking for bars by osm id first works too, but it's much much much slower....
-                c.execute("insert into bar values (name, type, osmid, geometry) values (?, ?, geomFromText('POINT ? ?', 4326)",
-                    barn.tags["name"], barn.tags["amenity"], barn.id, float(barn.lon), float(barn.lat))
+                # oh fuck you very much spatialite
+                bar = Bar(barn.tags["name"], float(barn.lat), float(barn.lon), type=barn.tags["amenity"], osmid=barn.id)
+                log.debug("inserting bar: %s", bar)
+                c.execute("insert into bars (name, type, osmid, geometry) values (?, ?, ?, geomFromText('POINT(%f %f)', 4326))" % (bar.lon, bar.lat),
+                    (bar.name, bar.type, bar.osmid))
+                updated_bars += 1
 
         conn.commit()
-        log.info("loaded %d bars, ignored %d nameless, created/updated %d bars", len(osm.nodes), ignored_bars, len(new_bars))
+        log.info("loaded %d bars, ignored %d nameless, created/updated %d bars", len(osm.nodes), ignored_bars, updated_bars)
 
     def by_osmid(self, osmid):
-        #return db.GqlQuery("select from Bar where bar_osm_id = :1", osmid).get()
-        #bar =  db.GqlQuery("select from Bar where bar_osm_id = :1", osmid).get()
-        #log.debug("bar key is %s", bar.key())
-        #return bar
         conn = sqlite3.connect(config['dbfile'])
-        rows = conn.execute("select name, type, osmid, x(geometry), y(geometry) from bars").fetchall()
+        conn.row_factory = sqlite3.Row
+        log.debug("looking for osmid: %d", osmid)
+        rows = conn.execute("select name, type, osmid, x(geometry) as lon, y(geometry) as lat from bars where osmid = ?", (osmid,)).fetchall()
         if len(rows) == 0:
             return None
         if len(rows) > 1:
             raise Exception("more than one bar with the same OSM id: %s" % osmid)
 
-        print rows
-
+        bar = Bar(rows[0]['name'], rows[0]['lat'], rows[0]['lon'], type=rows[0]['type'], osmid=rows[0]['osmid'])
+        return bar
 
 
 class Bar():
@@ -129,6 +132,9 @@ class Bar():
 
     def __repr__(self):
         return "Bar(name=%s, lat=%f, lon=%f, type=%s)" % (self.name, self.lat, self.lon, self.type)
+
+    def pricing_set(self):
+        return []
 
     @staticmethod
     def to_json(pyobj):
