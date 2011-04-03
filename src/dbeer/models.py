@@ -19,6 +19,7 @@ R = 6371000
 #conn.row_factory = sqlite3.Row
 
 config = {
+    'dbfile' : "/home/karl/src/dbeer-services/dbeer-demo.sqlite",
     'sql_create_table_bars' :
         """CREATE TABLE bars(PKUID integer primary key autoincrement,
                             name text not null,
@@ -42,14 +43,12 @@ class Db():
     """
     Wraps up the spatialite db holding the bar and price data
     """
-
-    def __init__(self, file="/home/karl/src/dbeer-services/dbeer-demo.sqlite"):
+    def verify_or_create(self):
         """
         opens, and creates if needed, the spatialite db
         """
-        self.conn = sqlite3.connect(file)
-
-        c = self.conn.cursor()
+        conn = sqlite3.connect(config['dbfile'])
+        c = conn.cursor()
         rows = c.execute("select name from sqlite_master where type = 'table' and name = 'bars'")
         if len(rows.fetchall()) == 0:
             log.info("bars table didn't exist, creating everything")
@@ -62,7 +61,7 @@ class Db():
             log.info("Bars table existed, assuming everything else is in place")
 
 
-    def add_file(filename):
+    def add_file(self, filename):
         """
         Parse an osm dump file, and load it into the data store, updating or creating as need be
         """
@@ -75,7 +74,8 @@ class Db():
         log.debug("Loaded osm dump")
 
         ignored_bars = 0
-        c = self.conn.cursor()
+        conn = sqlite3.connect(config['dbfile'])
+        c = conn.cursor()
         for barn in osm.nodes.values():
             if 'name' not in barn.tags or barn.tags["name"] == "":
                 ignored_bars += 1
@@ -86,15 +86,16 @@ class Db():
                 c.execute("insert into bar values (name, type, osmid, geometry) values (?, ?, geomFromText('POINT ? ?', 4326)",
                     barn.tags["name"], barn.tags["amenity"], barn.id, float(barn.lon), float(barn.lat))
 
-        self.conn.commit()
+        conn.commit()
         log.info("loaded %d bars, ignored %d nameless, created/updated %d bars", len(osm.nodes), ignored_bars, len(new_bars))
 
-    def by_osmid(osmid):
+    def by_osmid(self, osmid):
         #return db.GqlQuery("select from Bar where bar_osm_id = :1", osmid).get()
         #bar =  db.GqlQuery("select from Bar where bar_osm_id = :1", osmid).get()
         #log.debug("bar key is %s", bar.key())
         #return bar
-        rows = self.conn.execute("select name, type, osmid, x(geometry), y(geometry) from bars")
+        conn = sqlite3.connect(config['dbfile'])
+        rows = conn.execute("select name, type, osmid, x(geometry), y(geometry) from bars").fetchall()
         if len(rows) == 0:
             return None
         if len(rows) > 1:

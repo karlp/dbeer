@@ -24,6 +24,7 @@ from dbeer import app, config
 import models
 
 db = models.Db()
+db.verify_or_create()
 full_prices = {}
 
 def print_timing(func):
@@ -56,7 +57,7 @@ def bars_nearest_xml(num=3):
 @print_timing
 def bar_detail(osmid):
     ts = time.time()
-    bar = models.Bar.by_osmid(osmid)
+    bar = db.by_osmid(osmid)
     tt = time.time() - ts
     log.debug("fetch by osmid took %f", tt)
     if bar is None:
