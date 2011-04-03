@@ -90,7 +90,7 @@ def memget(raw_key):
 def bar_add_price(osmid):
 
     ## Make sure we have this bar in the datastore?
-    bar = models.Bar.by_osmid(osmid)
+    bar = db.by_osmid(osmid)
     if bar is None:
         abort(404)
     pp = request.form.get('price')
@@ -98,6 +98,7 @@ def bar_add_price(osmid):
     # we want the time from the user, because that will be the _local_ time,
     # which is more relevant for beer pricing than server time.
     orig_date = request.form.get('price_date')
+
     if pp is None or orig_date is None:
         abort(500, "price and price_date are required")
 
@@ -105,17 +106,9 @@ def bar_add_price(osmid):
     lon = request.form.get("recordedLon")
     orig_date = datetime.utcfromtimestamp(float(orig_date))
 
-    log.debug("Adding price %s for bar %s on %s", pp, osmid, orig_date)
-    add_price(bar, pp, price_type, orig_date, lat, lon)
+    log.debug("Adding price %s for bar %s on %s", pp, bar, orig_date)
+    db.add_price(bar, pp, price_type, orig_date, float(lat), float(lon))
     return "OK"
-
-def add_price(bar, price, price_type, date, lat, lon):
-    """
-    Just stuff it into the database!
-    """
-    pp = models.Pricing(bar=bar, location=db.GeoPt(lat, lon), drink_type=price_type, price=price, report_date=date)
-    db.put(pp)
-
 
 def get_avg_prices(bar):
     """

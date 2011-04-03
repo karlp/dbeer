@@ -151,6 +151,12 @@ class Db():
             prices[row[0]] = row[1]
         return prices
 
+    def add_price(self, bar, price, drink_type, orig_date, lat, lon):
+        conn = sqlite3.connect(config['dbfile'])
+        conn.execute("insert into pricings (barid, drink_type, price, date, geometry) values (?, ?, ?, ?, geomFromText('point(%f %f)', 4326))" % (lon, lat),
+            (bar.pkuid, drink_type, price, orig_date))
+        conn.commit()
+
 class Bar():
 
     def distance(self, p2lat, p2lon):
