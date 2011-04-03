@@ -22,10 +22,8 @@ except:
 from flask import request, abort, Response, render_template
 from dbeer import app, config
 import models
-from google.appengine.ext import db
-from google.appengine.api import quota
-from google.appengine.api import memcache
 
+db = models.Db()
 full_prices = {}
 
 def print_timing(func):
