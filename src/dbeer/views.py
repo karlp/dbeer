@@ -65,27 +65,6 @@ def bar_detail(osmid):
     prices = get_avg_prices(bar)
     return Response(render_template("bar.xml", bar=bar, prices=prices), content_type="application/xml; charset=utf-8", )
 
-def memget2(raw_keys):
-    keys = map(str, raw_keys)
-    dd = memcache.get_multi(keys)
-    if len(dd) != len(keys):
-        dd = db.get(raw_keys)
-        toset = dict(zip(keys, dd))
-        memcache.set_multi(toset)
-        return dd
-    else:
-        return dd.values()
-
-def memget(raw_key):
-    key = str(raw_key)
-    d = memcache.get(key)
-    if d is not None:
-        return d
-    d = db.get(raw_key)
-    memcache.add(key, d, 60)
-    return d
-
-# FIXME - test with PUT too
 @app.route('/bar/<int:osmid>.xml', methods=['POST', 'PUT'])
 def bar_add_price(osmid):
 

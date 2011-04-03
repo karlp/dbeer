@@ -5,9 +5,7 @@
 # oh yes, this does lots of calculations....
 
 import math
-import decimal
 import logging
-import time
 log = logging.getLogger("dbeer.models")
 
 from pyspatialite import dbapi2 as sqlite3
@@ -190,18 +188,3 @@ class Bar():
         if isinstance(pyobj, Bar):
             return {"name" : pyobj.name, "lat" : pyobj.lat, "lon": pyobj.lon, "osmid": pyobj.bar_osm_id, "type" : pyobj.type}
         return JSONEncoder.default(pyobj)
-
-
-class Pricing():
-    """
-    We don't need to search pricings based on geo data, so it can just be a normal model
-    """
-#    bar = db.ReferenceProperty(Bar)
-#    location = db.GeoPtProperty(required=True)
-#    drink_type = db.IntegerProperty(required=True)
-#    price = DecimalProperty(required=True)
-#    report_date = db.DateTimeProperty(required=True)
-
-    def __repr__(self):
-        return "Pricing(bar=%d, location=%s, type=%s, price=%f, date=%s)" % (self.bar, self.location, self.drink_type, self.price, self.report_date)
-
