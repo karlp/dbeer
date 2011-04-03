@@ -95,6 +95,9 @@ class Db():
         log.info("loaded %d bars, ignored %d nameless, created/updated %d bars", len(osm.nodes), ignored_bars, updated_bars)
 
     def by_osmid(self, osmid):
+        """
+        Look up a bar by it's osm id
+        """
         conn = sqlite3.connect(config['dbfile'])
         conn.row_factory = sqlite3.Row
         log.debug("looking for osmid: %d", osmid)
@@ -106,6 +109,18 @@ class Db():
 
         bar = Bar(rows[0]['name'], rows[0]['lat'], rows[0]['lon'], type=rows[0]['type'], osmid=rows[0]['osmid'])
         return bar
+
+    def nearest_bars(self, lat, lon, count):
+        conn = sqlite3.connect(config['dbfile'])
+        conn.row_factory = sqlite3.Row
+        bars = []
+        rows = conn.execute("""
+        select name, type, osmid, x(geometry) as lon, y(geometry) as lat,
+            distance(geometry, geomfromtext('point(%f %f)', 4326)) as distance from bars order by distance
+            """ % (lon, lat))
+        for row in rows:
+            bars.append(Bar(row['name'], row['lat'], row['lon'], type=row['type'], osmid=row['osmid']))
+        return bars
 
 
 class Bar():

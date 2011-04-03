@@ -152,17 +152,15 @@ def bars_nearest(num=3, tjson=False, txml=False):
         log.debug("Squashing request for %d bars down to %d", num, config['results_limit'])
         num = config['results_limit']
 
-    # TODO - this should consider how close to the edge of a lon_bucket we are, and fetch the adjacent one if we're "close"
-    slice = models.Bar.all(keys_only=True).filter("lon_bucket =", int(round(lon / models.BUCKET_SIZE))).filter("lat >", lat-1).filter("lat <", lat+1)
-    bb = memget2(slice)
-    nearest = sorted(bb, key=lambda b: b.distance(lat, lon))
-
+    nearest = db.nearest_bars(lat, lon, num)
     results = []
     # TODO - we should return a nicer datatype here, with "links" to more info...
     # look at the rest media types docs you have
-    for i,v in enumerate(nearest[:num]):
+    for i,v in enumerate(nearest):
         results.append({"bar" : v,
-                # danger! FIXME - this _recalculates_ the distance!
+                # danger! this calculates the distance in meters, the db returns sorted by lat/long
+                # FIXME - should experiment with places that are at high latitudes, and see if this actually needs resorting...?
+                # probably best to fetch num * 2 bars, then sort using real haversines? and take top num?
                 "distance" : v.distance(lat,lon),
                 "prices" : get_avg_prices(v)
                 })
