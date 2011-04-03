@@ -186,5 +186,5 @@ class Bar():
     @staticmethod
     def to_json(pyobj):
         if isinstance(pyobj, Bar):
-            return {"name" : pyobj.name, "lat" : pyobj.lat, "lon": pyobj.lon, "osmid": pyobj.bar_osm_id, "type" : pyobj.type}
+            return {"name" : pyobj.name, "lat" : pyobj.lat, "lon": pyobj.lon, "osmid": pyobj.osmid, "type" : pyobj.type}
         return JSONEncoder.default(pyobj)
