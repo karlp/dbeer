@@ -24,7 +24,6 @@ import models
 
 db = models.Db()
 db.verify_or_create()
-full_prices = {}
 
 def print_timing(func):
     def wrapper(*arg, **kwarg):
@@ -41,6 +40,9 @@ def status():
 
 @app.route('/upload', methods=['POST'])
 def add_raw_dump():
+    """
+    TODO - this should _reallly_ support gzipped uploads!
+    """
     db.add_file(request.files['osmfile'])
     return "OK"
 
@@ -83,7 +85,7 @@ def bar_add_price(osmid):
 
     lat = request.form.get("recordedLat")
     lon = request.form.get("recordedLon")
-    orig_date = datetime.utcfromtimestamp(float(orig_date))
+    orig_date = datetime.utcfromtimestamp(float(orig_date) / 1000)
 
     log.debug("Adding price %s for bar %s on %s", pp, bar, orig_date)
     db.add_price(bar, pp, price_type, orig_date, float(lat), float(lon))
