@@ -9,7 +9,6 @@ __date__ ="$Mar 15, 2011 7:24:21 PM$"
 import logging
 log = logging.getLogger("dbeer.views")
 
-import random
 from datetime import datetime
 import time
 
@@ -122,16 +121,7 @@ def get_avg_prices(bar):
     """
     Look up the full set of price history for this bar, and squish down to averages by drink type
     """
-    prices = {}
-    for p in bar.pricing_set():
-        bleh = prices.get(p.drink_type, [])
-        bleh.append(p.price)
-        prices[p.drink_type] = bleh
-
-    averages = {}
-    for drink_type in prices:
-        averages[drink_type] = sum(prices[drink_type]) / len(prices[drink_type])
-    return averages
+    return db.avg_prices_for_bar(bar.pkuid)
 
 @print_timing
 def bars_nearest(num=3, tjson=False, txml=False):
@@ -158,9 +148,7 @@ def bars_nearest(num=3, tjson=False, txml=False):
     # look at the rest media types docs you have
     for i,v in enumerate(nearest):
         results.append({"bar" : v,
-                # danger! this calculates the distance in meters, the db returns sorted by lat/long
-                # FIXME - should experiment with places that are at high latitudes, and see if this actually needs resorting...?
-                # probably best to fetch num * 2 bars, then sort using real haversines? and take top num?
+                # danger! FIXME - this recalculates the distance!
                 "distance" : v.distance(lat,lon),
                 "prices" : get_avg_prices(v)
                 })

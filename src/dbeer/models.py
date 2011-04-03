@@ -33,6 +33,7 @@ config = {
                             date integer not null,
                             barid integer not null,
                             drink_type integer not null,
+                            price real not null,
                             geometry blob not null
                             )""",
     'sql_update_geom_bars' : "SELECT RecoverGeometryColumn('bars', 'geometry', 4326, 'POINT', 2)",
@@ -112,13 +113,14 @@ class Db():
         conn = sqlite3.connect(config['dbfile'])
         conn.row_factory = sqlite3.Row
         log.debug("looking for osmid: %d", osmid)
-        rows = conn.execute("select name, type, osmid, x(geometry) as lon, y(geometry) as lat from bars where osmid = ?", (osmid,)).fetchall()
+        rows = conn.execute("select pkuid, name, type, osmid, x(geometry) as lon, y(geometry) as lat from bars where osmid = ?", (osmid,)).fetchall()
         if len(rows) == 0:
             return None
         if len(rows) > 1:
             raise Exception("more than one bar with the same OSM id: %s" % osmid)
 
         bar = Bar(rows[0]['name'], rows[0]['lat'], rows[0]['lon'], type=rows[0]['type'], osmid=rows[0]['osmid'])
+        bar.pkuid = rows[0]['pkuid']
         return bar
 
     def nearest_bars(self, lat, lon, count, lat_delta=BBOX_SIZE, lon_delta=BBOX_SIZE):
@@ -128,14 +130,26 @@ class Db():
         conn = sqlite3.connect(config['dbfile'])
         conn.row_factory = sqlite3.Row
         bars = []
-        rows = conn.execute("select name, type, osmid, x(geometry) as lon, y(geometry) as lat from bars where mbrContains(BuildMBR(?, ?, ?, ?), geometry)",
+        rows = conn.execute("select pkuid, name, type, osmid, x(geometry) as lon, y(geometry) as lat from bars where mbrContains(BuildMBR(?, ?, ?, ?), geometry)",
             (lon - lon_delta, lat - lat_delta, lon + lon_delta, lat + lat_delta))
         for row in rows:
-            bars.append(Bar(row['name'], row['lat'], row['lon'], type=row['type'], osmid=row['osmid']))
+            bar = Bar(row['name'], row['lat'], row['lon'], type=row['type'], osmid=row['osmid'])
+            bar.pkuid = row['pkuid']
+            bars.append(bar)
 
         # FIXME - this sort does a calulation on the distance, which is then done _again_ to populate the xml results
+        # arguably, we don't even need to sort, just return all the bars within the bbox, and their distances, the phone has to sort it again anyway,
+        # and will be recalculating the distances all the time anyway
         nearest = sorted(bars, key=lambda b: b.distance(lat, lon))
         return nearest[:count]
+
+    def avg_prices_for_bar(self, bar_pkuid):
+        prices = {}
+        conn = sqlite3.connect(config['dbfile'])
+        rows = conn.execute("select drink_type, avg(price) from pricings where barid = ? group by drink_type", (bar_pkuid,)).fetchall()
+        for row in rows:
+            prices[row[0]] = row[1]
+        return prices
 
 class Bar():
 
