@@ -15,6 +15,7 @@ import pyosm
 
 BUCKET_SIZE = 18
 R = 6371000
+BBOX_SIZE = 0.5
 
 #conn.row_factory = sqlite3.Row
 
@@ -57,6 +58,8 @@ class Db():
             c.execute(config['sql_create_table_pricings'])
             c.execute(config['sql_update_geom_bars'])
             c.execute(config['sql_update_geom_pricings'])
+            c.execute("create index idx_bar_osmid on bars(osmid)")
+            c.execute("create index idx_pricing_barid on pricings(barid)")
         else:
             log.info("Bars table existed, assuming everything else is in place")
 
@@ -75,6 +78,7 @@ class Db():
 
         ignored_bars = 0
         updated_bars = 0
+        new_bars = 0
         conn = sqlite3.connect(config['dbfile'])
         c = conn.cursor()
         for barn in osm.nodes.values():
@@ -84,15 +88,22 @@ class Db():
                 # Always updated, but use a key to make sure that we never make a duplicate.
                 # this _may_ cause some problems with ODBL? it makes it more of a derivative than a collection?
                 # Using my own key, and looking for bars by osm id first works too, but it's much much much slower....
-                # oh fuck you very much spatialite
                 bar = Bar(barn.tags["name"], float(barn.lat), float(barn.lon), type=barn.tags["amenity"], osmid=barn.id)
-                log.debug("inserting bar: %s", bar)
-                c.execute("insert into bars (name, type, osmid, geometry) values (?, ?, ?, geomFromText('POINT(%f %f)', 4326))" % (bar.lon, bar.lat),
-                    (bar.name, bar.type, bar.osmid))
-                updated_bars += 1
+                cnt = c.execute("select count(1) from bars where osmid = ?", (bar.osmid,)).fetchone()[0]
+                if cnt >= 1:
+                    # update
+                    c.execute("update bars set name = ?, type =?, geometry = geomFromText('POINT(%f %f)', 4326) where osmid = ?" % (bar.lon, bar.lat),
+                        (bar.name, bar.type, bar.osmid))
+                    updated_bars += 1
+                else:
+                    # created
+                    # oh fuck you very much spatialite
+                    c.execute("insert into bars (name, type, osmid, geometry) values (?, ?, ?, geomFromText('POINT(%f %f)', 4326))" % (bar.lon, bar.lat),
+                        (bar.name, bar.type, bar.osmid))
+                    new_bars += 1
 
         conn.commit()
-        log.info("loaded %d bars, ignored %d nameless, created/updated %d bars", len(osm.nodes), ignored_bars, updated_bars)
+        log.info("loaded %d bars, ignored %d nameless, created %d, updated %d", len(osm.nodes), ignored_bars, new_bars, updated_bars)
 
     def by_osmid(self, osmid):
         """
@@ -110,18 +121,21 @@ class Db():
         bar = Bar(rows[0]['name'], rows[0]['lat'], rows[0]['lon'], type=rows[0]['type'], osmid=rows[0]['osmid'])
         return bar
 
-    def nearest_bars(self, lat, lon, count):
+    def nearest_bars(self, lat, lon, count, lat_delta=BBOX_SIZE, lon_delta=BBOX_SIZE):
+        """
+        Get all the bars withing a box centered on a point, then sort those on real distance, and return them in order...
+        """
         conn = sqlite3.connect(config['dbfile'])
         conn.row_factory = sqlite3.Row
         bars = []
-        rows = conn.execute("""
-        select name, type, osmid, x(geometry) as lon, y(geometry) as lat,
-            distance(geometry, geomfromtext('point(%f %f)', 4326)) as distance from bars order by distance
-            """ % (lon, lat))
+        rows = conn.execute("select name, type, osmid, x(geometry) as lon, y(geometry) as lat from bars where mbrContains(BuildMBR(?, ?, ?, ?), geometry)",
+            (lon - lon_delta, lat - lat_delta, lon + lon_delta, lat + lat_delta))
         for row in rows:
             bars.append(Bar(row['name'], row['lat'], row['lon'], type=row['type'], osmid=row['osmid']))
-        return bars
 
+        # FIXME - this sort does a calulation on the distance, which is then done _again_ to populate the xml results
+        nearest = sorted(bars, key=lambda b: b.distance(lat, lon))
+        return nearest[:count]
 
 class Bar():
 
