@@ -8,7 +8,8 @@ __date__ ="$Mar 25, 2011 3:45:04 PM$"
 import logging
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(levelname)s %(name)s - %(message)s")
 
-from dbeer import app
+from dbeer import app as application
 
 if __name__ == "__main__":
-    app.run("0.0.0.0")
+    application.run("0.0.0.0")
+

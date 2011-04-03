@@ -18,7 +18,7 @@ BBOX_SIZE = 0.5
 #conn.row_factory = sqlite3.Row
 
 config = {
-    'dbfile' : "/home/karl/src/dbeer-services/dbeer-demo.sqlite",
+    'dbfile' : "/home/karl/src/dbeer-services/data/dbeer-demo.sqlite",
     'sql_create_table_bars' :
         """CREATE TABLE bars(PKUID integer primary key autoincrement,
                             name text not null,
@@ -36,7 +36,7 @@ config = {
                             )""",
     'sql_update_geom_bars' : "SELECT RecoverGeometryColumn('bars', 'geometry', 4326, 'POINT', 2)",
     'sql_update_geom_pricings' : "SELECT RecoverGeometryColumn('pricings', 'geometry', 4326, 'POINT', 2)",
-    'sql_create_geom_file' : "init_spatialite-2.3.sql",
+    'sql_create_geom_file' : "/home/karl/src/dbeer-services/data/init_spatialite-2.3.sql",
 }
 
 class Db():
