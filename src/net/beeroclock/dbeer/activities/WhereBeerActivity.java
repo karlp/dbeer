@@ -42,6 +42,10 @@ import java.util.*;
 public class WhereBeerActivity extends ListActivity implements LocationListener {
 
     public static final String TAG = "WhereBeerActivity";
+    public static final int SERVER_DEFAULT_ID = 0;
+    public static final int SERVER_DEV_ID = 1;
+    public static final int SERVER_CUSTOM_ID = 2;
+    public static final int SERVER_NEW_ID = 3;
     private TextView tvStatus;
     private ImageView headerImage;
     PintyApp pinty;
@@ -100,9 +104,17 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
                         redrawBarList();
                         return true;
                     case MENU_SERVER_ID:
-                        Log.d(TAG, "They chose an item from the server submenu: " + item + " with id + " + item.getItemId());
-                        // FIXME - do something here!
-                        // If it's one of the default ones, we need to just set it, otherwise, we need to accept edits and add to a list of options!
+                        if (item.getItemId() == SERVER_NEW_ID) {
+                            Log.d(TAG,  "need to pop a text edit here somehow!");
+                        } else {
+                            item.setChecked(true);
+                            Log.d(TAG, "They chose an item from the server submenu: " + item + " with id + " + item.getItemId());
+                            pinty.saveServer((String) item.getTitle());
+                            Intent i = getIntent();
+                            pinty.getKnownBars().clear();
+                            this.finish();
+                            startActivity(i);
+                        }
                         return true;
                     default:
                         return super.onOptionsItemSelected(item);
@@ -127,9 +139,22 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
 
         SubMenu serverChoices = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, R.string.menu_where_server);
         serverChoices.setHeaderTitle(R.string.menu_server_header);
-        serverChoices.add(MENU_SERVER_ID, 0, 0, "dbeer-services.ekta.is");
-        serverChoices.add(MENU_SERVER_ID, 1, 1, "tera.beeroclock.net");
-        serverChoices.add(MENU_SERVER_ID, 2, 2, "enter a new server");
+        // TODO - should this come from a list?
+        // just have one user pref,
+        String currentServer = pinty.getServer();
+        MenuItem defaultItem = serverChoices.add(MENU_SERVER_ID, SERVER_DEFAULT_ID, 0, "dbeer-services.ekta.is");
+        MenuItem teraItem = serverChoices.add(MENU_SERVER_ID, SERVER_DEV_ID, 1, "tera.beeroclock.net");
+        if (currentServer.equals("tera.beeroclock.net")) {
+            teraItem.setChecked(true);
+        } else if (currentServer.equals("dbeer-services.ekta.is")) {
+            defaultItem.setChecked(true);
+        } else {
+            MenuItem item = serverChoices.add(MENU_SERVER_ID, SERVER_CUSTOM_ID, 2, currentServer);
+            item.setChecked(true);
+        }
+        MenuItem item = serverChoices.add(MENU_SERVER_ID, SERVER_NEW_ID, 3, "enter a new server");
+        serverChoices.setGroupCheckable(MENU_SERVER_ID, true, true);
+        item.setCheckable(false);
 
         return true;
     }
@@ -300,7 +325,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
             qparams.add(new BasicNameValuePair("lon", String.valueOf(location.getLongitude())));
             URI uri;
             try {
-                uri = URIUtils.createURI("http", PintyApp.DBEER_SERVICES_HOST, -1, "/nearest.xml/10", URLEncodedUtils.format(qparams, "UTF-8"), null);
+                uri = URIUtils.createURI("http", pinty.getServer(), -1, "/nearest.xml/10", URLEncodedUtils.format(qparams, "UTF-8"), null);
             } catch (URISyntaxException e) {
                 Log.e(TAG, "how did this happen?!", e);
                 throw new IllegalStateException("You shouldn't be able to get here!", e);

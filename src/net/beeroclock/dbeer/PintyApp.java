@@ -21,10 +21,10 @@ import java.util.TreeSet;
  */
 public class PintyApp extends Application {
 
-    public static final String DBEER_SERVICES_HOST = "tera.beeroclock.net";
+    public static final String DEFAULT_SERVER = "dbeer-services.ekta.is";
     public static final String PREFS_FILE = "PintyPrefs";
     public static final String PREF_FAVOURITE_DRINK = "favourite_drink";
-    //    public static final String DBEER_SERVICES_HOST = "dbeer-services.ekta.is";
+    public static final String PREF_SERVER = "server";
     // Probably should become a map, or at least provide ways of getting certain bars back out again...
     private Set<Bar> knownBars;
     private Set<Bar> hiddenBars;
@@ -114,14 +114,26 @@ public class PintyApp extends Application {
      */
     public int getFavouriteDrink() {
         SharedPreferences pref = getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
-        int favouriteDrink = pref.getInt(PREF_FAVOURITE_DRINK, drinkExternalIds.get(0).intValue());
-        return favouriteDrink;
+        return pref.getInt(PREF_FAVOURITE_DRINK, drinkExternalIds.get(0).intValue());
     }
 
     public void saveFavouriteDrink(int drinkId) {
         SharedPreferences prefs = getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(PREF_FAVOURITE_DRINK, drinkId);
+        editor.commit();
+    }
+
+    public String getServer() {
+        SharedPreferences pref = getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
+        return pref.getString(PREF_SERVER, DEFAULT_SERVER);
+    }
+
+
+    public void saveServer(String server) {
+        SharedPreferences prefs = getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PREF_SERVER, server);
         editor.commit();
     }
 }

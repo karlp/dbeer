@@ -6,6 +6,7 @@
           />
     <item a:id="@+id/menu_where_other"
           a:title="@string/menu_where_other"
+          a:enabled="false"
           />
 
 </menu>
