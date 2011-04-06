@@ -50,7 +50,7 @@ public class TestUtils {
     public void testParseBarXml() throws Exception {
         Set<Bar> bars = Utils.parseBarXml(sampleResponse);
         assertEquals("Should get all 5 bars", 5, bars.size());
-        Bar teOgKaffi = new Bar("Te & Kaffi", 64.1311429, -21.8678835, 298914063L);
+        Bar teOgKaffi = new Bar("Te & Kaffi", "cafe", 64.1311429, -21.8678835, 298914063L);
         teOgKaffi.distance = 1386.26126992;
         Set<Price> prices = new TreeSet<Price>();
         prices.add(new Price(1, 800));

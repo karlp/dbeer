@@ -27,6 +27,7 @@ public class BarDetailActivity extends ListActivity {
     Bar bar;
     PintyApp pinty;
     TextView tvBarName;
+    TextView tvBarType;
     Button addPriceButton;
     private static final int BAR_ENABLED_DISTANCE = 150;
     public static final int REQUEST_ADD_PRICE = 1;
@@ -36,6 +37,7 @@ public class BarDetailActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bar_detail);
         tvBarName = (TextView) findViewById(R.id.bar_detail_name);
+        tvBarType = (TextView) findViewById(R.id.bar_detail_type);
         addPriceButton = (Button) findViewById(R.id.bar_add_price_btn);
         pinty = (PintyApp)getApplication();
 
@@ -61,6 +63,7 @@ public class BarDetailActivity extends ListActivity {
             addPriceButton.setEnabled(false);
         }
         tvBarName.setText(bar.name);
+        tvBarType.setText(bar.type);
 
         PriceArrayAdapter arrayAdapter = new PriceArrayAdapter(this, R.layout.price_row_item, new ArrayList<Price>(bar.prices));
         ListView lv = getListView();

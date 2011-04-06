@@ -7,8 +7,13 @@
     <TextView a:id="@+id/bar_detail_name"
               a:layout_height="wrap_content"
               a:layout_width="fill_parent"
-              a:textSize="20sp"
+              a:textSize="40sp"
             />
+    <TextView a:id="@+id/bar_detail_type"
+              a:layout_height="wrap_content"
+              a:layout_width="fill_parent"
+              a:textSize="25sp"
+              />
     <RelativeLayout a:layout_height="wrap_content" a:layout_width="wrap_content">
         <Button a:id="@+id/bar_get_directions_btn"
                 a:layout_height="wrap_content"

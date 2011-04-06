@@ -10,9 +10,9 @@
 
     <TextView a:id="@+id/bar_name"
             a:layout_width="wrap_content"
-            a:layout_height="fill_parent"
+            a:layout_height="wrap_content"
             a:layout_weight="1"
-            a:textSize="20sp"
+            a:textSize="30sp"
             />
 
     <TextView a:id="@+id/bar_distance"

@@ -19,6 +19,7 @@ public class Bar implements Comparable<Bar> {
     public String name;
     public long pkuid;
     public Long osmid;
+    public String type;
     public double lat;
     public double lon;
     public Double distance;  // The whole idea of this distance being reliable is INSANE!
@@ -32,8 +33,9 @@ public class Bar implements Comparable<Bar> {
     public Bar() {
     }
 
-    public Bar(String name, double lat, double lon, long pkuid) {
+    public Bar(String name, String type, double lat, double lon, long pkuid) {
         this.name = name;
+        this.type = type;
         this.lon = lon;
         this.lat = lat;
         this.pkuid = pkuid;
@@ -44,6 +46,7 @@ public class Bar implements Comparable<Bar> {
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder();
         hcb.append(name);
+        hcb.append(type);
         hcb.append(pkuid);
         hcb.append(lat);
         hcb.append(lon);
@@ -57,6 +60,7 @@ public class Bar implements Comparable<Bar> {
             Bar that = (Bar) o;
             EqualsBuilder eb = new EqualsBuilder();
             eb.append(this.name, that.name);
+            eb.append(this.type, that.type);
             eb.append(this.pkuid, that.pkuid);
             eb.append(this.lat, that.lat);
             eb.append(this.lon, that.lon);
@@ -73,6 +77,7 @@ public class Bar implements Comparable<Bar> {
     public int compareTo(Bar bar) {
         CompareToBuilder ctb = new CompareToBuilder();
         ctb.append(this.name, bar.name);
+        ctb.append(this.type, bar.type);
         ctb.append(this.pkuid, bar.pkuid);
         ctb.append(this.lat, bar.lat);
         ctb.append(this.lon, bar.lon);
@@ -83,6 +88,7 @@ public class Bar implements Comparable<Bar> {
     public String toString() {
         return "Bar{" +
                 "name='" + name + '\'' +
+                ", type=" + type +
                 ", pkuid=" + pkuid +
                 ", osmid=" + osmid +
                 ", lat=" + lat +

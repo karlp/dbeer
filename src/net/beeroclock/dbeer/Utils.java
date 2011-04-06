@@ -46,6 +46,7 @@ public class Utils {
                     b.osmid = Long.parseLong(osmid);
                 }
                 b.name = StringEscapeUtils.unescapeXml(bar.evaluateXPath("name/text()")[0].toString());
+                b.type = StringEscapeUtils.unescapeXml(bar.evaluateXPath("type/text()")[0].toString());
 
                 StringBuffer  sb = (StringBuffer) bar.evaluateXPath("distance/text()")[0];
                 b.distance = Double.valueOf(sb.toString());
