@@ -256,14 +256,36 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     public void onProviderDisabled(String provider) {
     }
 
+    class BarServiceFetcherResult {
+        boolean success;
+        Throwable exception;
+        String message;
+        Set<Bar> bars;
 
-    class BarServiceFetcher extends AsyncTask<Location, Void, Set<Bar>> {
+        BarServiceFetcherResult(Set<Bar> bars) {
+            success = true;
+            this.bars = bars;
+        }
+
+        BarServiceFetcherResult(String message) {
+            this.success = false;
+            this.message = message;
+        }
+
+        BarServiceFetcherResult(String message, Throwable exception) {
+            this.success = false;
+            this.message = message;
+            this.exception = exception;
+        }
+    }
+
+    class BarServiceFetcher extends AsyncTask<Location, Void, BarServiceFetcherResult> {
         Location location;
 
         @Override
-        protected Set<Bar> doInBackground(Location... locations) {
+        protected BarServiceFetcherResult doInBackground(Location... locations) {
             if (locations.length == 0) {
-                return new TreeSet<Bar>();
+                return new BarServiceFetcherResult("No locations given to search for");
             }
             if (locations.length > 1) {
                 Log.w(TAG, "ignoring request to fetch multiple locations!");
@@ -280,7 +302,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
                 uri = URIUtils.createURI("http", pinty.getServer(), -1, "/nearest.xml/10", URLEncodedUtils.format(qparams, "UTF-8"), null);
             } catch (URISyntaxException e) {
                 Log.e(TAG, "how did this happen?!", e);
-                throw new IllegalStateException("You shouldn't be able to get here!", e);
+                return new BarServiceFetcherResult("How did this happen? URI Syntax exception?!", e);
             }
             HttpGet request = new HttpGet(uri);
 
@@ -289,27 +311,35 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
             } catch (HttpResponseException e) {
                 // TODO - should invalidate the position somehow, so it gets refetched?
                 Log.e(TAG, e.getStatusCode() + "-" + e.getMessage(), e);
-                return new TreeSet<Bar>();
+                return new BarServiceFetcherResult("invalid response from the server!", e);
             } catch (IOException e) {
-                // FIXME - this is not really very pretty...
-                // FIXME - how to notify the user here?
                 Log.e(TAG, "Crazy error" + e.getMessage(), e);
-                return new TreeSet<Bar>();
+                return new BarServiceFetcherResult("Craziness?", e);
             }
-            return Utils.parseBarXml(xmlr);
+            try {
+                Set<Bar> bars = Utils.parseBarXml(xmlr);
+                return new BarServiceFetcherResult(bars);
+            } catch (Exception e) {
+                return new BarServiceFetcherResult("Failed to parse the xml reply", e);
+            }
         }
 
         @Override
-        protected void onPostExecute(Set<Bar> bars) {
-            super.onPostExecute(bars);
-            headerImage.setImageDrawable(getResources().getDrawable(R.drawable.emo_im_happy));
+        protected void onPostExecute(BarServiceFetcherResult result) {
+            super.onPostExecute(result);
+            if (result.success) {
+                headerImage.setImageDrawable(getResources().getDrawable(R.drawable.emo_im_happy));
 
-            // TODO - Could add proximity alerts here for each bar?
-            // save the bars to our application's current set of bars...
-            // TODO Remember, we have to resort the set of bars, based on our current location!
-            // Still want a set, so I don't get duplicate bars, but probably should resort it a lot more often
-            pinty.getKnownBars().addAll(bars);
-            redrawBarList();
+                // TODO - Could add proximity alerts here for each bar?
+                // save the bars to our application's current set of bars...
+                // TODO Remember, we have to resort the set of bars, based on our current location!
+                // Still want a set, so I don't get duplicate bars, but probably should resort it a lot more often
+                pinty.getKnownBars().addAll(result.bars);
+                redrawBarList();
+            } else {
+                tvStatus.setText(result.message);
+                // something else here?
+            }
         }
 
     }
