@@ -14,11 +14,12 @@ public class LocalDatabase extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     public static final String TABLE_HIDDEN_BARS = "hidden_bars";
+    public static final String HB_ROWID = "_id";
     public static final String HB_PKUID = "bar_pkuid";
     public static final String HB_NAME = "bar_name";
     private static final String TABLE_HIDDEN_BARS_CREATE =
                 "CREATE TABLE " + TABLE_HIDDEN_BARS + " (" +
-                        "_id integer primary key autoincrement, " +
+                HB_ROWID + " integer primary key autoincrement, " +
                 HB_PKUID + " integer not null, " +
                 HB_NAME + " TEXT not null);";
 

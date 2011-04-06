@@ -28,4 +28,6 @@
     <string name="menu_drink_choices_header">Show average prices for:</string>
     <string name="menu_server_header">Beer server to use:</string>
     <string name="preference_category_server">Server</string>
+    <string name="hidden_edit_title">These bars are hidden from view</string>
+    <string name="hidden_edit_btn_clear_label">Reshow all</string>
 </resources>

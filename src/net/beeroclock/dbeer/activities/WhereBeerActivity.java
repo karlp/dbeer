@@ -78,6 +78,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         return super.onContextItemSelected(item);
     }
 
+    // This is the menu shown for a long click
     @Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
@@ -93,12 +94,13 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_where_hidden_bars:
-                Log.d(TAG, "jumping to hidden bars...");
-                // TODO
+                Intent intentHiddenBars = new Intent(this, HiddenBarEditActivity.class);
+                startActivity(intentHiddenBars);
                 return true;
             case R.id.menu_where_preferences:
-                Intent i = new Intent(this, MyPreferencesActivity.class);
-                startActivity(i);
+                Intent intentPrefs = new Intent(this, MyPreferencesActivity.class);
+                startActivity(intentPrefs);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

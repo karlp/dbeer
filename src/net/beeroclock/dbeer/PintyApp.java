@@ -156,13 +156,17 @@ public class PintyApp extends Application {
         editor.commit();
     }
 
+    /**
+     * Reload the  list of hidden bars.
+     */
     public void loadHiddenBars() {
+        hiddenBars.clear();
         SQLiteDatabase db = new LocalDatabase(this).getReadableDatabase();
         Cursor cur = db.query(LocalDatabase.TABLE_HIDDEN_BARS, new String[]{LocalDatabase.HB_PKUID}, null, null, null, null, null);
         cur.moveToFirst();
         while (!cur.isAfterLast()) {
             long hiddenBarId = cur.getLong(0);
-            Log.d("pinty", "loaded WOO hidden barid: " + hiddenBarId);
+            Log.d("pinty", "loaded hidden barid: " + hiddenBarId);
             hiddenBars.add(hiddenBarId);
        	    cur.moveToNext();
         }
