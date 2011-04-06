@@ -23,22 +23,9 @@
     <string name="menu_where_drinks">Drinks</string>
     <string name="menu_where_hidden_bars">Hidden bars</string>
     <string name="menu_where_server">Server</string>
-    <string name="menu_where_other">Misc Settings</string>
+    <string name="menu_where_preferences">Preferences</string>
     <string name="menu_where_drink_types">Drink types</string>
     <string name="menu_drink_choices_header">Show average prices for:</string>
     <string name="menu_server_header">Beer server to use:</string>
-
-    <string-array name="drink_options_raw">
-        <!--
-         Don't fuck with the numbers before the ; !! those match up with drink descriptions on the server and so on.
-         This let's new drinks be added, and orders changed, and users to remove certain choices altogether.
-         We parse this list a bootup and then just keep it...
-         (TODO, could we... just keep it in preferences?...)
-         -->
-        <item>1;Basic large beer (tap)</item>
-        <item>2;Premium large beer (tap)</item>
-        <item>3;Basic shot</item>
-        <item>4;Basic bottled beer (small)</item>
-        <item>5;Premium bottled beer (small)</item>
-    </string-array>
+    <string name="preference_category_server">Server</string>
 </resources>

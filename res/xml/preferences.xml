@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:a="http://schemas.android.com/apk/res/android" a:key="PintyPrefs">
+    <PreferenceCategory a:title="@string/preference_category_server">
+        <CheckBoxPreference a:key="use_built_in_servers"
+                            a:title="Use built in servers"
+                            a:checked="true"
+                            />
+        <ListPreference a:title="Built in servers"
+                        a:dependency="use_built_in_servers"
+                        a:entries="@array/built_in_server_names"
+                        a:entryValues="@array/built_in_server_values"
+                        a:key="server">
+        </ListPreference>
+
+        <ListPreference
+           a:title="Favourite drink"
+           a:summary="Default drink to see prices for"
+           a:key="favourite_drink"
+           a:defaultValue="1"
+           a:entries="@array/drink_type_names"
+           a:entryValues="@array/drink_type_values" />
+    </PreferenceCategory>
+</PreferenceScreen>

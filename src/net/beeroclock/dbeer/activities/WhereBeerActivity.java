@@ -96,30 +96,11 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
                 Log.d(TAG, "jumping to hidden bars...");
                 // TODO
                 return true;
+            case R.id.menu_where_preferences:
+                Intent i = new Intent(this, MyPreferencesActivity.class);
+                startActivity(i);
             default:
-                switch (item.getGroupId()) {
-                    case MENU_DRINKS_ID:
-                        item.setChecked(true);
-                        pinty.saveFavouriteDrink(item.getItemId());
-                        redrawBarList();
-                        return true;
-                    case MENU_SERVER_ID:
-                        if (item.getItemId() == SERVER_NEW_ID) {
-                            Log.d(TAG,  "need to pop a text edit here somehow!");
-                        } else {
-                            item.setChecked(true);
-                            Log.d(TAG, "They chose an item from the server submenu: " + item + " with id + " + item.getItemId());
-                            pinty.saveServer((String) item.getTitle());
-                            // Restart!
-                            Intent i = getIntent();
-                            pinty.getKnownBars().clear();
-                            this.finish();
-                            startActivity(i);
-                        }
-                        return true;
-                    default:
-                        return super.onOptionsItemSelected(item);
-                }
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -127,36 +108,6 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_where, menu);
-        SubMenu drinkChoices = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, R.string.menu_where_drink_types);
-        drinkChoices.setHeaderTitle(R.string.menu_drink_choices_header);
-        int favouriteDrink = pinty.getFavouriteDrink();
-        for (int drinkId : pinty.drinkExternalIds) {
-            MenuItem item = drinkChoices.add(MENU_DRINKS_ID, drinkId, Menu.NONE, pinty.getDrinkNameForExternalId(drinkId));
-            if (item.getItemId() == favouriteDrink) {
-                item.setChecked(true);
-            }
-        }
-        drinkChoices.setGroupCheckable(MENU_DRINKS_ID, true, true);
-
-        SubMenu serverChoices = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, R.string.menu_where_server);
-        serverChoices.setHeaderTitle(R.string.menu_server_header);
-        // TODO - should this come from a list?
-        // just have one user pref,
-        String currentServer = pinty.getServer();
-        MenuItem defaultItem = serverChoices.add(MENU_SERVER_ID, SERVER_DEFAULT_ID, 0, "dbeer-services.ekta.is");
-        MenuItem teraItem = serverChoices.add(MENU_SERVER_ID, SERVER_DEV_ID, 1, "tera.beeroclock.net");
-        if (currentServer.equals("tera.beeroclock.net")) {
-            teraItem.setChecked(true);
-        } else if (currentServer.equals("dbeer-services.ekta.is")) {
-            defaultItem.setChecked(true);
-        } else {
-            MenuItem item = serverChoices.add(MENU_SERVER_ID, SERVER_CUSTOM_ID, 2, currentServer);
-            item.setChecked(true);
-        }
-        MenuItem item = serverChoices.add(MENU_SERVER_ID, SERVER_NEW_ID, 3, "enter a new server");
-        serverChoices.setGroupCheckable(MENU_SERVER_ID, true, true);
-        item.setCheckable(false);
-
         return true;
     }
 
@@ -181,13 +132,13 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         tvStatus.setText(R.string.where_beer_location_search);
 
         // Parse raw drink options... may need to push this to a background task...
-        String[] raw_drink_options = getResources().getStringArray(R.array.drink_options_raw);
+        String[] drink_names = getResources().getStringArray(R.array.drink_type_names);
+        String[] drink_ids = getResources().getStringArray(R.array.drink_type_values);
         pinty.drinkNames = new ArrayList<String>();
         pinty.drinkExternalIds = new ArrayList<Integer>();
-        for (String row : raw_drink_options) {
-            String[] bits = row.split(";", 2);  // allow drinks to contain ; if they really want.
-            pinty.drinkExternalIds.add(Integer.valueOf(bits[0]));
-            pinty.drinkNames.add(bits[1]);
+        for (int i = 0; i < drink_names.length; i++) {
+            pinty.drinkExternalIds.add(Integer.parseInt(drink_ids[i]));
+            pinty.drinkNames.add(drink_names[i]);
         }
 
         registerForContextMenu(getListView());

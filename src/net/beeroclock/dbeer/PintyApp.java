@@ -3,6 +3,7 @@ package net.beeroclock.dbeer;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import net.beeroclock.dbeer.models.Bar;
 import net.beeroclock.dbeer.models.Price;
 import net.beeroclock.dbeer.models.PricingReport;
@@ -113,25 +114,25 @@ public class PintyApp extends Application {
      * @return the external id of their saved favourite drink
      */
     public int getFavouriteDrink() {
-        SharedPreferences pref = getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
-        return pref.getInt(PREF_FAVOURITE_DRINK, drinkExternalIds.get(0));
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        return Integer.valueOf(pref.getString(PREF_FAVOURITE_DRINK, drinkExternalIds.get(0).toString()));
     }
 
     public void saveFavouriteDrink(int drinkId) {
-        SharedPreferences prefs = getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(PREF_FAVOURITE_DRINK, drinkId);
         editor.commit();
     }
 
     public String getServer() {
-        SharedPreferences pref = getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         return pref.getString(PREF_SERVER, DEFAULT_SERVER);
     }
 
 
     public void saveServer(String server) {
-        SharedPreferences prefs = getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PREF_SERVER, server);
         editor.commit();
