@@ -141,6 +141,9 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
             pinty.drinkNames.add(drink_names[i]);
         }
 
+        // load up current hidden bars...
+        pinty.loadHiddenBars();
+
         registerForContextMenu(getListView());
     }
 

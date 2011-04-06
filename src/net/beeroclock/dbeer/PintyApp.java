@@ -1,9 +1,13 @@
 package net.beeroclock.dbeer;
 
 import android.app.Application;
+import android.content.ContentValues;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import net.beeroclock.dbeer.models.Bar;
 import net.beeroclock.dbeer.models.Price;
 import net.beeroclock.dbeer.models.PricingReport;
@@ -28,7 +32,7 @@ public class PintyApp extends Application {
     public static final String PREF_SERVER = "server";
     // Probably should become a map, or at least provide ways of getting certain bars back out again...
     private Set<Bar> knownBars;
-    private Set<Bar> hiddenBars;
+    private Set<Long> hiddenBars;
     private Location lastLocation;
     // These are really a double array of constants, that match the remote server.
     // but android's resource model only gives us single arrays.
@@ -37,7 +41,7 @@ public class PintyApp extends Application {
 
     public PintyApp() {
         this.knownBars = new TreeSet<Bar>();
-        this.hiddenBars = new TreeSet<Bar>();
+        this.hiddenBars = new TreeSet<Long>();
     }
 
     public Set<Bar> getKnownBars() {
@@ -98,13 +102,27 @@ public class PintyApp extends Application {
     }
 
     public void hideBar(Bar toRemove) {
-        hiddenBars.add(toRemove);
+        LocalDatabase db = new LocalDatabase(this);
+        ContentValues values = new ContentValues();
+        values.put(LocalDatabase.HB_PKUID, toRemove.pkuid);
+        values.put(LocalDatabase.HB_NAME, toRemove.name);
+        db.getWritableDatabase().insert(LocalDatabase.TABLE_HIDDEN_BARS, null, values);
+        hiddenBars.add(toRemove.pkuid);
+        db.close();
     }
 
     public Set<Bar> getAllowedBars() {
-        Set<Bar> finalBars = new TreeSet<Bar>(knownBars);
-        finalBars.removeAll(hiddenBars);
-        return finalBars;
+        return stripByPkuid(knownBars, hiddenBars);
+    }
+
+    private Set<Bar> stripByPkuid(Set<Bar> knownBars, Set<Long> hiddenBars) {
+        Set<Bar> ret = new TreeSet<Bar>();
+        for (Bar b : knownBars) {
+            if (!hiddenBars.contains(b.pkuid)) {
+                ret.add(b);
+            }
+        }
+        return ret;
     }
 
     /**
@@ -136,5 +154,19 @@ public class PintyApp extends Application {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PREF_SERVER, server);
         editor.commit();
+    }
+
+    public void loadHiddenBars() {
+        SQLiteDatabase db = new LocalDatabase(this).getReadableDatabase();
+        Cursor cur = db.query(LocalDatabase.TABLE_HIDDEN_BARS, new String[]{LocalDatabase.HB_PKUID}, null, null, null, null, null);
+        cur.moveToFirst();
+        while (!cur.isAfterLast()) {
+            long hiddenBarId = cur.getLong(0);
+            Log.d("pinty", "loaded WOO hidden barid: " + hiddenBarId);
+            hiddenBars.add(hiddenBarId);
+       	    cur.moveToNext();
+        }
+        cur.close();
+        db.close();
     }
 }
