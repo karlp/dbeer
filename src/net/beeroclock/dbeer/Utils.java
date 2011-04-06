@@ -24,12 +24,7 @@ public class Utils {
      * @return a set of bars, if any could be found in the data..
      */
     public static Set<Bar> parseBarXml(String xmlr) {
-//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ECLAIR_MR1) {
-//            // we're on froyo+, and we have xpath..
-//            return parseBarXml_xpath(xmlr);
-//        } else {
-            return parseBarXml_ugly(xmlr);
-//        }
+        return parseBarXml_ugly(xmlr);
     }
 
     private static Set<Bar> parseBarXml_ugly(String xmlr) {
@@ -74,51 +69,5 @@ public class Utils {
         }
         return ret;
     }
-
-
-//    private static Set<Bar> parseBarXml_xpath(String xmlr) {
-//        XPathFactory pathFactory = XPathFactory.newInstance();
-//        XPath xpath = pathFactory.newXPath();
-//        InputSource is = new InputSource(new StringReader(xmlr));
-//        NodeList nodes;
-//        Set<Bar> ret = new TreeSet<Bar>();
-//        try {
-//            nodes = (NodeList) xpath.evaluate("/bars/bar", is, XPathConstants.NODESET);
-//
-//            for (int i = 0; i < nodes.getLength(); i++) {
-//                Node node = nodes.item(i);
-//
-//                Bar b = new Bar();
-//                b.lat = Double.parseDouble(node.getAttributes().getNamedItem("lat").getTextContent());
-//                b.lon = Double.parseDouble(node.getAttributes().getNamedItem("lon").getTextContent());
-//                b.pkuid = Long.parseLong(node.getAttributes().getNamedItem("pkuid").getTextContent());
-//                String osmid = node.getAttributes().getNamedItem("osmid").getTextContent();
-//                if (!StringUtils.isEmpty(osmid)) {
-//                    b.osmid = Long.parseLong(osmid);
-//                }
-//                b.name = (String) xpath.evaluate("name", node, XPathConstants.STRING);
-//                b.distance = (Double) xpath.evaluate("distance", node, XPathConstants.NUMBER);
-//
-//                NodeList priceNodes = (NodeList) xpath.evaluate("prices/price", node, XPathConstants.NODESET);
-//                b.prices = parsePriceXml(priceNodes);
-//                ret.add(b);
-//            }
-//        } catch (XPathExpressionException e) {
-//            throw new IllegalArgumentException("you got busted xpath somewhere: " + e.getMessage(), e);
-//        }
-//        return ret;
-//    }
-//
-//    private static Set<Price> parsePriceXml(NodeList nodes) {
-//        Set<Price> ret = new TreeSet<Price>();
-//        for (int i = 0; i < nodes.getLength(); i++) {
-//            Node node = nodes.item(i);
-//            Price p = new Price();
-//            p.id = Long.parseLong(node.getAttributes().getNamedItem("drinkid").getTextContent());
-//            p.avgPrice = Float.parseFloat(node.getTextContent());
-//            ret.add(p);
-//        }
-//        return ret;
-//    }
 
 }
