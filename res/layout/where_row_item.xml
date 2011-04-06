@@ -19,6 +19,7 @@
             a:layout_width="wrap_content"
             a:layout_height="fill_parent"
             a:padding="2sp"
+            a:gravity="center_vertical"
             />
 
     <!-- put a spinny arrow here, showing the direction of thebar? like in osmand? -->
@@ -27,12 +28,14 @@
                a:layout_height="24sp"
                a:scaleType="fitCenter"
                a:src="@drawable/ic_menu_goto"
+               a:layout_gravity="center_vertical"
             />
 
     <TextView a:id="@+id/bar_price"
             a:layout_width="wrap_content"
             a:layout_height="fill_parent"
             a:padding="2sp"
+            a:gravity="center_vertical"
             />
 
 </LinearLayout>
