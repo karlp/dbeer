@@ -55,7 +55,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         super.onListItemClick(l, v, position, id);    //To change body of overridden methods use File | Settings | File Templates.
         Intent i = new Intent(this, BarDetailActivity.class);
         Bar b = (Bar) v.getTag(R.id.tag_bar);
-        i.putExtra(Bar.OSM_ID, b.osmid);
+        i.putExtra(Bar.PKUID, b.pkuid);
         startActivity(i);
     }
 

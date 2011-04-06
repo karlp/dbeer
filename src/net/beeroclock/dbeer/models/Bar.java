@@ -17,13 +17,14 @@ import java.util.TreeSet;
  */
 public class Bar implements Comparable<Bar> {
     public String name;
-    public long osmid;
+    public long pkuid;
+    public Long osmid;
     public double lat;
     public double lon;
     public Double distance;  // The whole idea of this distance being reliable is INSANE!
     public Set<Price> prices = new TreeSet<Price>();
 
-    public static final String OSM_ID = "osm_id";
+    public static final String PKUID = "pkuid";
     public static final String LONGITUDE = "longitude";
     public static final String LATITUDE = "latitude";
     public static final String OSM_ID_SET = "osm_id_set";
@@ -31,11 +32,11 @@ public class Bar implements Comparable<Bar> {
     public Bar() {
     }
 
-    public Bar(String name, double lat, double lon, long osmid) {
+    public Bar(String name, double lat, double lon, long pkuid) {
         this.name = name;
         this.lon = lon;
         this.lat = lat;
-        this.osmid = osmid;
+        this.pkuid = pkuid;
     }
 
     // Compare on the physical aspects of the bar, ie, not on distance or price details, which change
@@ -43,7 +44,7 @@ public class Bar implements Comparable<Bar> {
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder();
         hcb.append(name);
-        hcb.append(osmid);
+        hcb.append(pkuid);
         hcb.append(lat);
         hcb.append(lon);
         return hcb.toHashCode();
@@ -56,7 +57,7 @@ public class Bar implements Comparable<Bar> {
             Bar that = (Bar) o;
             EqualsBuilder eb = new EqualsBuilder();
             eb.append(this.name, that.name);
-            eb.append(this.osmid, that.osmid);
+            eb.append(this.pkuid, that.pkuid);
             eb.append(this.lat, that.lat);
             eb.append(this.lon, that.lon);
             return eb.isEquals();
@@ -72,7 +73,7 @@ public class Bar implements Comparable<Bar> {
     public int compareTo(Bar bar) {
         CompareToBuilder ctb = new CompareToBuilder();
         ctb.append(this.name, bar.name);
-        ctb.append(this.osmid, bar.osmid);
+        ctb.append(this.pkuid, bar.pkuid);
         ctb.append(this.lat, bar.lat);
         ctb.append(this.lon, bar.lon);
         return ctb.toComparison();
@@ -82,6 +83,7 @@ public class Bar implements Comparable<Bar> {
     public String toString() {
         return "Bar{" +
                 "name='" + name + '\'' +
+                ", pkuid=" + pkuid +
                 ", osmid=" + osmid +
                 ", lat=" + lat +
                 ", lon=" + lon +

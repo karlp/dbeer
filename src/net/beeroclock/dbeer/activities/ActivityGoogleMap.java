@@ -43,7 +43,7 @@ public class ActivityGoogleMap extends MapActivity {
         mapView.setBuiltInZoomControls(true);
 
         Bundle extras = getIntent().getExtras();
-        Long barId = extras.getLong(Bar.OSM_ID);
+        Long barId = extras.getLong(Bar.PKUID);
         if (barId == null) {
             fail_go_boom();
             return;

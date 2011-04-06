@@ -20,27 +20,27 @@ public class TestUtils {
 
     String sampleResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n" +
             "<bars> \n" +
-            "    <bar lat=\"64.1287825\" lon=\"-21.8663741\" osmid=\"315158528\"> \n" +
+            "    <bar lat=\"64.1287825\" lon=\"-21.8663741\" pkuid=\"315158528\"> \n" +
             "        <name>Billiardbarinn</name> \n" +
             "        <distance>1143.8291309</distance> \n" +
             "        <prices><price drinkid=\"1\">550</price></prices> \n" +
             "    </bar> \n" +
-            "    <bar lat=\"64.1311429\" lon=\"-21.8678835\" osmid=\"298914063\"> \n" +
+            "    <bar lat=\"64.1311429\" lon=\"-21.8678835\" pkuid=\"298914063\"> \n" +
             "        <name>Te &amp; Kaffi</name> \n" +
             "        <distance>1386.26126992</distance> \n" +
             "        <prices><price drinkid=\"1\">800</price></prices> \n" +
             "    </bar> \n" +
-            "    <bar lat=\"64.1052642\" lon=\"-21.8150646\" osmid=\"326362757\"> \n" +
+            "    <bar lat=\"64.1052642\" lon=\"-21.8150646\" pkuid=\"326362757\"> \n" +
             "        <name>Café Bar 8</name> \n" +
             "        <distance>2468.63996778</distance> \n" +
             "        <prices><price drinkid=\"1\">800</price></prices> \n" +
             "    </bar> \n" +
-            "    <bar lat=\"64.1378744\" lon=\"-21.9134875\" osmid=\"971164355\"> \n" +
+            "    <bar lat=\"64.1378744\" lon=\"-21.9134875\" pkuid=\"971164355\"> \n" +
             "        <name>Kjarvalsstaðir</name> \n" +
             "        <distance>3593.47360026</distance> \n" +
             "        <prices><price drinkid=\"1\">750</price></prices> \n" +
             "    </bar> \n" +
-            "    <bar lat=\"64.1460071\" lon=\"-21.9012007\" osmid=\"815740255\"> \n" +
+            "    <bar lat=\"64.1460071\" lon=\"-21.9012007\" pkuid=\"815740255\"> \n" +
             "        <name>Amokka Kaffihús</name> \n" +
             "        <distance>3695.38346754</distance> \n" +
             "        <prices><price drinkid=\"1\">550</price></prices> \n" +

@@ -20,8 +20,8 @@ import java.util.TreeSet;
  */
 public class PintyApp extends Application {
 
-    //public static final String DBEER_SERVICES_HOST = "tera.beeroclock.net";
-    public static final String DBEER_SERVICES_HOST = "dbeer-services.appspot.com";
+    public static final String DBEER_SERVICES_HOST = "tera.beeroclock.net";
+//    public static final String DBEER_SERVICES_HOST = "dbeer-services.ekta.is";
     // Probably should become a map, or at least provide ways of getting certain bars back out again...
     private Set<Bar> knownBars;
     private Location lastLocation;
@@ -40,7 +40,7 @@ public class PintyApp extends Application {
 
     public Bar getBar(Long barId) {
         for (Bar b : knownBars) {
-            if (b.osmid == barId) {
+            if (b.pkuid == barId) {
                 return b;
             }
         }

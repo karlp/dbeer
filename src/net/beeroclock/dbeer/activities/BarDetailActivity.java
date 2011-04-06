@@ -39,7 +39,7 @@ public class BarDetailActivity extends ListActivity {
         addPriceButton = (Button) findViewById(R.id.bar_add_price_btn);
         pinty = (PintyApp)getApplication();
 
-        Long barId = getIntent().getExtras().getLong(Bar.OSM_ID);
+        Long barId = getIntent().getExtras().getLong(Bar.PKUID);
         if (barId == null) {
             fail_go_boom();
             return;
@@ -69,13 +69,13 @@ public class BarDetailActivity extends ListActivity {
 
     public void onClick_showOnMap(View view) {
         Intent i = new Intent(this, ActivityGoogleMap.class);
-        i.putExtra(Bar.OSM_ID, bar.osmid);
+        i.putExtra(Bar.PKUID, bar.pkuid);
         startActivity(i);
     }
 
     public void onClick_addPrice(View view) {
         Intent i = new Intent(this, AddPricingActivity.class);
-        i.putExtra(Bar.OSM_ID, bar.osmid);
+        i.putExtra(Bar.PKUID, bar.pkuid);
         startActivityForResult(i, REQUEST_ADD_PRICE);
     }
 

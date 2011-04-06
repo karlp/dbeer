@@ -47,7 +47,7 @@ public class AddPricingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_pricing);
 
-        barId = getIntent().getExtras().getLong(Bar.OSM_ID);
+        barId = getIntent().getExtras().getLong(Bar.PKUID);
         if (barId == null) {
             throw new IllegalStateException("adding a pricing without a bar!");
         }
