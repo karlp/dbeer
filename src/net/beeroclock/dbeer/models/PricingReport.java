@@ -19,7 +19,7 @@ public class PricingReport {
      * The longitude where you were when you reported the price, used to sanity check price updates
      */
     public double lon;
-    public long drinkExternalId;
+    public int drinkTypeId;
     public BigDecimal priceInLocalCurrency;
 
     /**
@@ -27,11 +27,11 @@ public class PricingReport {
      */
     public Date dateRecorded;
 
-    public PricingReport(long barOsmId, double lat, double lon, long drinkExternalId, BigDecimal priceInLocalCurrency) {
+    public PricingReport(long barOsmId, double lat, double lon, int drinkExternalId, BigDecimal priceInLocalCurrency) {
         this.barOsmId = barOsmId;
         this.lat = lat;
         this.lon = lon;
-        this.drinkExternalId = drinkExternalId;
+        this.drinkTypeId = drinkExternalId;
         this.priceInLocalCurrency = priceInLocalCurrency;
         dateRecorded = new Date();
     }

@@ -110,6 +110,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
                             item.setChecked(true);
                             Log.d(TAG, "They chose an item from the server submenu: " + item + " with id + " + item.getItemId());
                             pinty.saveServer((String) item.getTitle());
+                            // Restart!
                             Intent i = getIntent();
                             pinty.getKnownBars().clear();
                             this.finish();
@@ -129,8 +130,8 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         SubMenu drinkChoices = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, R.string.menu_where_drink_types);
         drinkChoices.setHeaderTitle(R.string.menu_drink_choices_header);
         int favouriteDrink = pinty.getFavouriteDrink();
-        for (Long drinkId : pinty.drinkExternalIds) {
-            MenuItem item = drinkChoices.add(MENU_DRINKS_ID, drinkId.intValue(), Menu.NONE, pinty.getDrinkNameForExternalId(drinkId));
+        for (int drinkId : pinty.drinkExternalIds) {
+            MenuItem item = drinkChoices.add(MENU_DRINKS_ID, drinkId, Menu.NONE, pinty.getDrinkNameForExternalId(drinkId));
             if (item.getItemId() == favouriteDrink) {
                 item.setChecked(true);
             }
@@ -182,10 +183,10 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         // Parse raw drink options... may need to push this to a background task...
         String[] raw_drink_options = getResources().getStringArray(R.array.drink_options_raw);
         pinty.drinkNames = new ArrayList<String>();
-        pinty.drinkExternalIds = new ArrayList<Long>();
+        pinty.drinkExternalIds = new ArrayList<Integer>();
         for (String row : raw_drink_options) {
             String[] bits = row.split(";", 2);  // allow drinks to contain ; if they really want.
-            pinty.drinkExternalIds.add(Long.valueOf(bits[0]));
+            pinty.drinkExternalIds.add(Integer.valueOf(bits[0]));
             pinty.drinkNames.add(bits[1]);
         }
 
@@ -435,7 +436,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
                     int desiredPriceType = pinty.getFavouriteDrink();
                     boolean done = false;
                     for (Price p : bar.prices) {
-                        if (p.id == desiredPriceType) {
+                        if (p.drinkTypeId == desiredPriceType) {
                             priceView.setText(String.valueOf(p.avgPrice));
                             done = true;
                         }

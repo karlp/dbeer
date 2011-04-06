@@ -12,14 +12,14 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * Time: 8:59 PM
  */
 public class Price implements Comparable<Price> {
-    public long id;
+    public int drinkTypeId;
     public double avgPrice;
 
     public Price() {
     }
 
-    public Price(long id, double avgPrice) {
-        this.id = id;
+    public Price(int drinkTypeId, double avgPrice) {
+        this.drinkTypeId = drinkTypeId;
         this.avgPrice = avgPrice;
     }
 
@@ -28,7 +28,7 @@ public class Price implements Comparable<Price> {
         if (o instanceof Price) {
             Price that = (Price)o;
             EqualsBuilder eb = new EqualsBuilder();
-            eb.append(this.id, that.id);
+            eb.append(this.drinkTypeId, that.drinkTypeId);
             eb.append(this.avgPrice, that.avgPrice);
             return eb.isEquals();
         }
@@ -38,14 +38,14 @@ public class Price implements Comparable<Price> {
     @Override
     public int hashCode() {
         HashCodeBuilder hb = new HashCodeBuilder();
-        hb.append(this.id);
+        hb.append(this.drinkTypeId);
         hb.append(this.avgPrice);
         return hb.toHashCode();
     }
 
     public int compareTo(Price that) {
         CompareToBuilder cb = new CompareToBuilder();
-        cb.append(this.id, that.id);
+        cb.append(this.drinkTypeId, that.drinkTypeId);
         cb.append(this.avgPrice, that.avgPrice);
         return cb.toComparison();
     }
@@ -53,7 +53,7 @@ public class Price implements Comparable<Price> {
     @Override
     public String toString() {
         return "Price{" +
-                "id=" + id +
+                "drinkTypeId=" + drinkTypeId +
                 ", avgPrice=" + avgPrice +
                 '}';
     }

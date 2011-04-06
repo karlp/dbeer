@@ -123,7 +123,7 @@ public class BarDetailActivity extends ListActivity {
             if (price != null) {
                 TextView drinkType = (TextView) view.findViewById(R.id.drink_name);
                 if (drinkType != null) {
-                    drinkType.setText(pinty.getDrinkNameForExternalId(price.id));
+                    drinkType.setText(pinty.getDrinkNameForExternalId(price.drinkTypeId));
                 }
                 // TODO - colour by age if we have that information?
                 TextView priceView = (TextView) view.findViewById(R.id.drink_price);

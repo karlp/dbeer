@@ -40,7 +40,13 @@ public class Utils {
                 TagNode bar = (TagNode) baro;
                 b.lat = Double.parseDouble(bar.getAttributeByName("lat"));
                 b.lon = Double.parseDouble(bar.getAttributeByName("lon"));
-                b.pkuid = Long.parseLong(bar.getAttributeByName("pkuid"));
+                String pkuid = bar.getAttributeByName("pkuid");
+                if (StringUtils.isEmpty(pkuid)) {
+                    // TODO - could make this a custom error, and do something, but do we care?
+                    throw new IllegalStateException("server appears to be an incompatible version? doesn't supply pkuid for bars!");
+                } else {
+                    b.pkuid = Long.parseLong(pkuid);
+                }
                 String osmid = bar.getAttributeByName("osmid");
                 if (!StringUtils.isEmpty(osmid)) {
                     b.osmid = Long.parseLong(osmid);
@@ -56,7 +62,7 @@ public class Utils {
                 for (Object priceo : priceNodes) {
                     TagNode price = (TagNode) priceo;
                     Price p = new Price();
-                    p.id = Long.parseLong(price.getAttributeByName("drinkid"));
+                    p.drinkTypeId = Integer.parseInt(price.getAttributeByName("drinkid"));
                     p.avgPrice = Double.parseDouble(price.getText().toString());
                     prices.add(p);
                 }

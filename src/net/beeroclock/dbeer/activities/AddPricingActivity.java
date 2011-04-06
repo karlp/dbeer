@@ -61,6 +61,7 @@ public class AddPricingActivity extends Activity {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         drinksSpinner.setAdapter(adapter);
+        drinksSpinner.setSelection(pinty.drinkExternalIds.indexOf(pinty.getFavouriteDrink()));
         drinksSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 chosenDrink = position;
@@ -101,7 +102,7 @@ public class AddPricingActivity extends Activity {
             List<NameValuePair> qparams = new ArrayList<NameValuePair>();
             qparams.add(new BasicNameValuePair("recordedLat", String.valueOf(report.lat)));
             qparams.add(new BasicNameValuePair("recordedLon", String.valueOf(report.lon)));
-            qparams.add(new BasicNameValuePair("price_type", String.valueOf(report.drinkExternalId)));
+            qparams.add(new BasicNameValuePair("price_type", String.valueOf(report.drinkTypeId)));
             qparams.add(new BasicNameValuePair("price", String.valueOf(report.priceInLocalCurrency)));
             qparams.add(new BasicNameValuePair("price_date", String.valueOf(report.dateRecorded.getTime())));
 

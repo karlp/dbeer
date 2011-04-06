@@ -32,7 +32,7 @@ public class PintyApp extends Application {
     // These are really a double array of constants, that match the remote server.
     // but android's resource model only gives us single arrays.
     public ArrayList<String> drinkNames;
-    public ArrayList<Long> drinkExternalIds;
+    public ArrayList<Integer> drinkExternalIds;
 
     public PintyApp() {
         this.knownBars = new TreeSet<Bar>();
@@ -63,9 +63,9 @@ public class PintyApp extends Application {
     // simplistically handle updating our local price averages...
     public void addPricingReport(PricingReport report) {
         Bar b = getBar(report.barOsmId);
-        Price pp = findPrice(b.prices, report.drinkExternalId);
+        Price pp = findPrice(b.prices, report.drinkTypeId);
         if (pp == null) {
-            pp = new Price(report.drinkExternalId, report.priceInLocalCurrency.doubleValue());
+            pp = new Price(report.drinkTypeId, report.priceInLocalCurrency.doubleValue());
             b.prices.add(pp);
         } else {
             // simplistic average...
@@ -74,9 +74,9 @@ public class PintyApp extends Application {
         }
     }
 
-    private Price findPrice(Set<Price> prices, long drinkExternalId) {
+    private Price findPrice(Set<Price> prices, int drinkExternalId) {
         for (Price p : prices) {
-            if (p.id == drinkExternalId) {
+            if (p.drinkTypeId == drinkExternalId) {
                 return p;
             }
         }
@@ -88,7 +88,7 @@ public class PintyApp extends Application {
      * @param id external id of the drink name we're looking for
      * @return drink name
      */
-    public String getDrinkNameForExternalId(long id) {
+    public String getDrinkNameForExternalId(int id) {
         int i = drinkExternalIds.indexOf(id);
         if (i == -1) {
             return null;
@@ -114,7 +114,7 @@ public class PintyApp extends Application {
      */
     public int getFavouriteDrink() {
         SharedPreferences pref = getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
-        return pref.getInt(PREF_FAVOURITE_DRINK, drinkExternalIds.get(0).intValue());
+        return pref.getInt(PREF_FAVOURITE_DRINK, drinkExternalIds.get(0));
     }
 
     public void saveFavouriteDrink(int drinkId) {
