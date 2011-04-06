@@ -15,9 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
 import net.beeroclock.dbeer.models.Bar;
 import net.beeroclock.dbeer.PintyApp;
@@ -48,16 +46,36 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     private ImageView headerImage;
     PintyApp pinty;
     LocationManager locationManager;
+    private static final int DELETE_ID = Menu.FIRST + 1;
+    private ArrayList<Bar> currentlyDisplayedBars;
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
 //        Debug.stopMethodTracing();
-        super.onListItemClick(l, v, position, id);    //To change body of overridden methods use File | Settings | File Templates.
+        super.onListItemClick(l, v, position, id);
         Intent i = new Intent(this, BarDetailActivity.class);
         Bar b = (Bar) v.getTag(R.id.tag_bar);
         i.putExtra(Bar.PKUID, b.pkuid);
         startActivity(i);
     }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case DELETE_ID:
+                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                Bar toRemove = currentlyDisplayedBars.get((int) info.id);
+                pinty.hideBar(toRemove);
+                return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    @Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(Menu.NONE, DELETE_ID, Menu.NONE, R.string.where_beer_ctx_hide_bar);
+	}
 
     /**
      * Called when the activity is first created.
@@ -88,6 +106,8 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
             pinty.drinkExternalIds.add(Long.valueOf(bits[0]));
             pinty.drinkNames.add(bits[1]);
         }
+
+        registerForContextMenu(getListView());
     }
 
     @Override
@@ -95,9 +115,10 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         super.onResume();
         // do we already know sort of where we are?
         // if we do, make sure to update our display!
-        if (pinty.getLastLocation() != null && !pinty.getKnownBars().isEmpty()) {
+        Set<Bar> allwedBars = pinty.getAllowedBars();
+        if (pinty.getLastLocation() != null && !allwedBars.isEmpty()) {
             Log.i(TAG, "resuming and reusing cached location and bars");
-            displayBarsForLocation(pinty.getLastLocation(), pinty.getKnownBars());
+            displayBarsForLocation(pinty.getLastLocation(), allwedBars);
             return;
         }
 
@@ -248,13 +269,13 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         protected void onPostExecute(Set<Bar> bars) {
             super.onPostExecute(bars);
             headerImage.setImageDrawable(getResources().getDrawable(R.drawable.emo_im_happy));
-            displayBarsForLocation(location, bars);
 
             // TODO - Could add proximity alerts here for each bar?
             // save the bars to our application's current set of bars...
             // TODO Remember, we have to resort the set of bars, based on our current location!
             // Still want a set, so I don't get duplicate bars, but probably should resort it a lot more often
             pinty.getKnownBars().addAll(bars);
+            displayBarsForLocation(location, pinty.getAllowedBars());
         }
 
     }
@@ -266,11 +287,11 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
      * @param bars the bars to display, assumed to be in increasing order of distance from "here"
      */
     private void displayBarsForLocation(Location location, Set<Bar> bars) {
-        ArrayList<Bar> sortedBars = new ArrayList<Bar>(bars);
+        currentlyDisplayedBars = new ArrayList<Bar>(bars);
         // This is probably bogus, it doesn't update the distance based on here, just sorts on where they were...
         // (Which gets updated every time we get a web request, so that's ok?
-        Collections.sort(sortedBars, Bar.makeDistanceComparator());
-        BarArrayAdapter arrayAdapter = new BarArrayAdapter(this, R.layout.where_row_item, location, sortedBars);
+        Collections.sort(currentlyDisplayedBars, Bar.makeDistanceComparator());
+        BarArrayAdapter arrayAdapter = new BarArrayAdapter(this, R.layout.where_row_item, location, currentlyDisplayedBars);
         ListView lv = getListView();
         lv.setAdapter(arrayAdapter);
         String s = getResources().getString(R.string.where_beer_last_update);

@@ -24,6 +24,7 @@ public class PintyApp extends Application {
 //    public static final String DBEER_SERVICES_HOST = "dbeer-services.ekta.is";
     // Probably should become a map, or at least provide ways of getting certain bars back out again...
     private Set<Bar> knownBars;
+    private Set<Bar> hiddenBars;
     private Location lastLocation;
     // These are really a double array of constants, that match the remote server.
     // but android's resource model only gives us single arrays.
@@ -32,6 +33,7 @@ public class PintyApp extends Application {
 
     public PintyApp() {
         this.knownBars = new TreeSet<Bar>();
+        this.hiddenBars = new TreeSet<Bar>();
     }
 
     public Set<Bar> getKnownBars() {
@@ -89,5 +91,15 @@ public class PintyApp extends Application {
             return null;
         }
         return this.drinkNames.get(i);
+    }
+
+    public void hideBar(Bar toRemove) {
+        hiddenBars.add(toRemove);
+    }
+
+    public Set<Bar> getAllowedBars() {
+        Set<Bar> finalBars = new TreeSet<Bar>(knownBars);
+        finalBars.removeAll(hiddenBars);
+        return finalBars;
     }
 }

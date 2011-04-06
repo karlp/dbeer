@@ -19,6 +19,7 @@
     <string name="add_pricing_price_label">Price\n(local currency)</string>
     <string name="add_pricing_spinner_label">Drink</string>
     <string name="add_price_failure">Epic fail...:(</string>
+    <string name="where_beer_ctx_hide_bar">Hide this bar forever</string>
 
     <string-array name="drink_options_raw">
         <!--
