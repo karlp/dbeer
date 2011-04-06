@@ -9,6 +9,8 @@
     <string name="bar_detail_btn_get_directions">Get directions</string>
     <string name="bar_detail_btn_show_on_map">Show on map</string>
     <string name="bar_detail_btn_add_pricing">Add a pricing</string>
+    <string name="bar_detail_btn_hide_bar">Hide this bar</string>
+    <string name="bar_detail_btn_show_bar">Reshow this bar</string>
 
     <string name="toast_wtf">Something\'s wrong, hope you didn\'t see this :(</string>
     <string name="toast_add_price_thanks">Done! Thanks!</string>

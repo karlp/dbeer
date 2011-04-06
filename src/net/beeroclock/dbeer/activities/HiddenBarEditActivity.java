@@ -1,16 +1,18 @@
 package net.beeroclock.dbeer.activities;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
+import android.widget.TextView;
 import net.beeroclock.dbeer.LocalDatabase;
 import net.beeroclock.dbeer.PintyApp;
 import net.beeroclock.dbeer.R;
+import net.beeroclock.dbeer.models.Bar;
 
 /**
  * Shows all the hidden bars, click to pop a dialog for re-enabling or going to the bar
@@ -28,11 +30,13 @@ public class HiddenBarEditActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hidden_bar_edit);
         pinty = (PintyApp)getApplication();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         mDb = new LocalDatabase(this).getWritableDatabase();
         fillData();
-        // only for long clicks... registerForContextMenu(getListView());
-
     }
 
     @Override
@@ -45,8 +49,8 @@ public class HiddenBarEditActivity extends ListActivity {
         Cursor c = mDb.query(LocalDatabase.TABLE_HIDDEN_BARS, new String[]{LocalDatabase.HB_ROWID, LocalDatabase.HB_PKUID, LocalDatabase.HB_NAME}, null, null, null, null, LocalDatabase.HB_NAME);
         startManagingCursor(c);
 
-        String[] from = new String[] {LocalDatabase.HB_NAME};
-        int[] to = new int[] {R.id.hidden_bar_row_text};
+        String[] from = new String[] {LocalDatabase.HB_NAME, LocalDatabase.HB_PKUID};
+        int[] to = new int[] {R.id.hidden_bar_row_text, R.id.hidden_bar_row_id};
 
         SimpleCursorAdapter sca = new SimpleCursorAdapter(this, R.layout.hidden_bar_row, c, from, to);
         setListAdapter(sca);
@@ -74,11 +78,12 @@ public class HiddenBarEditActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-//        Intent i = new Intent(this, BarDetailActivity.class);
-//        Bar b = (Bar) v.getTag(R.id.tag_bar);
-//        i.putExtra(Bar.PKUID, b.pkuid);
-//        startActivity(i);
-        Toast.makeText(this, "Want to pop a dialog here!", Toast.LENGTH_SHORT).show();
+        TextView idView = (TextView) v.findViewById(R.id.hidden_bar_row_id);
+        Intent i = new Intent(this, BarDetailActivity.class);
+        i.putExtra(Bar.PKUID, Long.valueOf((String) idView.getText()));
+        startActivity(i);
+//        Toast.makeText(this, "Want to pop a dialog here!", Toast.LENGTH_SHORT).show();
+        // TODO - or not, maybe just a button with a X on it, that removes it from the list on the spot?
     }
 
 

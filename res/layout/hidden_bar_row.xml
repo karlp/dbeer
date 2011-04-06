@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:a="http://schemas.android.com/apk/res/android"
-          a:layout_width="fill_parent"
-          a:layout_height="fill_parent"
-          a:textSize="30sp"
-          a:id="@+id/hidden_bar_row_text">
-</TextView>
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+              a:orientation="horizontal"
+              a:layout_width="fill_parent"
+              a:layout_height="fill_parent">
+    <TextView a:id="@+id/hidden_bar_row_text"
+              a:layout_width="fill_parent"
+              a:layout_height="fill_parent"
+              a:textSize="30sp"
+            />
+    <!-- this feels a bit dirty, but it saves more db lookups to just carry it here in the field -->
+    <TextView a:id="@+id/hidden_bar_row_id" a:layout_height="wrap_content" a:layout_width="wrap_content"
+              a:visibility="gone"/>
+</LinearLayout>

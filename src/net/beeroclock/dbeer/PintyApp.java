@@ -111,6 +111,13 @@ public class PintyApp extends Application {
         db.close();
     }
 
+    public void unhideBar(Bar bar) {
+        LocalDatabase db = new LocalDatabase(this);
+        db.getWritableDatabase().delete(LocalDatabase.TABLE_HIDDEN_BARS, LocalDatabase.HB_PKUID + "=?", new String[]{String.valueOf(bar.pkuid)});
+        hiddenBars.remove(bar.pkuid);
+        db.close();
+    }
+
     public Set<Bar> getAllowedBars() {
         return stripByPkuid(knownBars, hiddenBars);
     }
@@ -173,4 +180,9 @@ public class PintyApp extends Application {
         cur.close();
         db.close();
     }
+
+    public boolean isAllowed(long pkuid) {
+        return !hiddenBars.contains(pkuid);
+    }
+
 }

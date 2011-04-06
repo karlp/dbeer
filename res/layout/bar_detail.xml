@@ -40,6 +40,13 @@
     <ListView a:id="@+id/android:list"
               a:layout_height="wrap_content"
               a:layout_width="fill_parent"
+              a:layout_weight="1"
+            />
+    <Button a:id="@+id/bar_toggle_hidden"
+            a:layout_width="wrap_content"
+            a:layout_height="wrap_content"
+            a:onClick="onClick_toggleHidden"
+            a:text="@string/bar_detail_btn_hide_bar"
             />
 
 </LinearLayout>

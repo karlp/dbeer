@@ -29,6 +29,7 @@ public class BarDetailActivity extends ListActivity {
     TextView tvBarName;
     TextView tvBarType;
     Button addPriceButton;
+    Button toggleHiddenButton;
     private static final int BAR_ENABLED_DISTANCE = 150;
     public static final int REQUEST_ADD_PRICE = 1;
 
@@ -39,6 +40,7 @@ public class BarDetailActivity extends ListActivity {
         tvBarName = (TextView) findViewById(R.id.bar_detail_name);
         tvBarType = (TextView) findViewById(R.id.bar_detail_type);
         addPriceButton = (Button) findViewById(R.id.bar_add_price_btn);
+        toggleHiddenButton = (Button) findViewById(R.id.bar_toggle_hidden);
         pinty = (PintyApp)getApplication();
 
         Long barId = getIntent().getExtras().getLong(Bar.PKUID);
@@ -62,6 +64,11 @@ public class BarDetailActivity extends ListActivity {
         } else {
             addPriceButton.setEnabled(false);
         }
+        if (pinty.isAllowed(bar.pkuid)) {
+            toggleHiddenButton.setText(R.string.bar_detail_btn_hide_bar);
+        } else {
+            toggleHiddenButton.setText(R.string.bar_detail_btn_show_bar);
+        }
         tvBarName.setText(bar.name);
         tvBarType.setText(bar.type);
 
@@ -80,6 +87,18 @@ public class BarDetailActivity extends ListActivity {
         Intent i = new Intent(this, AddPricingActivity.class);
         i.putExtra(Bar.PKUID, bar.pkuid);
         startActivityForResult(i, REQUEST_ADD_PRICE);
+    }
+
+    public void onClick_toggleHidden(View view) {
+        if (pinty.isAllowed(bar.pkuid)) {
+            pinty.hideBar(bar);
+            finish();
+            Toast.makeText(this, "Ok, bar hidden from view", Toast.LENGTH_SHORT).show();
+        } else {
+            pinty.unhideBar(bar);
+            toggleHiddenButton.setText(R.string.bar_detail_btn_hide_bar);
+            Toast.makeText(this, "Ok, bar will show up again", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
