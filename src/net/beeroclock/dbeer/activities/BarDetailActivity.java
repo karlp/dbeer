@@ -28,7 +28,7 @@ public class BarDetailActivity extends ListActivity {
     PintyApp pinty;
     TextView tvBarName;
     Button addPriceButton;
-    private static final int BAR_ENABLED_DISTANCE = 90;
+    private static final int BAR_ENABLED_DISTANCE = 150;
     public static final int REQUEST_ADD_PRICE = 1;
 
     @Override
