@@ -104,21 +104,20 @@ class Db():
         conn.commit()
         log.info("loaded %d bars, ignored %d nameless, created %d, updated %d", len(osm.nodes), ignored_bars, new_bars, updated_bars)
 
-    def by_osmid(self, osmid):
+    def bar_by_id(self, barid):
         """
-        Look up a bar by it's osm id
+        Look up a bar by our internal ID
         """
         conn = sqlite3.connect(config['dbfile'])
         conn.row_factory = sqlite3.Row
-        log.debug("looking for osmid: %d", osmid)
-        rows = conn.execute("select pkuid, name, type, osmid, x(geometry) as lon, y(geometry) as lat from bars where osmid = ?", (osmid,)).fetchall()
+        rows = conn.execute("select pkuid, name, type, osmid, x(geometry) as lon, y(geometry) as lat from bars where pkuid = ?", (barid,)).fetchall()
         if len(rows) == 0:
             return None
         if len(rows) > 1:
-            raise Exception("more than one bar with the same OSM id: %s" % osmid)
-
+            raise Exception("more than one bar with the same PKUID id: %s" % barid)
         bar = Bar(rows[0]['name'], rows[0]['lat'], rows[0]['lon'], type=rows[0]['type'], osmid=rows[0]['osmid'])
         bar.pkuid = rows[0]['pkuid']
+        conn.close()
         return bar
 
     def nearest_bars(self, lat, lon, count, lat_delta=BBOX_SIZE, lon_delta=BBOX_SIZE):
@@ -186,5 +185,5 @@ class Bar():
     @staticmethod
     def to_json(pyobj):
         if isinstance(pyobj, Bar):
-            return {"name" : pyobj.name, "lat" : pyobj.lat, "lon": pyobj.lon, "osmid": pyobj.osmid, "type" : pyobj.type}
+            return {"name" : pyobj.name, "pkuid" : pyobj.pkuid, "lat" : pyobj.lat, "lon": pyobj.lon, "osmid": pyobj.osmid, "type" : pyobj.type}
         return JSONEncoder.default(pyobj)

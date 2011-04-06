@@ -54,24 +54,24 @@ def bars_nearest_json(num=3):
 def bars_nearest_xml(num=3):
     return bars_nearest(num, txml=True)
 
-@app.route('/bar/<int:osmid>.xml', methods=['GET'])
+@app.route('/bar/<int:barid>.xml', methods=['GET'])
 @print_timing
-def bar_detail(osmid):
+def bar_detail(barid):
     ts = time.time()
-    bar = db.by_osmid(osmid)
+    bar = db.bar_by_id(barid)
     tt = time.time() - ts
-    log.debug("fetch by osmid took %f", tt)
+    log.debug("bar fetch took %f", tt)
     if bar is None:
         abort(404)
 
     prices = get_avg_prices(bar)
     return Response(render_template("bar.xml", bar=bar, prices=prices), content_type="application/xml; charset=utf-8", )
 
-@app.route('/bar/<int:osmid>.xml', methods=['POST', 'PUT'])
-def bar_add_price(osmid):
+@app.route('/bar/<int:barid>.xml', methods=['POST', 'PUT'])
+def bar_add_price(barid):
 
     ## Make sure we have this bar in the datastore?
-    bar = db.by_osmid(osmid)
+    bar = db.bar_by_id(barid)
     if bar is None:
         abort(404)
     pp = request.form.get('price')

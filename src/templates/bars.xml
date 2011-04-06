@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bars>
     {% for bar in bars -%}
-    <bar lat="{{bar.bar.lat}}" lon="{{bar.bar.lon}}" osmid="{{bar.bar.osmid}}">
+    <bar pkuid="{{bar.bar.pkuid}}" lat="{{bar.bar.lat}}" lon="{{bar.bar.lon}}" osmid="{{bar.bar.osmid}}">
         <name>{{bar.bar.name}}</name>
         <type>{{bar.bar.type}}</type>
         <distance>{{bar.distance}}</distance>
