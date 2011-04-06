@@ -1,6 +1,7 @@
 package net.beeroclock.dbeer;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.location.Location;
 import net.beeroclock.dbeer.models.Bar;
 import net.beeroclock.dbeer.models.Price;
@@ -21,7 +22,9 @@ import java.util.TreeSet;
 public class PintyApp extends Application {
 
     public static final String DBEER_SERVICES_HOST = "tera.beeroclock.net";
-//    public static final String DBEER_SERVICES_HOST = "dbeer-services.ekta.is";
+    public static final String PREFS_FILE = "PintyPrefs";
+    public static final String PREF_FAVOURITE_DRINK = "favourite_drink";
+    //    public static final String DBEER_SERVICES_HOST = "dbeer-services.ekta.is";
     // Probably should become a map, or at least provide ways of getting certain bars back out again...
     private Set<Bar> knownBars;
     private Set<Bar> hiddenBars;
@@ -101,5 +104,24 @@ public class PintyApp extends Application {
         Set<Bar> finalBars = new TreeSet<Bar>(knownBars);
         finalBars.removeAll(hiddenBars);
         return finalBars;
+    }
+
+    /**
+     * Return the users favourite drink.
+     * TODO - android dev notes seem to indicate that you should save this locally, and only commit/read from prefs when the activity is created/closed
+     * (probably for performance reasons?)
+     * @return the external id of their saved favourite drink
+     */
+    public int getFavouriteDrink() {
+        SharedPreferences pref = getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
+        int favouriteDrink = pref.getInt(PREF_FAVOURITE_DRINK, drinkExternalIds.get(0).intValue());
+        return favouriteDrink;
+    }
+
+    public void saveFavouriteDrink(int drinkId) {
+        SharedPreferences prefs = getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(PREF_FAVOURITE_DRINK, drinkId);
+        editor.commit();
     }
 }

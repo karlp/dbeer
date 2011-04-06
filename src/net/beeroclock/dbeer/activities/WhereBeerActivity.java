@@ -47,6 +47,8 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     PintyApp pinty;
     LocationManager locationManager;
     private static final int DELETE_ID = Menu.FIRST + 1;
+    private static final int MENU_DRINKS_ID = DELETE_ID + 1;
+    private static final int MENU_SERVER_ID = MENU_DRINKS_ID + 1;
     private ArrayList<Bar> currentlyDisplayedBars;
 
     @Override
@@ -66,6 +68,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
                 AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
                 Bar toRemove = currentlyDisplayedBars.get((int) info.id);
                 pinty.hideBar(toRemove);
+                redrawBarList();
                 return true;
         }
         return super.onContextItemSelected(item);
@@ -76,6 +79,60 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.add(Menu.NONE, DELETE_ID, Menu.NONE, R.string.where_beer_ctx_hide_bar);
 	}
+
+    /**
+     * Handle the menu options for this activity
+     * @param item the menu item clicked
+     * @return see super()
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_where_hidden_bars:
+                Log.d(TAG, "jumping to hidden bars...");
+                // TODO
+                return true;
+            default:
+                switch (item.getGroupId()) {
+                    case MENU_DRINKS_ID:
+                        item.setChecked(true);
+                        pinty.saveFavouriteDrink(item.getItemId());
+                        redrawBarList();
+                        return true;
+                    case MENU_SERVER_ID:
+                        Log.d(TAG, "They chose an item from the server submenu: " + item + " with id + " + item.getItemId());
+                        // FIXME - do something here!
+                        // If it's one of the default ones, we need to just set it, otherwise, we need to accept edits and add to a list of options!
+                        return true;
+                    default:
+                        return super.onOptionsItemSelected(item);
+                }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_where, menu);
+        SubMenu drinkChoices = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, R.string.menu_where_drink_types);
+        drinkChoices.setHeaderTitle(R.string.menu_drink_choices_header);
+        int favouriteDrink = pinty.getFavouriteDrink();
+        for (Long drinkId : pinty.drinkExternalIds) {
+            MenuItem item = drinkChoices.add(MENU_DRINKS_ID, drinkId.intValue(), Menu.NONE, pinty.getDrinkNameForExternalId(drinkId));
+            if (item.getItemId() == favouriteDrink) {
+                item.setChecked(true);
+            }
+        }
+        drinkChoices.setGroupCheckable(MENU_DRINKS_ID, true, true);
+
+        SubMenu serverChoices = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, R.string.menu_where_server);
+        serverChoices.setHeaderTitle(R.string.menu_server_header);
+        serverChoices.add(MENU_SERVER_ID, 0, 0, "dbeer-services.ekta.is");
+        serverChoices.add(MENU_SERVER_ID, 1, 1, "tera.beeroclock.net");
+        serverChoices.add(MENU_SERVER_ID, 2, 2, "enter a new server");
+
+        return true;
+    }
 
     /**
      * Called when the activity is first created.
@@ -275,9 +332,13 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
             // TODO Remember, we have to resort the set of bars, based on our current location!
             // Still want a set, so I don't get duplicate bars, but probably should resort it a lot more often
             pinty.getKnownBars().addAll(bars);
-            displayBarsForLocation(location, pinty.getAllowedBars());
+            redrawBarList();
         }
 
+    }
+
+    private void redrawBarList() {
+        displayBarsForLocation(pinty.getLastLocation(), pinty.getAllowedBars());
     }
 
     /**
@@ -346,8 +407,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
                 }
                 TextView priceView = (TextView) view.findViewById(R.id.bar_price);
                 if (priceView != null) {
-                    // FIXME - should really use per user preferences on what they consider a price of note.
-                    int desiredPriceType = 1;
+                    int desiredPriceType = pinty.getFavouriteDrink();
                     boolean done = false;
                     for (Price p : bar.prices) {
                         if (p.id == desiredPriceType) {

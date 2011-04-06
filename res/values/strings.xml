@@ -20,6 +20,13 @@
     <string name="add_pricing_spinner_label">Drink</string>
     <string name="add_price_failure">Epic fail...:(</string>
     <string name="where_beer_ctx_hide_bar">Hide this bar forever</string>
+    <string name="menu_where_drinks">Drinks</string>
+    <string name="menu_where_hidden_bars">Hidden bars</string>
+    <string name="menu_where_server">Server</string>
+    <string name="menu_where_other">Misc Settings</string>
+    <string name="menu_where_drink_types">Drink types</string>
+    <string name="menu_drink_choices_header">Show average prices for:</string>
+    <string name="menu_server_header">Beer server to use:</string>
 
     <string-array name="drink_options_raw">
         <!--
