@@ -1,7 +1,10 @@
 package net.beeroclock.dbeer.activities;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -55,6 +58,8 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     private static final int MENU_DRINKS_ID = DELETE_ID + 1;
     private static final int MENU_SERVER_ID = MENU_DRINKS_ID + 1;
     private ArrayList<Bar> currentlyDisplayedBars;
+    private static final int DIALOG_HELP = 1;
+    private static final int DIALOG_ABOUT = 2;
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -102,6 +107,11 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
                 Intent intentPrefs = new Intent(this, MyPreferencesActivity.class);
                 startActivity(intentPrefs);
                 return true;
+            case R.id.menu_where_help:
+                showDialog(DIALOG_HELP);
+                return true;
+            case R.id.menu_where_about:
+                showDialog(DIALOG_ABOUT);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -112,6 +122,26 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_where, menu);
         return true;
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        switch (id) {
+            case DIALOG_HELP:
+                return builder.setMessage(R.string.where_beer_help_text)
+                    .setTitle(R.string.menu_where_help).create();
+            case DIALOG_ABOUT:
+                return builder.setTitle(R.string.app_name)
+                        .setMessage(R.string.app_about_text).create();
+        }
+        return super.onCreateDialog(id);
+    }
+
+    private Dialog makeHelpDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        return builder.create();
     }
 
     /**

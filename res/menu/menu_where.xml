@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:a="http://schemas.android.com/apk/res/android">
+    <item a:id="@+id/menu_where_about"
+          a:title="@string/menu_where_about"
+          />
     <item a:id="@+id/menu_where_hidden_bars"
           a:title="@string/menu_where_hidden_bars"
           />
     <item a:id="@+id/menu_where_preferences"
           a:title="@string/menu_where_preferences"
           a:icon="@android:drawable/ic_menu_preferences"
+          />
+    <item a:id="@+id/menu_where_help"
+          a:title="@string/menu_where_help"
+          a:icon="@android:drawable/ic_menu_help"
           />
 
 </menu>

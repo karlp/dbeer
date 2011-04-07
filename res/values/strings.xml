@@ -1,10 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Beer Finder</string>
+    <string name="app_about_text">This app helps you find bars in any part of the world, that are near you, and
+        shows their latest bar prices.  Perhaps you never knew that Bar X had such cheap drinks, so you try somewhere new.
+    Perhaps you\'re in a new city, and don\'t even know what direction the bars are.  This can help with both.\n
+    \n
+    The bar lists come from the great OpenStreetMap, and the pricings come from all the users in the world!\n
+        \n
+        More info at dbeer-services.ekta.is</string>
+
     <string name="where_beer_header">Bars nearby</string>
     <string name="where_beer_location_search">No idea where we are right now, waiting for better information on our location.</string>
     <string name="where_beer_http_error">Oops, couldn\'t reach the beer server!</string>
     <string name="where_beer_last_update">Last update at: </string>
+    <string name="where_beer_ctx_hide_bar">Hide this bar forever</string>
+    <string name="where_beer_help_text">This screen shows you a list of all known nearby bars, sorted by distance.
+    The bar name, distance to the bar and the current average price for your favourite drink are shown.
+        \n\n
+    If you don\'t have a favourite drink, go to the preferences and choose one!  If you click on a bar, you can see more
+        detailed price history, add a drink price, or show the bar on a map.\n
+        \nLong clicking on a bar will let you hide that bar forever.
+    </string>
+
+    <!--<string name="menu_where_drinks">Drinks</string>-->
+    <string name="menu_where_about">About</string>
+    <string name="menu_where_hidden_bars">Hidden bars</string>
+    <string name="menu_where_help">Help</string>
+    <string name="menu_where_preferences">Preferences</string>
 
     <string name="bar_detail_btn_get_directions">Get directions</string>
     <string name="bar_detail_btn_show_on_map">Show on map</string>
@@ -21,15 +43,9 @@
     <string name="add_pricing_price_label">Price\n(local currency)</string>
     <string name="add_pricing_spinner_label">Drink</string>
     <string name="add_price_failure">Epic fail...:(</string>
-    <string name="where_beer_ctx_hide_bar">Hide this bar forever</string>
-    <string name="menu_where_drinks">Drinks</string>
-    <string name="menu_where_hidden_bars">Hidden bars</string>
-    <string name="menu_where_server">Server</string>
-    <string name="menu_where_preferences">Preferences</string>
-    <string name="menu_where_drink_types">Drink types</string>
-    <string name="menu_drink_choices_header">Show average prices for:</string>
-    <string name="menu_server_header">Beer server to use:</string>
-    <string name="preference_category_server">Server</string>
+
+    <string name="preference_category_main">Preferences</string>
+
     <string name="hidden_edit_title">These bars are hidden from view</string>
     <string name="hidden_edit_btn_clear_label">Reshow all</string>
 </resources>
