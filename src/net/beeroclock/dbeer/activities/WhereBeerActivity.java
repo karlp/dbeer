@@ -129,9 +129,6 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         // Acquire a reference to the system Location Manager
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
 
-        // Register ourselves for any sort of location update
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 5, this);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 5, this);
         tvStatus.setText(R.string.where_beer_location_search);
 
         // Parse raw drink options... may need to push this to a background task...
@@ -153,12 +150,15 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     @Override
     protected void onResume() {
         super.onResume();
+        // Register ourselves for any sort of location update
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 5, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 5, this);
         // do we already know sort of where we are?
         // if we do, make sure to update our display!
-        Set<Bar> allwedBars = pinty.getAllowedBars();
-        if (pinty.getLastLocation() != null && !allwedBars.isEmpty()) {
+        Set<Bar> allowedBars = pinty.getAllowedBars();
+        if (pinty.getLastLocation() != null && !allowedBars.isEmpty()) {
             Log.i(TAG, "resuming and reusing cached location and bars");
-            displayBarsForLocation(pinty.getLastLocation(), allwedBars);
+            displayBarsForLocation(pinty.getLastLocation(), allowedBars);
             return;
         }
 
@@ -362,7 +362,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
      * @param bars the bars to display, assumed to be in increasing order of distance from "here"
      */
     private void displayBarsForLocation(Location location, Set<Bar> bars) {
-        currentlyDisplayedBars = new ArrayList<Bar>(bars);
+        currentlyDisplayedBars = recalculateDistances(location, bars);
         // This is probably bogus, it doesn't update the distance based on here, just sorts on where they were...
         // (Which gets updated every time we get a web request, so that's ok?
         Collections.sort(currentlyDisplayedBars, Bar.makeDistanceComparator());
@@ -371,6 +371,16 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         lv.setAdapter(arrayAdapter);
         String s = getResources().getString(R.string.where_beer_last_update);
         tvStatus.setText(s + " " + new Date());
+    }
+
+    private ArrayList<Bar> recalculateDistances(Location location, Set<Bar> bars) {
+        Log.d(TAG, "recalculating distances...");
+        ArrayList<Bar> ret = new ArrayList<Bar>();
+        for (Bar b : bars) {
+            b.distance = (double) location.distanceTo(b.toLocation());
+            ret.add(b);
+        }
+        return ret;
     }
 
 
