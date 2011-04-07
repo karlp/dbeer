@@ -44,8 +44,15 @@
     <string name="add_pricing_spinner_label">Drink</string>
     <string name="add_price_failure">Epic fail...:(</string>
 
-    <string name="preference_category_main">Preferences</string>
 
     <string name="hidden_edit_title">These bars are hidden from view</string>
     <string name="hidden_edit_btn_clear_label">Reshow all</string>
+
+    <string name="preference_category_main">Preferences</string>
+    <string name="preference_drink_choice_title">Favourite drink</string>
+    <string name="preference_drink_choice_summary">Default drink to see prices for</string>
+
+    <string name="preference_category_developer">Developer Settings</string>
+    <string name="preference_dev_server_list">Remote Server</string>
+    <string name="preference_developer_mode">Enable developer mode</string>
 </resources>

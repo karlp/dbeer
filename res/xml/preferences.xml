@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:a="http://schemas.android.com/apk/res/android" a:key="PintyPrefs">
-    <PreferenceCategory a:title="@string/preference_category_server">
-        <CheckBoxPreference a:key="use_built_in_servers"
-                            a:title="Use built in servers"
-                            a:checked="true"
-                            />
-        <ListPreference a:title="Built in servers"
-                        a:dependency="use_built_in_servers"
-                        a:entries="@array/built_in_server_names"
-                        a:entryValues="@array/built_in_server_values"
-                        a:key="server">
-        </ListPreference>
-
+    <PreferenceCategory a:title="@string/preference_category_main">
         <ListPreference
-           a:title="Favourite drink"
-           a:summary="Default drink to see prices for"
+           a:title="@string/preference_drink_choice_title"
+           a:summary="@string/preference_drink_choice_summary"
            a:key="favourite_drink"
            a:defaultValue="1"
            a:entries="@array/drink_type_names"
            a:entryValues="@array/drink_type_values" />
+        <CheckBoxPreference a:key="developer_mode" a:title="@string/preference_developer_mode" a:defaultValue="false" />
+    </PreferenceCategory>
+    <PreferenceCategory a:title="@string/preference_category_developer">
+        <ListPreference a:title="@string/preference_dev_server_list"
+                        a:entries="@array/built_in_server_names"
+                        a:entryValues="@array/built_in_server_values"
+                        a:dependency="developer_mode"
+                        a:key="server">
+        </ListPreference>
     </PreferenceCategory>
 </PreferenceScreen>
