@@ -12,6 +12,9 @@ import android.util.Log;
 import net.beeroclock.dbeer.models.Bar;
 import net.beeroclock.dbeer.models.Price;
 import net.beeroclock.dbeer.models.PricingReport;
+import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -25,6 +28,9 @@ import java.util.TreeSet;
  * Date: 3/22/11
  * Time: 9:42 AM
  */
+@ReportsCrashes(formKey="dHZfRldtSG56NFhTNlg5Q2R1SXlUV1E6MQ",
+                mode = ReportingInteractionMode.TOAST,
+                resToastText = R.string.crash_toast_text)
 public class PintyApp extends Application {
 
     public static final String DEFAULT_SERVER = "dbeer-services.ekta.is";
@@ -41,10 +47,13 @@ public class PintyApp extends Application {
     public ArrayList<Integer> drinkExternalIds;
     public String userAgent;
 
-    public PintyApp() {
+    @Override
+    public void onCreate() {
         this.knownBars = new TreeSet<Bar>();
         this.hiddenBars = new TreeSet<Long>();
         this.userAgent = "Apache-HttpClient/Android " + Build.VERSION.RELEASE + " (" + Build.MANUFACTURER + " " + Build.PRODUCT+ "/" + Build.MODEL + ")";
+        ACRA.init(this);
+        super.onCreate();
     }
 
     public Set<Bar> getKnownBars() {

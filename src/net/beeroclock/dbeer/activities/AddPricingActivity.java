@@ -11,6 +11,7 @@ import net.beeroclock.dbeer.PintyApp;
 import net.beeroclock.dbeer.R;
 import net.beeroclock.dbeer.models.PricingReport;
 import net.beeroclock.dbeer.models.ReportStatus;
+import org.acra.ErrorReporter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -119,9 +120,11 @@ public class AddPricingActivity extends Activity {
                 xmlr = client.execute(request, new BasicResponseHandler());
             } catch (HttpResponseException e) {
                 Log.e(TAG, e.getStatusCode() + "-" + e.getMessage(), e);
+                ErrorReporter.getInstance().handleException(e);
                 return new ReportStatus(false, e.getMessage());
             } catch (IOException e) {
                 Log.e(TAG, "Crazy error" + e.getMessage(), e);
+                ErrorReporter.getInstance().handleException(e);
                 return new ReportStatus(false, e.getMessage());
             }
             pinty.addPricingReport(report);

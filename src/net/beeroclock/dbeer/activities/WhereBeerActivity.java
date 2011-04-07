@@ -25,6 +25,7 @@ import net.beeroclock.dbeer.PintyApp;
 import net.beeroclock.dbeer.R;
 import net.beeroclock.dbeer.Utils;
 import net.beeroclock.dbeer.models.Price;
+import org.acra.ErrorReporter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -342,15 +343,18 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
             } catch (HttpResponseException e) {
                 // TODO - should invalidate the position somehow, so it gets refetched?
                 Log.e(TAG, e.getStatusCode() + "-" + e.getMessage(), e);
+                ErrorReporter.getInstance().handleException(e);
                 return new BarServiceFetcherResult("invalid response from the server: " + e.getStatusCode(), e);
             } catch (IOException e) {
                 Log.e(TAG, "Crazy error" + e.getMessage(), e);
+                ErrorReporter.getInstance().handleException(e);
                 return new BarServiceFetcherResult("Craziness? " + e.getMessage(), e);
             }
             try {
                 Set<Bar> bars = Utils.parseBarXml(xmlr);
                 return new BarServiceFetcherResult(bars);
             } catch (Exception e) {
+                ErrorReporter.getInstance().handleException(e);
                 return new BarServiceFetcherResult("Failed to parse the xml reply", e);
             }
         }
