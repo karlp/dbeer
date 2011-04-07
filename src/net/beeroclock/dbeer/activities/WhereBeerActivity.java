@@ -318,7 +318,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
             } catch (HttpResponseException e) {
                 // TODO - should invalidate the position somehow, so it gets refetched?
                 Log.e(TAG, e.getStatusCode() + "-" + e.getMessage(), e);
-                return new BarServiceFetcherResult("invalid response from the server!", e);
+                return new BarServiceFetcherResult("invalid response from the server: " + e.getStatusCode(), e);
             } catch (IOException e) {
                 Log.e(TAG, "Crazy error" + e.getMessage(), e);
                 return new BarServiceFetcherResult("Craziness?", e);
