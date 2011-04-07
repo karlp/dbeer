@@ -20,6 +20,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreProtocolPNames;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -99,6 +100,7 @@ public class AddPricingActivity extends Activity {
             PricingReport report = pricingReports[0];
 
             HttpClient client = new DefaultHttpClient();
+            client.getParams().setParameter(CoreProtocolPNames.USER_AGENT, pinty.userAgent);
             List<NameValuePair> qparams = new ArrayList<NameValuePair>();
             qparams.add(new BasicNameValuePair("recordedLat", String.valueOf(report.lat)));
             qparams.add(new BasicNameValuePair("recordedLon", String.valueOf(report.lon)));

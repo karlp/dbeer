@@ -32,6 +32,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreProtocolPNames;
 
 import java.io.*;
 import java.net.URI;
@@ -299,6 +300,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
             String xmlr;
 
             HttpClient client = new DefaultHttpClient();
+            client.getParams().setParameter(CoreProtocolPNames.USER_AGENT, pinty.userAgent);
             List<NameValuePair> qparams = new ArrayList<NameValuePair>();
             qparams.add(new BasicNameValuePair("lat", String.valueOf(location.getLatitude())));
             qparams.add(new BasicNameValuePair("lon", String.valueOf(location.getLongitude())));

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import net.beeroclock.dbeer.models.Bar;
@@ -38,10 +39,12 @@ public class PintyApp extends Application {
     // but android's resource model only gives us single arrays.
     public ArrayList<String> drinkNames;
     public ArrayList<Integer> drinkExternalIds;
+    public String userAgent;
 
     public PintyApp() {
         this.knownBars = new TreeSet<Bar>();
         this.hiddenBars = new TreeSet<Long>();
+        this.userAgent = "Apache-HttpClient/Android " + Build.VERSION.RELEASE + " (" + Build.MANUFACTURER + " " + Build.PRODUCT+ "/" + Build.MODEL + ")";
     }
 
     public Set<Bar> getKnownBars() {
