@@ -50,6 +50,8 @@ public class BarDetailActivity extends ListActivity {
         }
         bar = pinty.getBar(barId);
         if (bar == null) {
+            // TODO You can get hereby clicking on a "hidden" bar in preferences, that is not currently in pinty's brane.
+            // should fetch that bar on demand?
             fail_go_boom();
             return;
         }
