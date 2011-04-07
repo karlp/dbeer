@@ -5,7 +5,8 @@
         shows their latest bar prices.  Perhaps you never knew that Bar X had such cheap drinks, so you try somewhere new.
     Perhaps you\'re in a new city, and don\'t even know what direction the bars are.  This can help with both.\n
     \n
-    The bar lists come from the great OpenStreetMap, and the pricings come from all the users in the world!\n
+    The bar lists come from the great OpenStreetMap, and the pricings come from all the users in the world! If you
+        don\'t see a bar on the list, visit www.openstreetmap.org and add it!\n
         \n
         More info at dbeer-services.ekta.is</string>
 
@@ -25,7 +26,7 @@
     <!--<string name="menu_where_drinks">Drinks</string>-->
     <string name="menu_where_about">About</string>
     <string name="menu_where_hidden_bars">Hidden bars</string>
-    <string name="menu_where_help">Help</string>
+    <string name="dialog_help_title">Help</string>
     <string name="menu_where_preferences">Preferences</string>
 
     <string name="bar_detail_btn_get_directions">Get directions</string>
@@ -33,6 +34,11 @@
     <string name="bar_detail_btn_add_pricing">Add a pricing</string>
     <string name="bar_detail_btn_hide_bar">Hide this bar</string>
     <string name="bar_detail_btn_show_bar">Reshow this bar</string>
+    <string name="bar_detail_help_text">This screen shows the full bar details, with average prices for all drinks on
+        record.  You can show the bar on a map, (one day) get directions to the bar, or hide the bar completely.\n
+    \n
+        If you\'re at (or close to) the bar, you can add a price for the bar, updating the prices for everyone!
+    </string>
 
     <string name="toast_wtf">Something\'s wrong, hope you didn\'t see this :(</string>
     <string name="toast_add_price_thanks">Done! Thanks!</string>

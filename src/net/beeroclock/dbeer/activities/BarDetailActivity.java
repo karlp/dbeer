@@ -1,12 +1,12 @@
 package net.beeroclock.dbeer.activities;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
 import net.beeroclock.dbeer.models.Bar;
 import net.beeroclock.dbeer.PintyApp;
@@ -32,6 +32,43 @@ public class BarDetailActivity extends ListActivity {
     Button toggleHiddenButton;
     private static final int BAR_ENABLED_DISTANCE = 150;
     public static final int REQUEST_ADD_PRICE = 1;
+    private static final int DIALOG_HELP = 1;
+
+
+    /**
+     * Handle the menu options for this activity
+     * @param item the menu item clicked
+     * @return see super()
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_bar_detail_help:
+                showDialog(DIALOG_HELP);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_bar_detail, menu);
+        return true;
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        switch (id) {
+            case DIALOG_HELP:
+                return builder.setMessage(R.string.bar_detail_help_text)
+                    .setTitle(R.string.dialog_help_title).create();
+        }
+        return super.onCreateDialog(id);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +88,7 @@ public class BarDetailActivity extends ListActivity {
         bar = pinty.getBar(barId);
         if (bar == null) {
             // TODO You can get hereby clicking on a "hidden" bar in preferences, that is not currently in pinty's brane.
-            // should fetch that bar on demand?
+            // should fetch that bar on demand?  (use a progress dialog with a bar fetcher!)
             fail_go_boom();
             return;
         }

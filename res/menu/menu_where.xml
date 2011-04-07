@@ -12,7 +12,7 @@
           a:icon="@android:drawable/ic_menu_preferences"
           />
     <item a:id="@+id/menu_where_help"
-          a:title="@string/menu_where_help"
+          a:title="@string/dialog_help_title"
           a:icon="@android:drawable/ic_menu_help"
           />
 

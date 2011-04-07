@@ -130,18 +130,12 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         switch (id) {
             case DIALOG_HELP:
                 return builder.setMessage(R.string.where_beer_help_text)
-                    .setTitle(R.string.menu_where_help).create();
+                    .setTitle(R.string.dialog_help_title).create();
             case DIALOG_ABOUT:
                 return builder.setTitle(R.string.app_name)
                         .setMessage(R.string.app_about_text).create();
         }
         return super.onCreateDialog(id);
-    }
-
-    private Dialog makeHelpDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        return builder.create();
     }
 
     /**
@@ -351,7 +345,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
                 return new BarServiceFetcherResult("invalid response from the server: " + e.getStatusCode(), e);
             } catch (IOException e) {
                 Log.e(TAG, "Crazy error" + e.getMessage(), e);
-                return new BarServiceFetcherResult("Craziness?", e);
+                return new BarServiceFetcherResult("Craziness? " + e.getMessage(), e);
             }
             try {
                 Set<Bar> bars = Utils.parseBarXml(xmlr);
