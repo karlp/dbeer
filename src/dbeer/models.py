@@ -32,7 +32,10 @@ config = {
                             barid integer not null,
                             drink_type integer not null,
                             price real not null,
-                            geometry blob not null
+                            geometry blob not null,
+                            host text,
+                            user_agent text,
+                            userid text
                             )""",
     'sql_update_geom_bars' : "SELECT RecoverGeometryColumn('bars', 'geometry', 4326, 'POINT', 2)",
     'sql_update_geom_pricings' : "SELECT RecoverGeometryColumn('pricings', 'geometry', 4326, 'POINT', 2)",
@@ -148,10 +151,12 @@ class Db():
             prices[row[0]] = row[1]
         return prices
 
-    def add_price(self, bar, price, drink_type, orig_date, lat, lon):
+    def add_price(self, bar, price, drink_type, orig_date, lat, lon, remote_host, user_agent, userid):
         conn = sqlite3.connect(config['dbfile'])
-        conn.execute("insert into pricings (barid, drink_type, price, date, geometry) values (?, ?, ?, ?, geomFromText('point(%f %f)', 4326))" % (lon, lat),
-            (bar.pkuid, drink_type, price, orig_date))
+        conn.execute("""insert into pricings
+            (barid, drink_type, price, date, geometry, host, user_agent, userid)
+            values (?, ?, ?, ?, geomFromText('point(%f %f)', 4326), ?, ?, ?)""" % (lon, lat),
+            (bar.pkuid, drink_type, price, orig_date, remote_host, user_agent, userid))
         conn.commit()
 
 class Bar():

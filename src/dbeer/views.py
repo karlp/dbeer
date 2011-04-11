@@ -87,8 +87,12 @@ def bar_add_price(barid):
     lon = request.form.get("recordedLon")
     orig_date = datetime.utcfromtimestamp(float(orig_date) / 1000)
 
-    log.debug("Adding price %s for bar %s on %s", pp, bar, orig_date)
-    db.add_price(bar, pp, price_type, orig_date, float(lat), float(lon))
+    user = request.form.get("userid", "None")
+    remote_host = request.remote_addr
+    if remote_host == '127.0.0.1':
+        remote_host = request.headers.get("X-Forwarded-For", "unknown tunneled")
+    log.debug("Adding price %s for bar %s on %s from %s@%s", pp, bar, orig_date, user, remote_host)
+    db.add_price(bar, pp, price_type, orig_date, float(lat), float(lon), remote_host, request.user_agent.string, user)
     return "OK"
 
 def get_avg_prices(bar):
