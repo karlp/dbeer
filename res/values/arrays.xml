@@ -23,8 +23,8 @@
         <item>tera.beeroclock.net (dev)</item>
     </string-array>
     <string-array name="built_in_server_values">
-        <item>dbeer-services.ekta.is/services</item>
-        <item>dbeer-services.beeroclock.net/services</item>
+        <item>dbeer-services.ekta.is</item>
+        <item>dbeer-services.beeroclock.net</item>
         <item>tera.beeroclock.net</item>
     </string-array>
 </resources>
