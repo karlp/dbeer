@@ -9,6 +9,7 @@
         <item>Basic shot</item>
         <item>Basic bottled beer (small)</item>
         <item>Premium bottled beer (small)</item>
+        <item>Glass of wine</item>
     </string-array>
     <string-array name="drink_type_values">
         <item>1</item>
@@ -16,6 +17,7 @@
         <item>3</item>
         <item>4</item>
         <item>5</item>
+        <item>61</item>
     </string-array>
     <string-array name="built_in_server_names">
         <item>ekta.is (live)</item>
