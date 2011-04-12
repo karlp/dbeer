@@ -18,6 +18,7 @@
               a:layout_width="fill_parent"
               a:layout_height="wrap_content"
               a:layout_weight="1"
+              a:scrollbarStyle="insideInset"
             />
     <TextView a:id="@+id/where_status"
             a:layout_height="wrap_content"
