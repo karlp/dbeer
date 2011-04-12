@@ -6,17 +6,21 @@
     <string-array name="drink_type_names">
         <item>Basic large beer (tap)</item>
         <item>Premium large beer (tap)</item>
-        <item>Basic shot</item>
+        <!--<item>Basic shot</item>-->
         <item>Basic bottled beer (small)</item>
         <item>Premium bottled beer (small)</item>
+        <item>Basic single mixed drink</item>
+        <item>Basic double mixed drink</item>
         <item>Glass of wine</item>
     </string-array>
     <string-array name="drink_type_values">
         <item>1</item>
         <item>2</item>
-        <item>3</item>
+        <!--<item>3</item>-->
         <item>4</item>
         <item>5</item>
+        <item>91</item>
+        <item>92</item>
         <item>61</item>
     </string-array>
     <string-array name="built_in_server_names">
