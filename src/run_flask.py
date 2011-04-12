@@ -6,7 +6,8 @@ __author__="Karl Palsson"
 __date__ ="$Mar 25, 2011 3:45:04 PM$"
 
 import logging
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(levelname)s %(name)s - %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s - %(message)s")
+logging.getLogger("dbeer").setLevel(logging.DEBUG)
 
 from dbeer import app as application
 
