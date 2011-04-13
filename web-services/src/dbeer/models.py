@@ -19,9 +19,9 @@ BBOX_SIZE = 0.5
 #conn.row_factory = sqlite3.Row
 
 config = {
-    'dbfile' : "/home/karl/src/dbeer-services/data/dbeer-demo.sqlite",
-    'sql_create_geom_file' : "/home/karl/src/dbeer-services/data/init_spatialite-2.3.sql",
-    'sql_create_tables': "/home/karl/src/dbeer-services/src/create_dbeer_db.1.sql",
+    'dbfile' : "/home/karl/src/dbeer/web-services/data/dbeer-demo.sqlite",
+    'sql_create_geom_file' : "/home/karl/src/dbeer/web-services/data/init_spatialite-2.3.sql",
+    'sql_create_tables': "/home/karl/src/dbeer/web-services/src/create_dbeer_db.1.sql",
 }
 
 class Db():
