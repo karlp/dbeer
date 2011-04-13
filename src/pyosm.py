@@ -168,10 +168,10 @@ class OSCXMLFile(object):
 
     def statistic(self):
         """Print a short statistic about the osc file object"""
-        log.info("filename      : %s", self.filename)
-        log.info("nodes created : %i", len(self.create_nodes))
-        log.info("nodes modified: %i", len(self.modify_nodes))
-        log.info("nodes deleted : %i", len(self.delete_nodes))
+        log.info("Filename : %s", self.filename)
+        log.info(" nodes created : %i", len(self.create_nodes))
+        log.info(" nodes modified: %i", len(self.modify_nodes))
+        log.info(" nodes deleted : %i", len(self.delete_nodes))
 
 class OSMXMLFile(object):
     def __init__(self, filename=None, content=None, options={}):
