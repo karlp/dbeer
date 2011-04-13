@@ -20,30 +20,8 @@ BBOX_SIZE = 0.5
 
 config = {
     'dbfile' : "/home/karl/src/dbeer-services/data/dbeer-demo.sqlite",
-    'sql_create_table_bars' :
-        """CREATE TABLE bars(PKUID integer primary key autoincrement,
-                            name text not null,
-                            osmid integer,
-                            type text,
-                            created integer not null,
-                            updated integer,
-                            deleted integer,
-                            geometry blob not null
-                            )""",
-    'sql_create_table_pricings' :
-        """CREATE TABLE pricings(PKUID integer primary key autoincrement,
-                            date integer not null,
-                            barid integer not null,
-                            drink_type integer not null,
-                            price real not null,
-                            geometry blob not null,
-                            host text,
-                            user_agent text,
-                            userid text
-                            )""",
-    'sql_update_geom_bars' : "SELECT RecoverGeometryColumn('bars', 'geometry', 4326, 'POINT', 2)",
-    'sql_update_geom_pricings' : "SELECT RecoverGeometryColumn('pricings', 'geometry', 4326, 'POINT', 2)",
     'sql_create_geom_file' : "/home/karl/src/dbeer-services/data/init_spatialite-2.3.sql",
+    'sql_create_tables': "/home/karl/src/dbeer-services/src/create_dbeer_db.1.sql",
 }
 
 class Db():
@@ -60,12 +38,7 @@ class Db():
         if len(rows.fetchall()) == 0:
             log.info("bars table didn't exist, creating everything")
             c.executescript(open(config['sql_create_geom_file']).read())
-            c.execute(config['sql_create_table_bars'])
-            c.execute(config['sql_create_table_pricings'])
-            c.execute(config['sql_update_geom_bars'])
-            c.execute(config['sql_update_geom_pricings'])
-            c.execute("create index idx_bar_osmid on bars(osmid)")
-            c.execute("create index idx_pricing_barid on pricings(barid)")
+            c.executescript(open(config['sql_create_tables']).read())
         else:
             log.info("Bars table existed, assuming everything else is in place")
 
@@ -107,6 +80,12 @@ class Db():
                         (bar.name, bar.type, bar.osmid, update_tstamp))
                     new_bars += 1
 
+        username = "unknown" # FIXME
+        source_file = "unknown" # FIXME
+        # FIXME - make this log a failure too please!
+        c.execute("""insert into data_updates (date, username, bars_created, bars_modified, source_file, status)
+                    values (?, ?, ?, ?, ?, ?)""",
+                    (update_tstamp, username, new_bars, updated_bars, source_file, "OK"))
         conn.commit()
         conn.close()
         log.info("loaded %d bars, ignored %d nameless, created %d, updated %d", len(nodeset), ignored_bars, new_bars, updated_bars)
@@ -122,9 +101,30 @@ class Db():
             c.execute("update bars set deleted = ? where osmid = ?",
                 (update_tstamp, barn.id))
 
+        username = "unknown" # FIXME
+        source_file = "unknown" # FIXME
+        c.execute("""insert into data_updates (date, username, bars_removed, source_file, status)
+                    values (?, ?, ?, ?, ?)""",
+                    (update_tstamp, username, len(nodeset), source_file, "OK"))
         conn.commit()
         conn.close()
         log.info("removed %d bars", len(nodeset))
+
+    def last_update(self):
+        """
+        Return the timestamp of the last database update
+        """
+        conn = sqlite3.connect(config['dbfile'])
+        conn.row_factory = sqlite3.Row
+        row = conn.execute("select date, bars_removed, bars_created, bars_modified from data_updates where date = (select max(date) from data_updates)").fetchone()
+        lu = {}
+        lu['bars_removed'] = row['bars_removed']
+        lu['bars_created'] = row['bars_created']
+        lu['bars_modified'] = row['bars_modified']
+        lu['date'] = time.gmtime(row['date'])
+        #lu['date'] = int(row['date'])
+        conn.close()
+        return lu
 
     def bar_by_id(self, barid):
         """

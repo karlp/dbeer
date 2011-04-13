@@ -1,0 +1,9 @@
+<dbeerServices>
+    <status>OK</status>
+    <lastUpdate>
+        <date>{{last_update.date}}</date>
+        <barsCreated>{{last_update.bars_created}}</barsCreated>
+        <barsRemoved>{{last_update.bars_removed}}</barsRemoved>
+        <barsModified>{{last_update.bars_modified}}</barsModified>
+    </lastUpdate>
+</dbeerServices>

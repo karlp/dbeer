@@ -36,7 +36,8 @@ def print_timing(func):
 
 @app.route("/status")
 def status():
-    return "OK"
+    lu = db.last_update()
+    return Response(render_template("status.xml", last_update=lu), content_type="application/xml; charset=utf-8", )
 
 @app.route('/upload', methods=['POST'])
 def add_raw_dump():

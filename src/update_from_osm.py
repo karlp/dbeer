@@ -30,6 +30,7 @@ if __name__ == "__main__":
             osc.statistic()
             db.add_or_update_nodes(osc.create_nodes)
             log.info("Finished creating new nodes")
+            # Note, you can still "create" here, because we might be adding the name for the first time
             db.add_or_update_nodes(osc.modify_nodes)
             log.info("Finished modifying nodes")
             db.remove_nodes(osc.delete_nodes)
