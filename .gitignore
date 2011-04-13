@@ -5,3 +5,4 @@ android/out/
 android/libs/*-javadoc.jar
 android/libs/*-sources.jar
 *.pyc
+*/nbproject/private
