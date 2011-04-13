@@ -5,6 +5,7 @@
 # oh yes, this does lots of calculations....
 
 import math
+import datetime
 import time
 import logging
 log = logging.getLogger("dbeer.models")
@@ -119,7 +120,7 @@ class Db():
         lu['bars_removed'] = row['bars_removed']
         lu['bars_created'] = row['bars_created']
         lu['bars_modified'] = row['bars_modified']
-        lu['date'] = time.gmtime(row['date'])
+        lu['date'] = datetime.datetime.fromtimestamp(row['date'])
         #lu['date'] = int(row['date'])
         conn.close()
         return lu
