@@ -1,0 +1,9 @@
+wget http://download.geofabrik.de/osm/europe.osm.bz2
+
+bzcat europe.osm.bz2 | ../osm-iceland/osmfilter64 --drop-ways --drop-relations
+| ../osm-iceland/osmfilter64 -k"amenity=pub =bar =restaraunt =cafe =nightclub"
+> europe.pubsandfriends.osm
+
+
+
+or: wget -O - http://planet.openstreetmap.org/planet-<date>.osm.bz2 |bzcat ...

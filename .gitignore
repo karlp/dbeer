@@ -1,6 +1,7 @@
-local.properties
-.idea/workspace.xml
-gen/
-out/
-libs/*-javadoc.jar
-libs/*-sources.jar
+android/local.properties
+android/.idea/workspace.xml
+android/gen/
+android/out/
+android/libs/*-javadoc.jar
+android/libs/*-sources.jar
+*.pyc

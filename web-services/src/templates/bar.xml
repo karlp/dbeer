@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bar pkuid="{{bar.pkuid}}" lat="{{bar.lat}}" lon="{{bar.lon}}" osmid="{{bar.osmid}}">
+    <name>{{bar.name}}</name>
+    <type>{{bar.type}}</type>
+    <prices>
+        {%- for price in prices -%}
+        <price drinkid="{{price}}">{{prices[price]}}</price>
+        {%- endfor -%}
+    </prices>
+    <lon_bucket>{{bar.lon_bucket}}</lon_bucket>
+</bar>
