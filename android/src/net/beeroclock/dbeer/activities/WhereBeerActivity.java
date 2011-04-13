@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -149,7 +148,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         setContentView(R.layout.wherebeer);
         pinty = (PintyApp)getApplication();
         tvStatus = (TextView) findViewById(R.id.where_status);
-        headerImage = (ImageView) findViewById(R.id.where_image);
+        headerImage = (ImageView) findViewById(R.id.where_status_icon);
 
         // Acquire a reference to the system Location Manager
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
