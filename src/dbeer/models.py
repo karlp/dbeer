@@ -56,7 +56,7 @@ class Db():
         log.debug("Loaded osm dump")
         add_or_update_nodes(osm.nodes)
 
-    def add_or_update_nodes(self, nodeset):
+    def add_or_update_nodes(self, nodeset, source_file="unknown"):
         ignored_bars = 0
         updated_bars = 0
         new_bars = 0
@@ -81,7 +81,6 @@ class Db():
                     new_bars += 1
 
         username = "unknown" # FIXME
-        source_file = "unknown" # FIXME
         # FIXME - make this log a failure too please!
         c.execute("""insert into data_updates (date, username, bars_created, bars_modified, source_file, status)
                     values (?, ?, ?, ?, ?, ?)""",
@@ -90,7 +89,7 @@ class Db():
         conn.close()
         log.info("loaded %d bars, ignored %d nameless, created %d, updated %d", len(nodeset), ignored_bars, new_bars, updated_bars)
 
-    def remove_nodes(self, nodeset):
+    def remove_nodes(self, nodeset, source_file="unknown"):
         """
         Mark bars as removed, presumably because an osm changes file indicated that they were deleted.
         """
@@ -102,7 +101,6 @@ class Db():
                 (update_tstamp, barn.id))
 
         username = "unknown" # FIXME
-        source_file = "unknown" # FIXME
         c.execute("""insert into data_updates (date, username, bars_removed, source_file, status)
                     values (?, ?, ?, ?, ?)""",
                     (update_tstamp, username, len(nodeset), source_file, "OK"))
