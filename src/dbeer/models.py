@@ -5,6 +5,7 @@
 # oh yes, this does lots of calculations....
 
 import math
+import time
 import logging
 log = logging.getLogger("dbeer.models")
 
@@ -24,6 +25,9 @@ config = {
                             name text not null,
                             osmid integer,
                             type text,
+                            created integer not null,
+                            updated integer,
+                            deleted integer,
                             geometry blob not null
                             )""",
     'sql_create_table_pricings' :
@@ -77,35 +81,50 @@ class Db():
             log.error("EPIC FAIL: couldn't parse the osm file %s" % exx)
             return
         log.debug("Loaded osm dump")
+        add_or_update_nodes(osm.nodes)
 
+    def add_or_update_nodes(self, nodeset):
         ignored_bars = 0
         updated_bars = 0
         new_bars = 0
         conn = sqlite3.connect(config['dbfile'])
         c = conn.cursor()
-        for barn in osm.nodes.values():
+        update_tstamp = time.time()
+        for barn in nodeset.values():
             if 'name' not in barn.tags or barn.tags["name"] == "":
                 ignored_bars += 1
             else:
                 # Always updated, but use a key to make sure that we never make a duplicate.
-                # this _may_ cause some problems with ODBL? it makes it more of a derivative than a collection?
-                # Using my own key, and looking for bars by osm id first works too, but it's much much much slower....
                 bar = Bar(barn.tags["name"], float(barn.lat), float(barn.lon), type=barn.tags["amenity"], osmid=barn.id)
                 cnt = c.execute("select count(1) from bars where osmid = ?", (bar.osmid,)).fetchone()[0]
                 if cnt >= 1:
-                    # update
-                    c.execute("update bars set name = ?, type =?, geometry = geomFromText('POINT(%f %f)', 4326) where osmid = ?" % (bar.lon, bar.lat),
-                        (bar.name, bar.type, bar.osmid))
+                    c.execute("update bars set name = ?, type =?, updated = ?, geometry = geomFromText('POINT(%f %f)', 4326) where osmid = ?" % (bar.lon, bar.lat),
+                        (bar.name, bar.type, update_tstamp, bar.osmid))
                     updated_bars += 1
                 else:
-                    # created
                     # oh fuck you very much spatialite
-                    c.execute("insert into bars (name, type, osmid, geometry) values (?, ?, ?, geomFromText('POINT(%f %f)', 4326))" % (bar.lon, bar.lat),
-                        (bar.name, bar.type, bar.osmid))
+                    c.execute("insert into bars (name, type, osmid, created, geometry) values (?, ?, ?, ?, geomFromText('POINT(%f %f)', 4326))" % (bar.lon, bar.lat),
+                        (bar.name, bar.type, bar.osmid, update_tstamp))
                     new_bars += 1
 
         conn.commit()
-        log.info("loaded %d bars, ignored %d nameless, created %d, updated %d", len(osm.nodes), ignored_bars, new_bars, updated_bars)
+        conn.close()
+        log.info("loaded %d bars, ignored %d nameless, created %d, updated %d", len(nodeset), ignored_bars, new_bars, updated_bars)
+
+    def remove_nodes(self, nodeset):
+        """
+        Mark bars as removed, presumably because an osm changes file indicated that they were deleted.
+        """
+        conn = sqlite3.connect(config['dbfile'])
+        c = conn.cursor()
+        update_tstamp = time.time()
+        for barn in nodeset.values():
+            c.execute("update bars set deleted = ? where osmid = ?",
+                (update_tstamp, barn.id))
+
+        conn.commit()
+        conn.close()
+        log.info("removed %d bars", len(nodeset))
 
     def bar_by_id(self, barid):
         """
