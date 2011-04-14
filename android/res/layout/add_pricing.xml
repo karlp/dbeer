@@ -5,14 +5,6 @@
               a:layout_height="fill_parent"
               a:orientation="vertical"
         >
-    <TextView a:id="@+id/add_pricing_instructions"
-              a:layout_height="wrap_content"
-              a:layout_width="fill_parent"
-              a:text="@string/add_pricing_instructions_initial"
-              a:textSize="20sp"
-              a:textStyle="bold"
-              a:padding="5sp"
-            />
     <RelativeLayout a:layout_height="wrap_content" a:layout_width="fill_parent">
         <TextView a:id="@+id/add_pricing_spinner_label"
                   a:layout_height="wrap_content"
@@ -40,7 +32,7 @@
                   a:layout_width="fill_parent"
                   a:layout_toRightOf="@id/add_pricing_price_label"
                   a:inputType="numberDecimal"
-                  a:imeOptions="actionDone"
+                  a:imeOptions="actionSend"
                 />
     </RelativeLayout>
     <Button a:id="@+id/add_pricing_btn_confirm"
@@ -49,5 +41,13 @@
             a:gravity="center"
             a:text="@string/add_beer_btn_confirm"
             a:onClick="submitPrice"
+            />
+    <TextView a:id="@+id/add_pricing_instructions"
+              a:layout_height="wrap_content"
+              a:layout_width="fill_parent"
+              a:text="@string/add_pricing_instructions_initial"
+              a:textSize="20sp"
+              a:textStyle="bold"
+              a:padding="5sp"
             />
 </LinearLayout>

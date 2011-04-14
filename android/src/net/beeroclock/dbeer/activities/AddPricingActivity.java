@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import net.beeroclock.dbeer.models.Bar;
 import net.beeroclock.dbeer.PintyApp;
@@ -59,6 +61,16 @@ public class AddPricingActivity extends Activity {
         Spinner drinksSpinner = (Spinner) findViewById(R.id.add_pricing_drink_spinner);
         priceEntry = (EditText) findViewById(R.id.add_pricing_price);
         submitButton = (Button)findViewById(R.id.add_pricing_btn_confirm);
+
+        // let people just press "send/done" on their keyboard, rather than having to click the send button
+        priceEntry.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    submitButton.performClick();
+                }
+                return true;
+            }
+        });
 
         // yucky magic :(
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, pinty.drinkNames);
