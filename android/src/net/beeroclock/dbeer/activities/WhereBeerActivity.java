@@ -169,6 +169,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     public void onCreate(Bundle savedInstanceState) {
 //        Debug.startMethodTracing("wherebeer");
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.wherebeer);
         pinty = (PintyApp)getApplication();
         tvStatus = (TextView) findViewById(R.id.where_status);
@@ -207,6 +208,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         if (pinty.getLastLocation() != null && !allowedBars.isEmpty()) {
             Log.i(TAG, "resuming and reusing cached location and bars");
             displayBarsForLocation(pinty.getLastLocation(), allowedBars);
+            headerImage.setImageDrawable(getResources().getDrawable(R.drawable.emo_im_happy));
             return;
         }
 
@@ -385,6 +387,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         @Override
         protected void onPostExecute(BarServiceFetcherResult result) {
             super.onPostExecute(result);
+            setProgressBarIndeterminateVisibility(false);
             if (result.success) {
                 headerImage.setImageDrawable(getResources().getDrawable(R.drawable.emo_im_happy));
 
@@ -438,7 +441,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     private void useGoodNewLocation(Location location) {
         Log.i(TAG, "updating location and fetching for:" + location);
         pinty.setLastLocation(location);
-
+        setProgressBarIndeterminateVisibility(true);
         new BarServiceFetcher().execute(location);
     }
 

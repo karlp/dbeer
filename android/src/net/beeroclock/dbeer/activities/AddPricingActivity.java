@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.*;
 import net.beeroclock.dbeer.models.Bar;
 import net.beeroclock.dbeer.PintyApp;
@@ -47,6 +48,7 @@ public class AddPricingActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.add_pricing);
 
         barId = getIntent().getExtras().getLong(Bar.PKUID);
@@ -90,6 +92,7 @@ public class AddPricingActivity extends Activity {
         PricingReport pricingReport = new PricingReport(barId, 
                 pinty.getLastLocation().getLatitude(), pinty.getLastLocation().getLongitude(), 
                 pinty.drinkExternalIds.get(chosenDrink), new BigDecimal(text));
+        setProgressBarIndeterminateVisibility(true);
         new BarPricePoster().execute(pricingReport);
     }
 
@@ -134,6 +137,7 @@ public class AddPricingActivity extends Activity {
         @Override
         protected void onPostExecute(ReportStatus reportStatus) {
             super.onPostExecute(reportStatus);
+            setProgressBarIndeterminateVisibility(false);
             if (reportStatus.success) {
                 submitButton.setText(R.string.add_beer_btn_confirm);
                 setResult(RESULT_OK);
