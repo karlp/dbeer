@@ -3,6 +3,8 @@ package net.beeroclock.dbeer;
 import android.app.Application;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
@@ -13,6 +15,7 @@ import net.beeroclock.dbeer.models.Bar;
 import net.beeroclock.dbeer.models.Price;
 import net.beeroclock.dbeer.models.PricingReport;
 import org.acra.ACRA;
+import org.acra.ErrorReporter;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
@@ -53,7 +56,16 @@ public class PintyApp extends Application {
     public void onCreate() {
         this.knownBars = new TreeSet<Bar>();
         this.hiddenBars = new TreeSet<Long>();
-        this.userAgent = "Apache-HttpClient/Android " + Build.VERSION.RELEASE + " (" + Build.MANUFACTURER + " " + Build.PRODUCT+ "/" + Build.MODEL + ")";
+        PackageInfo pi;
+        try {
+            pi = getPackageManager().getPackageInfo(getClass().getPackage().getName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            // yeah right, we can't find ourselves :)
+            ErrorReporter.getInstance().handleException(e);
+            throw new IllegalStateException(e);
+        }
+        this.userAgent = String.format("Apache-HttpClient/Android %s (%s %s/%s) %s/%d",
+                Build.VERSION.RELEASE, Build.MANUFACTURER, Build.PRODUCT, Build.MODEL, pi.packageName, pi.versionCode);
         ACRA.init(this);
         super.onCreate();
     }
@@ -87,7 +99,7 @@ public class PintyApp extends Application {
             pp = new Price(report.drinkTypeId, report.priceInLocalCurrency.doubleValue());
             b.prices.add(pp);
         } else {
-            // simplistic average...
+            // FIXME - this is completely busted!  simplistic average...
             pp.avgPrice += report.priceInLocalCurrency.doubleValue();
             pp.avgPrice /= 2;
         }
