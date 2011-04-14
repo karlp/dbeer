@@ -4,7 +4,7 @@
     <type>{{bar.type}}</type>
     <prices>
         {%- for price in prices -%}
-        <price drinkid="{{price}}">{{prices[price]}}</price>
+            <price drinkid="{{price.drink_type}}" samples="{{price.samples}}">{{price.average}}</price>
         {%- endfor -%}
     </prices>
     <lon_bucket>{{bar.lon_bucket}}</lon_bucket>

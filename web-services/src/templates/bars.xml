@@ -7,7 +7,7 @@
         <distance>{{bar.distance}}</distance>
         <prices>
             {%- for price in bar.prices -%}
-            <price drinkid="{{price}}">{{bar.prices[price]}}</price>
+            <price drinkid="{{price.drink_type}}" samples="{{price.samples}}">{{price.average}}</price>
             {%- endfor -%}
         </prices>
         <lon_bucket>{{bar.bar.lon_bucket}}</lon_bucket>

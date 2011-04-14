@@ -162,11 +162,11 @@ class Db():
         return nearest[:count]
 
     def avg_prices_for_bar(self, bar_pkuid):
-        prices = {}
+        prices = []
         conn = sqlite3.connect(config['dbfile'])
-        rows = conn.execute("select drink_type, avg(price) from pricings where barid = ? group by drink_type", (bar_pkuid,)).fetchall()
+        rows = conn.execute("select drink_type, avg(price), count(price) from pricings where barid = ? group by drink_type", (bar_pkuid,)).fetchall()
         for row in rows:
-            prices[row[0]] = row[1]
+            prices.append({'drink_type': row[0], 'average': row[1], 'samples': row[2]})
         return prices
 
     def add_price(self, bar, price, drink_type, orig_date, lat, lon, remote_host, user_agent, userid):
