@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
@@ -130,10 +132,32 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         switch (id) {
             case DIALOG_HELP:
                 return builder.setMessage(R.string.where_beer_help_text)
-                    .setTitle(R.string.dialog_help_title).create();
+                        .setTitle(R.string.dialog_help_title)
+                        .setPositiveButton(R.string.btn_help_view_online_manual, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(PintyApp.APP_HELP_PAGE)));
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dismissDialog(DIALOG_HELP);
+                            }
+                        })
+                        .create();
             case DIALOG_ABOUT:
                 return builder.setTitle(R.string.app_name)
-                        .setMessage(R.string.app_about_text).create();
+                        .setMessage(R.string.app_about_text)
+                        .setPositiveButton(R.string.btn_about_visit_website, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(PintyApp.APP_HOME_PAGE)));
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dismissDialog(DIALOG_ABOUT);
+                            }
+                        })
+                        .create();
         }
         return super.onCreateDialog(id);
     }
