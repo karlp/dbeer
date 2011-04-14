@@ -2,6 +2,7 @@ package net.beeroclock.dbeer;
 
 import net.beeroclock.dbeer.models.Bar;
 import net.beeroclock.dbeer.models.Price;
+import net.beeroclock.dbeer.ws.DBeerServiceStatus;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.htmlcleaner.HtmlCleaner;
@@ -77,4 +78,14 @@ public class Utils {
         return ret;
     }
 
+    public static DBeerServiceStatus parseStatus(String xmlr) {
+        HtmlCleaner cleaner = new HtmlCleaner();
+        TagNode node = cleaner.clean(xmlr);
+        try {
+            String date = node.evaluateXPath("//lastUpdate/date/text()")[0].toString();
+            return new DBeerServiceStatus(date);
+        } catch (XPatherException e) {
+            throw new IllegalStateException("something went bad with xpath", e);
+        }
+    }
 }

@@ -59,6 +59,9 @@
     <string name="preference_drink_choice_title">Favourite drink</string>
     <string name="preference_drink_choice_summary">Default drink to see prices for</string>
 
+    <string name="preference_category_stats">Statistics</string>
+    <string name="preference_last_data_update">Last server data update</string>
+
     <string name="preference_category_developer">Developer Settings</string>
     <string name="preference_dev_server_list">Remote Server</string>
     <string name="preference_developer_mode">Enable developer mode</string>
