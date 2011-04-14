@@ -489,8 +489,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
                     boolean done = false;
                     for (Price p : bar.prices) {
                         if (p.drinkTypeId == desiredPriceType) {
-                            // FIXME - make sure this is formatted to only 2 decimals!
-                            priceView.setText(String.valueOf(p.avgPrice));
+                            priceView.setText(String.format("%4.2f", p.avgPrice));
                             done = true;
                         }
                     }
