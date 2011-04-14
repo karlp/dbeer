@@ -393,8 +393,8 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
 
                 // TODO - Could add proximity alerts here for each bar?
                 // save the bars to our application's current set of bars...
-                // TODO Remember, we have to resort the set of bars, based on our current location!
-                // Still want a set, so I don't get duplicate bars, but probably should resort it a lot more often
+                // Make sure that new data replaces any existing data for a given bar.
+                pinty.getKnownBars().removeAll(result.bars);
                 pinty.getKnownBars().addAll(result.bars);
                 redrawBarList();
             } else {
