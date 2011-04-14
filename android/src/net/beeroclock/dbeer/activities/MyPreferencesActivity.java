@@ -89,16 +89,13 @@ public class MyPreferencesActivity extends PreferenceActivity {
             try {
                 xmlr = client.execute(request, new BasicResponseHandler());
             } catch (HttpResponseException e) {
-                ErrorReporter.getInstance().handleException(e);
                 return new DBeerServiceStatus("invalid response from the server: " + e.getStatusCode(), e);
             } catch (IOException e) {
-                ErrorReporter.getInstance().handleException(e);
                 return new DBeerServiceStatus("Craziness? " + e.getMessage(), e);
             }
             try {
                 return Utils.parseStatus(xmlr);
             } catch (Exception e) {
-                ErrorReporter.getInstance().handleException(e);
                 return new DBeerServiceStatus("Failed to parse the xml reply", e);
             }
         }
@@ -113,6 +110,8 @@ public class MyPreferencesActivity extends PreferenceActivity {
                 editor.putString(PREF_LAST_DATA_UPDATE, result.lastUpdated);
                 editor.commit();
             } else {
+                // If we couldn't get the server status, while we do care, we don't really want to try and start
+                // notifying the server about it either.
                 lastUpdatedPref.setSummary("unknown");
             }
         }
