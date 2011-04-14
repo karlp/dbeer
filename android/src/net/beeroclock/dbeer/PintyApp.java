@@ -90,7 +90,10 @@ public class PintyApp extends Application {
         this.lastLocation = lastLocation;
     }
 
-    // simplistically handle updating our local price averages...
+    /**
+     * Update our local pricing view, in case we don't get an update from the server anytime soon.
+     * @param report the pricing report we're submitting to the server
+     */
     public void addPricingReport(PricingReport report) {
         Bar b = getBar(report.barOsmId);
         Price pp = findPrice(b.prices, report.drinkTypeId);
@@ -98,9 +101,9 @@ public class PintyApp extends Application {
             pp = new Price(report.drinkTypeId, report.priceInLocalCurrency.doubleValue());
             b.prices.add(pp);
         } else {
-            // FIXME - this is completely busted!  simplistic average...
-            pp.avgPrice += report.priceInLocalCurrency.doubleValue();
-            pp.avgPrice /= 2;
+            pp.sampleSize++;
+            double tmp = pp.avgPrice + report.priceInLocalCurrency.doubleValue();
+            pp.avgPrice = tmp / pp.sampleSize;
         }
     }
 

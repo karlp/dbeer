@@ -64,6 +64,7 @@ public class Utils {
                     TagNode price = (TagNode) priceo;
                     Price p = new Price();
                     p.drinkTypeId = Integer.parseInt(price.getAttributeByName("drinkid"));
+                    p.sampleSize = Integer.parseInt(price.getAttributeByName("samples"));
                     p.avgPrice = Double.parseDouble(price.getText().toString());
                     prices.add(p);
                 }

@@ -26,6 +26,7 @@ import net.beeroclock.dbeer.PintyApp;
 import net.beeroclock.dbeer.R;
 import net.beeroclock.dbeer.Utils;
 import net.beeroclock.dbeer.models.Price;
+import net.beeroclock.dbeer.ws.BarServiceFetcherResult;
 import org.acra.ErrorReporter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
@@ -304,29 +305,6 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     }
 
     public void onProviderDisabled(String provider) {
-    }
-
-    class BarServiceFetcherResult {
-        boolean success;
-        Throwable exception;
-        String message;
-        Set<Bar> bars;
-
-        BarServiceFetcherResult(Set<Bar> bars) {
-            success = true;
-            this.bars = bars;
-        }
-
-        BarServiceFetcherResult(String message) {
-            this.success = false;
-            this.message = message;
-        }
-
-        BarServiceFetcherResult(String message, Throwable exception) {
-            this.success = false;
-            this.message = message;
-            this.exception = exception;
-        }
     }
 
     class BarServiceFetcher extends AsyncTask<Location, Void, BarServiceFetcherResult> {
