@@ -37,7 +37,6 @@ import java.util.TreeSet;
 public class PintyApp extends Application {
 
     public static final String DEFAULT_SERVER = "dbeer-services.ekta.is";
-    public static final String PREFS_FILE = "PintyPrefs";
     public static final String PREF_FAVOURITE_DRINK = "favourite_drink";
     public static final String PREF_SERVER = "server";
     // Probably should become a map, or at least provide ways of getting certain bars back out again...
@@ -169,24 +168,9 @@ public class PintyApp extends Application {
         return Integer.valueOf(pref.getString(PREF_FAVOURITE_DRINK, drinkExternalIds.get(0).toString()));
     }
 
-    public void saveFavouriteDrink(int drinkId) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(PREF_FAVOURITE_DRINK, drinkId);
-        editor.commit();
-    }
-
     public String getServer() {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         return pref.getString(PREF_SERVER, DEFAULT_SERVER);
-    }
-
-
-    public void saveServer(String server) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PREF_SERVER, server);
-        editor.commit();
     }
 
     /**

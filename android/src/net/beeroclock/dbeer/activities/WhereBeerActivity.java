@@ -48,24 +48,17 @@ import java.util.*;
 public class WhereBeerActivity extends ListActivity implements LocationListener {
 
     public static final String TAG = "WhereBeerActivity";
-    public static final int SERVER_DEFAULT_ID = 0;
-    public static final int SERVER_DEV_ID = 1;
-    public static final int SERVER_CUSTOM_ID = 2;
-    public static final int SERVER_NEW_ID = 3;
     private TextView tvStatus;
     private ImageView headerImage;
     PintyApp pinty;
     LocationManager locationManager;
     private static final int DELETE_ID = Menu.FIRST + 1;
-    private static final int MENU_DRINKS_ID = DELETE_ID + 1;
-    private static final int MENU_SERVER_ID = MENU_DRINKS_ID + 1;
     private ArrayList<Bar> currentlyDisplayedBars;
     private static final int DIALOG_HELP = 1;
     private static final int DIALOG_ABOUT = 2;
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-//        Debug.stopMethodTracing();
         super.onListItemClick(l, v, position, id);
         Intent i = new Intent(this, BarDetailActivity.class);
         Bar b = (Bar) v.getTag(R.id.tag_bar);
@@ -73,6 +66,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         startActivity(i);
     }
 
+    // This handles the long click event itself
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -167,7 +161,6 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-//        Debug.startMethodTracing("wherebeer");
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.wherebeer);
@@ -229,6 +222,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     @Override
     protected void onStop() {
         super.onStop();
+        // Make sure we stop requesting location updates, or we'll drain the battery needlessly
         locationManager.removeUpdates(this);
         // keep pinty.knownBars though, we can fetch it again if we are killed, and there's no reason to remove bars once we learn of them....
     }
@@ -411,14 +405,11 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
 
     /**
      * Fill the list with the given set of bars, as if we were at the given location.
-     * TODO distance in each bar object might not be up to date?
      * @param location "here"
      * @param bars the bars to display, assumed to be in increasing order of distance from "here"
      */
     private void displayBarsForLocation(Location location, Set<Bar> bars) {
         currentlyDisplayedBars = recalculateDistances(location, bars);
-        // This is probably bogus, it doesn't update the distance based on here, just sorts on where they were...
-        // (Which gets updated every time we get a web request, so that's ok?
         Collections.sort(currentlyDisplayedBars, Bar.makeDistanceComparator());
         BarArrayAdapter arrayAdapter = new BarArrayAdapter(this, R.layout.where_row_item, location, currentlyDisplayedBars);
         ListView lv = getListView();
