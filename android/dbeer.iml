@@ -43,6 +43,7 @@
     <orderEntry type="library" name="htmlcleaner" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="google-Android 2.1-update1 Platform" level="application" />
     <orderEntry type="library" name="acra" level="project" />
+    <orderEntry type="library" name="admob" level="project" />
   </component>
 </module>
 

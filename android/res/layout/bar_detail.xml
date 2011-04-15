@@ -49,4 +49,12 @@
             a:text="@string/bar_detail_btn_hide_bar"
             />
 
+    <com.google.ads.AdView a:id="@+id/bar_detail_ad_view"
+                           a:layout_width="fill_parent"
+                           a:layout_height="50px"
+                           xmlns:ads="http://schemas.android.com/apk/res/net.beeroclock.dbeer"
+                           ads:adUnitId="a14da74362a3ae5"
+                           ads:adSize="BANNER"/>
+
+
 </LinearLayout>

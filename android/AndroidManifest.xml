@@ -11,6 +11,7 @@
         <activity a:name=".activities.MyPreferencesActivity"/>
         <activity a:name=".activities.HiddenBarEditActivity"/>
         <activity a:name=".activities.ActivityGoogleMap" a:theme="@android:style/Theme.NoTitleBar"/>
+        <activity a:name="com.google.ads.AdActivity" a:configChanges="keyboard|keyboardHidden|orientation"/>
         <activity a:name=".activities.WhereBeerActivity" a:label="@string/app_name">
             <intent-filter>
                 <action a:name="android.intent.action.MAIN"/>
@@ -22,7 +23,7 @@
     </application>
     <uses-permission a:name="android.permission.ACCESS_MOCK_LOCATION"/>
     <uses-permission a:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission a:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
     <uses-permission a:name="android.permission.INTERNET"/>
+    <uses-permission a:name="android.permission.ACCESS_NETWORK_STATE"/>
 
 </manifest>

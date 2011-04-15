@@ -5,9 +5,12 @@ import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
+import com.google.ads.AdRequest;
+import com.google.ads.AdView;
 import net.beeroclock.dbeer.models.Bar;
 import net.beeroclock.dbeer.PintyApp;
 import net.beeroclock.dbeer.models.Price;
@@ -97,8 +100,15 @@ public class BarDetailActivity extends ListActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Location lastLocation = pinty.getLastLocation();
+        AdView adView = (AdView) findViewById(R.id.bar_detail_ad_view);
+        AdRequest adRequest = new AdRequest();
+        adRequest.setLocation(lastLocation);
+        adRequest.setTesting(pinty.ads_test_mode);
+        adView.loadAd(adRequest);
+
         // TODO - or, let them click it, but make toast to say why it's off...
-        if (pinty.getLastLocation().distanceTo(bar.toLocation()) < BAR_ENABLED_DISTANCE) {
+        if (lastLocation.distanceTo(bar.toLocation()) < BAR_ENABLED_DISTANCE) {
             addPriceButton.setEnabled(true);
         } else {
             addPriceButton.setEnabled(false);

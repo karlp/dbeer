@@ -21,6 +21,8 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import com.google.ads.AdRequest;
+import com.google.ads.AdView;
 import net.beeroclock.dbeer.models.Bar;
 import net.beeroclock.dbeer.PintyApp;
 import net.beeroclock.dbeer.R;
@@ -193,13 +195,22 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     @Override
     protected void onResume() {
         super.onResume();
+        AdView adView = (AdView)this.findViewById(R.id.where_beer_ad_view);
+        AdRequest adRequest = new AdRequest();
+        Location lastLocation = pinty.getLastLocation();
+        if (lastLocation != null) {
+            adRequest.setLocation(lastLocation);
+        }
+        adRequest.setTesting(pinty.ads_test_mode);
+        adView.loadAd(adRequest);
+
         // Register ourselves for any sort of location update
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 5, this);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 5, this);
         // do we already know sort of where we are?
         // if we do, make sure to update our display!
         Set<Bar> allowedBars = pinty.getAllowedBars();
-        if (pinty.getLastLocation() != null && !allowedBars.isEmpty()) {
+        if (lastLocation != null && !allowedBars.isEmpty()) {
             Log.i(TAG, "resuming and reusing cached location and bars");
             displayBarsForLocation(pinty.getLastLocation(), allowedBars);
             headerImage.setImageDrawable(getResources().getDrawable(R.drawable.emo_im_happy));
