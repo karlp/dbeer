@@ -18,6 +18,7 @@ import org.acra.ACRA;
 import org.acra.ErrorReporter;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -39,6 +40,7 @@ public class PintyApp extends Application {
     public static final String DEFAULT_SERVER = "dbeer-services.ekta.is";
     public static final String PREF_FAVOURITE_DRINK = "favourite_drink";
     public static final String PREF_SERVER = "server";
+    public static final String PREF_SHOW_CAFES = "show_cafes";
     // Probably should become a map, or at least provide ways of getting certain bars back out again...
     private Set<Bar> knownBars;
     private Set<Long> hiddenBars;
@@ -148,7 +150,27 @@ public class PintyApp extends Application {
     }
 
     public Set<Bar> getAllowedBars() {
-        return stripByPkuid(knownBars, hiddenBars);
+        Set<Bar> nonHiddenBars = stripByPkuid(knownBars, hiddenBars);
+        return stripByPreferences(nonHiddenBars);
+    }
+
+    /**
+     * Remove all the bars from a set that are of a type we don't want to show.
+     * ie, remove all cafes/restaraunts from a list, or all nightclubs for instance.
+     * @param bars unfiltered bar set, (will be modified!)
+     * @return the same bars, without any bar desired hidden in preferences.
+     */
+    private Set<Bar> stripByPreferences(Set<Bar> bars) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean showCafes = pref.getBoolean(PREF_SHOW_CAFES, true);
+        Set<Bar> toHide = new TreeSet<Bar>();
+        for (Bar b : bars) {
+            if (StringUtils.equals(b.type, "cafe") & !showCafes) {
+                toHide.add(b);
+            }
+        }
+        bars.removeAll(toHide);
+        return bars;
     }
 
     private Set<Bar> stripByPkuid(Set<Bar> knownBars, Set<Long> hiddenBars) {

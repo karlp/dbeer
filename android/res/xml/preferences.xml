@@ -9,6 +9,8 @@
                 a:defaultValue="1"
                 a:entries="@array/drink_type_names"
                 a:entryValues="@array/drink_type_values"/>
+        <CheckBoxPreference a:key="show_cafes" a:title="@string/preference_show_cafes"
+                            a:summary="@string/preference_show_cafes_summary" a:defaultValue="true"/>
     </PreferenceCategory>
     <PreferenceCategory a:title="@string/preference_category_stats">
         <Preference a:title="@string/preference_last_data_update" a:key="last_data_update"

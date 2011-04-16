@@ -71,4 +71,6 @@
     <string name="dialog_no_bars_message">No bars found anywhere near your location :(\n
         \n
         Head for civilisation!</string>
+    <string name="preference_show_cafes">Show cafes</string>
+    <string name="preference_show_cafes_summary">Should cafes be included in the list of bars?</string>
 </resources>
