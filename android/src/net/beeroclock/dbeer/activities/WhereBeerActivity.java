@@ -3,6 +3,7 @@ package net.beeroclock.dbeer.activities;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -51,7 +52,6 @@ import java.util.*;
 public class WhereBeerActivity extends ListActivity implements LocationListener {
 
     public static final String TAG = "WhereBeerActivity";
-    private TextView tvStatus;
     private ImageView headerImage;
     PintyApp pinty;
     LocationManager locationManager;
@@ -60,6 +60,8 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     private static final int DIALOG_HELP = 1;
     private static final int DIALOG_ABOUT = 2;
     private static final int DIALOG_NO_BARS = 3;
+    private static final int ONE_MINUTE = 60 * 1000;
+    private ProgressDialog lostDialog;
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -178,13 +180,10 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.wherebeer);
         pinty = (PintyApp)getApplication();
-        tvStatus = (TextView) findViewById(R.id.where_status);
         headerImage = (ImageView) findViewById(R.id.where_status_icon);
 
         // Acquire a reference to the system Location Manager
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-
-        tvStatus.setText(R.string.where_beer_location_search);
 
         // Parse raw drink options... may need to push this to a background task...
         String[] drink_names = getResources().getStringArray(R.array.drink_type_names);
@@ -220,7 +219,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         // do we already know sort of where we are?
         // if we do, make sure to update our display!
         Set<Bar> allowedBars = pinty.getAllowedBars();
-        if (lastLocation != null && !allowedBars.isEmpty()) {
+        if (!isOldLocation(lastLocation) && !allowedBars.isEmpty()) {
             Log.i(TAG, "resuming and reusing cached location and bars");
             displayBarsForLocation(pinty.getLastLocation(), allowedBars);
             headerImage.setImageDrawable(getResources().getDrawable(R.drawable.emo_im_happy));
@@ -237,8 +236,22 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         } else {
             // oh well, nothing viable...  FIXME - should update this periodically, letting them know we're still trying...
             // Can we even do that? we're registered for updates, that's about as good as we can do!
-            tvStatus.setText(R.string.where_beer_location_search);
+            lostDialog = ProgressDialog.show(this, getResources().getString(R.string.dialog_lost_title),
+                    getResources().getString(R.string.dialog_lost_message), true, false);
         }
+    }
+
+    /**
+     * Is this location worth using for anything?
+     * @param lastLocation a location object we're considering using
+     * @return true if the location is out of date or null
+     */
+    private static boolean isOldLocation(Location lastLocation) {
+        if (lastLocation == null) {
+            return true;
+        }
+        Date now = new Date();
+        return (now.getTime() - lastLocation.getTime() > 3 * ONE_MINUTE);
     }
 
     @Override
@@ -256,6 +269,9 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         // if our app has been killed, we'll get the first one here, which _will_ update
         // android isn't very good really at only sending us updates when it's moved more than 5m.
         // ...at least with the network provider, works for the gps provider
+        if (lostDialog != null) {
+            lostDialog.dismiss();
+        }
         Location lastLocation = pinty.getLastLocation();
         if (isBetterLocation(location, lastLocation)) {
             useGoodNewLocation(location);
@@ -391,8 +407,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
                 pinty.getKnownBars().addAll(result.bars);
                 redrawBarList();
             } else {
-                tvStatus.setText(result.message);
-                // something else here?
+                Toast.makeText(WhereBeerActivity.this, result.message, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -419,8 +434,6 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         BarArrayAdapter arrayAdapter = new BarArrayAdapter(this, R.layout.where_row_item, location, currentlyDisplayedBars);
         ListView lv = getListView();
         lv.setAdapter(arrayAdapter);
-        String s = getResources().getString(R.string.where_beer_last_update);
-        tvStatus.setText(s + " " + new Date());
     }
 
     private ArrayList<Bar> recalculateDistances(Location location, Set<Bar> bars) {

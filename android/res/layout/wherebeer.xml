@@ -30,7 +30,4 @@
                            xmlns:ads="http://schemas.android.com/apk/res/net.beeroclock.dbeer"
                            ads:adUnitId="a14da74362a3ae5"
                            ads:adSize="BANNER"/>
-    <TextView a:id="@+id/where_status"
-              a:layout_height="wrap_content"
-              a:layout_width="wrap_content"/>
 </LinearLayout>

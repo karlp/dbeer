@@ -12,9 +12,6 @@
     <string name="btn_about_visit_website">Visit website</string>
 
     <string name="where_beer_header">Bars nearby</string>
-    <string name="where_beer_location_search">No idea where we are right now, waiting for better information on our location.</string>
-    <string name="where_beer_http_error">Oops, couldn\'t reach the beer server!</string>
-    <string name="where_beer_last_update">Last update at: </string>
     <string name="where_beer_ctx_hide_bar">Hide this bar forever</string>
     <string name="where_beer_help_text">This screen shows you a list of all known nearby bars, sorted by distance.
     The bar name, distance to the bar and the current average price for your favourite drink are shown.
@@ -73,4 +70,6 @@
         Head for civilisation!</string>
     <string name="preference_show_cafes">Show cafes</string>
     <string name="preference_show_cafes_summary">Should cafes be included in the list of bars?</string>
+    <string name="dialog_lost_title">Lost</string>
+    <string name="dialog_lost_message">No idea where we are right now, waiting for better information on our location.</string>
 </resources>
