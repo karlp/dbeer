@@ -59,6 +59,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     private ArrayList<Bar> currentlyDisplayedBars;
     private static final int DIALOG_HELP = 1;
     private static final int DIALOG_ABOUT = 2;
+    private static final int DIALOG_NO_BARS = 3;
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -152,6 +153,15 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
                         .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 dismissDialog(DIALOG_ABOUT);
+                            }
+                        })
+                        .create();
+            case DIALOG_NO_BARS:
+                return builder.setTitle(R.string.dialog_no_bars_title)
+                        .setMessage(R.string.dialog_no_bars_message)
+                        .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dismissDialog(DIALOG_NO_BARS);
                             }
                         })
                         .create();
@@ -398,6 +408,12 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
      * @param bars the bars to display, assumed to be in increasing order of distance from "here"
      */
     private void displayBarsForLocation(Location location, Set<Bar> bars) {
+        if (bars.size() == 0) {
+            // replace entire list view with a centered blob of text saying no bars nearby?
+            // Note: this is only shown if you start up fresh with no bars.  Because we cache bars locally, if you simply
+            // move a long long way, we'll still know about the bars at your old location.
+            showDialog(DIALOG_NO_BARS);
+        }
         currentlyDisplayedBars = recalculateDistances(location, bars);
         Collections.sort(currentlyDisplayedBars, Bar.makeDistanceComparator());
         BarArrayAdapter arrayAdapter = new BarArrayAdapter(this, R.layout.where_row_item, location, currentlyDisplayedBars);
