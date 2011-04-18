@@ -1,6 +1,7 @@
 package net.beeroclock.dbeer.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +47,7 @@ public class AddPricingActivity extends Activity {
     Long barId;
     private EditText priceEntry;
     private Button submitButton;
+    private ProgressDialog uploadDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +100,9 @@ public class AddPricingActivity extends Activity {
             Toast.makeText(this, "Please enter a price!", Toast.LENGTH_SHORT).show();
             return;
         }
+        uploadDialog = ProgressDialog.show(this, getResources().getString(R.string.dialog_upload_title), 
+                        getResources().getString(R.string.dialog_upload_message), true, false);
+        
         Log.i(TAG, "Submitting a price for " + barId + ", drink=" + pinty.drinkExternalIds.get(chosenDrink) + ", price=" + text);
         // Make sure to update our local pricings?
         // Could get an intent here and add info to return with..
@@ -150,6 +155,7 @@ public class AddPricingActivity extends Activity {
         protected void onPostExecute(ReportStatus reportStatus) {
             super.onPostExecute(reportStatus);
             setProgressBarIndeterminateVisibility(false);
+            uploadDialog.dismiss();
             if (reportStatus.success) {
                 submitButton.setText(R.string.add_beer_btn_confirm);
                 setResult(RESULT_OK);

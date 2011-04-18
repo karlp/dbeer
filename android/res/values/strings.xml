@@ -72,4 +72,6 @@
     <string name="preference_show_cafes_summary">Should cafes be included in the list of bars?</string>
     <string name="dialog_lost_title">Lost</string>
     <string name="dialog_lost_message">No idea where we are right now, waiting for better information on our location.</string>
+    <string name="dialog_upload_title">Uploading...</string>
+    <string name="dialog_upload_message">Sending price data</string>
 </resources>
