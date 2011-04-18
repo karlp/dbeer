@@ -52,7 +52,6 @@ import java.util.*;
 public class WhereBeerActivity extends ListActivity implements LocationListener {
 
     public static final String TAG = "WhereBeerActivity";
-    private ImageView headerImage;
     PintyApp pinty;
     LocationManager locationManager;
     private static final int DELETE_ID = Menu.FIRST + 1;
@@ -180,7 +179,6 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.wherebeer);
         pinty = (PintyApp)getApplication();
-        headerImage = (ImageView) findViewById(R.id.where_status_icon);
 
         // Acquire a reference to the system Location Manager
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
@@ -222,7 +220,6 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         if (!isOldLocation(lastLocation) && !allowedBars.isEmpty()) {
             Log.i(TAG, "resuming and reusing cached location and bars");
             displayBarsForLocation(pinty.getLastLocation(), allowedBars);
-            headerImage.setImageDrawable(getResources().getDrawable(R.drawable.emo_im_happy));
             return;
         }
 
@@ -403,8 +400,6 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
             super.onPostExecute(result);
             setProgressBarIndeterminateVisibility(false);
             if (result.success) {
-                headerImage.setImageDrawable(getResources().getDrawable(R.drawable.emo_im_happy));
-
                 // TODO - Could add proximity alerts here for each bar?
                 // save the bars to our application's current set of bars...
                 // Make sure that new data replaces any existing data for a given bar.
@@ -491,7 +486,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
                 if (distanceView != null) {
                     // Don't use string format on android, just truncate distance to whole meters
                     // TODO - could use a custom number formatter to display km instead of m?  (geeky overload)
-                    distanceView.setText(integerInstance.format(bar.distance));
+                    distanceView.setText(String.format("%,dm", bar.distance.intValue()));
                 }
                 TextView nameView = (TextView) view.findViewById(R.id.bar_name);
                 if (nameView != null) {

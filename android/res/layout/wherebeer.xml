@@ -10,11 +10,11 @@
                   a:text="@string/where_beer_header"
                   a:layout_weight="1"
                 />
-        <ImageView a:id="@+id/where_status_icon"
-                   a:layout_height="wrap_content"
-                   a:layout_width="wrap_content"
-                   a:layout_gravity="center"
-                   a:src="@drawable/ic_tab_where_selected"
+        <TextView a:id="@+id/where_header_price"
+                  a:layout_height="wrap_content"
+                  a:layout_width="wrap_content"
+                  a:paddingRight="4sp"
+                  a:text="@string/where_beer_header_price"
                 />
     </LinearLayout>
 

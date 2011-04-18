@@ -11,7 +11,8 @@
         More info at dbeer-services.ekta.is</string>
     <string name="btn_about_visit_website">Visit website</string>
 
-    <string name="where_beer_header">Bars nearby</string>
+    <string name="where_beer_header">Bar and direction</string>
+    <string name="where_beer_header_price">$€¥£</string>
     <string name="where_beer_ctx_hide_bar">Hide this bar forever</string>
     <string name="where_beer_help_text">This screen shows you a list of all known nearby bars, sorted by distance.
     The bar name, distance to the bar and the current average price for your favourite drink are shown.
