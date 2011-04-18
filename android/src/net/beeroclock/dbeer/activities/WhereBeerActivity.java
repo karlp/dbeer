@@ -292,8 +292,9 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
             return false;
         }
 
-        if (isOldLocation(location)) {
+        if (isOldLocation(location) && location.hasAccuracy()) {
             // an old location is definitely worse.
+            // emulator hack... it only has a "gps" and it doesn't support accuracy, and reports totally crazy times
             return false;
         }
         if (currentBestLocation == null) {
