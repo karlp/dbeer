@@ -251,7 +251,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
             return true;
         }
         Date now = new Date();
-        return (now.getTime() - lastLocation.getTime() > 3 * ONE_MINUTE);
+        return (now.getTime() - lastLocation.getTime() > 3 * DateUtils.MINUTE_IN_MILLIS);
     }
 
     @Override
@@ -295,15 +295,20 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
             return false;
         }
 
+        if (isOldLocation(location)) {
+            // an old location is definitely worse.
+            return false;
+        }
         if (currentBestLocation == null) {
-            // A new location is always better than no location
+            // if the new location is fresh, and the other is null, it must be ok
             return true;
         }
 
+        // below here, both fixes are viable, need to choose the better one...
         // Check whether the new location fix is newer or older
         long timeDelta = location.getTime() - currentBestLocation.getTime();
-        boolean isSignificantlyNewer = timeDelta > 2 * DateUtils.MINUTE_IN_MILLIS;
-        boolean isSignificantlyOlder = timeDelta < -2 * DateUtils.MINUTE_IN_MILLIS;
+        boolean isSignificantlyNewer = timeDelta > 3 * DateUtils.MINUTE_IN_MILLIS;
+        boolean isSignificantlyOlder = timeDelta < -3 * DateUtils.MINUTE_IN_MILLIS;
         boolean isNewer = timeDelta > 0;
 
         // If it's been more than two minutes since the current location, use the new location
