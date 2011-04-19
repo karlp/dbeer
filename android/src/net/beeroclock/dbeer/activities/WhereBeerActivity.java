@@ -7,17 +7,18 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
+import android.graphics.*;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
+import android.os.*;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.*;
@@ -49,7 +50,7 @@ import java.net.URISyntaxException;
 import java.text.NumberFormat;
 import java.util.*;
 
-public class WhereBeerActivity extends ListActivity implements LocationListener {
+public class WhereBeerActivity extends ListActivity implements LocationListener, SensorEventListener {
 
     public static final String TAG = "WhereBeerActivity";
     PintyApp pinty;
@@ -60,13 +61,17 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     private static final int DIALOG_NO_BARS = 3;
     private ProgressDialog lostDialog;
     BarArrayAdapter arrayAdapter;
+    private float mCurrentOrientation;
+    private SensorManager sensorManager;
+    private Sensor oSensor;
+    private Handler uiHandler;
+    private static final int MSG_TYPE_ROTATE = 99;
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Intent i = new Intent(this, BarDetailActivity.class);
-        Bar b = (Bar) v.getTag(R.id.tag_bar);
-        i.putExtra(Bar.PKUID, b.pkuid);
+        i.putExtra(Bar.PKUID, arrayAdapter.getItem(position).pkuid);
         startActivity(i);
     }
 
@@ -179,8 +184,13 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         setContentView(R.layout.wherebeer);
         pinty = (PintyApp)getApplication();
 
+        uiHandler = new Handler();
+
         // Acquire a reference to the system Location Manager
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+        sensorManager = (SensorManager) this.getSystemService(Context.SENSOR_SERVICE);
+        // Can this ever fail?
+        oSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 
         // Parse raw drink options... may need to push this to a background task...
         String[] drink_names = getResources().getStringArray(R.array.drink_type_names);
@@ -215,6 +225,10 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         // Register ourselves for any sort of location update
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 5, this);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 5, this);
+
+        // Also try SENSOR_DELAY_UI, it might be good enough
+        sensorManager.registerListener(this, oSensor, SensorManager.SENSOR_DELAY_UI);
+
         // do we already know sort of where we are?
         // if we do, make sure to update our display!
         Set<Bar> allowedBars = pinty.getAllowedBars();
@@ -258,6 +272,9 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         // Make sure we stop requesting location updates, or we'll drain the battery needlessly
         locationManager.removeUpdates(this);
         // keep pinty.knownBars though, we can fetch it again if we are killed, and there's no reason to remove bars once we learn of them....
+
+        // make sure we stop listening to the orientation sensor too, also for battery saving..
+        sensorManager.unregisterListener(this);
     }
 
     public void onLocationChanged(Location location) {
@@ -346,6 +363,32 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     }
 
     public void onProviderDisabled(String provider) {
+    }
+
+    // Update our local field holding our orientation.
+    public void onSensorChanged(SensorEvent event) {
+        // we get _lots_ of events here, let's chill unless it really swings a bit
+        if (Math.abs(mCurrentOrientation - event.values[0]) < 4) {
+            return;
+        }
+        mCurrentOrientation = event.values[0];
+        if (!pinty.getAllowedBars().isEmpty()) {
+            if (!uiHandler.hasMessages(MSG_TYPE_ROTATE)) {
+                Message msg = Message.obtain(uiHandler, new Runnable() {
+                    public void run() {
+                        // FIXME - this _works_ but it causes much mroe work than we need.  we haven't _moved_, just rotated.
+                        // no need to reload all the bars and hidden ones and allowed ones and so forth..
+//                        redrawBarList();
+                        arrayAdapter.notifyDataSetChanged();
+                    }
+                });
+                msg.what = MSG_TYPE_ROTATE;
+                uiHandler.sendMessageDelayed(msg, 100);
+            }
+        }
+    }
+
+    public void onAccuracyChanged(Sensor sensor, int i) {
     }
 
     class BarServiceFetcher extends AsyncTask<Location, Void, BarServiceFetcherResult> {
@@ -474,49 +517,109 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = convertView;
-
+            ViewHolder holder;
             // karl - no idea what this is for yet, comes from http://stackoverflow.com/questions/2265661/how-to-use-arrayadaptermyclass
             // I believe this is if we somehow are in a state where the view is being requested, but has been gc'd, perhaps returning to this activity?
             if (view == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.where_row_item, null);
+                holder = new ViewHolder();
+                holder.arrowView = (ImageView) view.findViewById(R.id.bar_direction);
+                holder.distanceView = (TextView) view.findViewById(R.id.bar_distance);
+                holder.nameView = (TextView) view.findViewById(R.id.bar_name);
+                holder.priceView = (TextView) view.findViewById(R.id.bar_price);
+                view.setTag(holder);
+            } else {
+                holder = (ViewHolder) view.getTag();
             }
 
             Bar bar = getItem(position);
 
             if (bar != null) {
-                TextView distanceView = (TextView) view.findViewById(R.id.bar_distance);
-                if (distanceView != null) {
-                    // Don't use string format on android, just truncate distance to whole meters
-                    // TODO - could use a custom number formatter to display km instead of m?  (geeky overload)
-                    distanceView.setText(String.format("%,dm", bar.distance.intValue()));
-                }
-                TextView nameView = (TextView) view.findViewById(R.id.bar_name);
-                if (nameView != null) {
-                    nameView.setText(bar.name);
-                }
-                TextView priceView = (TextView) view.findViewById(R.id.bar_price);
-                if (priceView != null) {
-                    int desiredPriceType = pinty.getFavouriteDrink();
-                    boolean done = false;
-                    for (Price p : bar.prices) {
-                        if (p.drinkTypeId == desiredPriceType) {
-                            priceView.setText(String.format("%4.2f", p.avgPrice));
-                            done = true;
-                        }
-                    }
-                    if (!done) {
-                        priceView.setText("???");
+                // Don't use string format on android, just truncate distance to whole meters
+                // TODO - could use a custom number formatter to display km instead of m?  (geeky overload)
+                holder.distanceView.setText(String.valueOf(bar.distance.intValue()));
+                holder.distanceView.append("m");
+                holder.nameView.setText(bar.name);
+
+                int desiredPriceType = pinty.getFavouriteDrink();
+                boolean done = false;
+                for (Price p : bar.prices) {
+                    if (p.drinkTypeId == desiredPriceType) {
+                        holder.priceView.setText(String.format("%4.2f", p.avgPrice));
+                        done = true;
                     }
                 }
-                ImageView arrowView = (ImageView) view.findViewById(R.id.bar_direction);
-                if (arrowView != null) {
-                    arrowView.setImageDrawable(makeArrowToBar(here, bar));
+                if (!done) {
+                    holder.priceView.setText("???");
                 }
 
+//                DirectedArrow da = new DirectedArrow(getDirection(here, bar) - mCurrentOrientation);
+                Drawable da = makeArrowToBar(here, bar);
+                holder.arrowView.setImageDrawable(da);
             }
-            view.setTag(R.id.tag_bar, bar);
             return view;
+        }
+    }
+
+    private static class ViewHolder {
+        ImageView arrowView;
+        TextView priceView;
+        TextView nameView;
+        TextView distanceView;
+    }
+
+
+    public class DirectedArrow extends Drawable {
+        float currentBearing = 0;
+        Paint mPaint = new Paint();
+        Path mPath = new Path();
+
+        public DirectedArrow(float currentBearing) {
+            this.currentBearing = currentBearing;
+            mPath.moveTo(0, -10);
+            mPath.lineTo(-4, 10);
+            mPath.lineTo(0, 7);
+            mPath.lineTo(4, 10);
+            mPath.close();
+        }
+
+        @Override
+        public void draw(Canvas canvas) {
+            Paint paint = mPaint;
+
+            canvas.drawColor(Color.TRANSPARENT);
+
+            paint.setAntiAlias(true);
+            paint.setColor(Color.WHITE);
+            paint.setStyle(Paint.Style.FILL);
+
+//            int w = canvas.getWidth();
+//            int h = canvas.getHeight();
+//            int cx = w / 2;
+//            int cy = h / 2;
+
+            canvas.translate(12, 12);
+//            canvas.rotate(-currentBearing, cx, cy);
+//            canvas.rotate(-currentBearing, 12, 12);
+            canvas.rotate(currentBearing);
+            canvas.drawPath(mPath, mPaint);
+
+        }
+
+        @Override
+        public void setAlpha(int i) {
+            mPaint.setAlpha(i);
+        }
+
+        @Override
+        public void setColorFilter(ColorFilter colorFilter) {
+            mPaint.setColorFilter(colorFilter);
+        }
+
+        @Override
+        public int getOpacity() {
+            return PixelFormat.TRANSLUCENT;
         }
     }
 
@@ -536,16 +639,16 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         // Setting post rotate to 90
         Matrix mtx = new Matrix();
         // TODO - this doesn't take into account the current heading of the phone. :(
-        mtx.postRotate(getDirection(here, bar) - 135); // image is naturally pointing to 135
+        float bearingToBar = getDirection(here, bar);
+        mtx.postRotate(bearingToBar - mCurrentOrientation - 135); // image is naturally pointing to 135
         // Rotating Bitmap
         Bitmap rotatedBMP = Bitmap.createBitmap(bmp, 0, 0, w1, h1, mtx, true);
         return new BitmapDrawable(rotatedBMP);
     }
 
-    private float getDirection(Location here, Bar bar) {
-        Location l = new Location("local");
-        l.setLatitude(bar.lat);
-        l.setLongitude(bar.lon);
-        return here.bearingTo(l);
+    private static float getDirection(Location here, Bar bar) {
+        float[] ret = new float[2];
+        Location.distanceBetween(here.getLatitude(), here.getLongitude(), bar.lat, bar.lon, ret);
+        return ret[1];
     }
 }

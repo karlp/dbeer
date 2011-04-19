@@ -26,9 +26,9 @@
     <ImageView a:id="@+id/bar_direction"
                a:layout_width="24sp"
                a:layout_height="24sp"
-               a:scaleType="fitCenter"
                a:src="@drawable/ic_menu_goto"
                a:layout_gravity="center_vertical"
+               a:padding="2sp"
             />
 
     <TextView a:id="@+id/bar_price"
