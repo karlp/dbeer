@@ -47,7 +47,7 @@ import org.apache.http.params.CoreProtocolPNames;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.NumberFormat;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class WhereBeerActivity extends ListActivity implements LocationListener, SensorEventListener {
@@ -507,6 +507,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
     public class BarArrayAdapter extends ArrayAdapter<Bar> {
         private Context context;
         private Location here;
+        private DecimalFormat df = new DecimalFormat("#.00");
 
         public BarArrayAdapter(Context context, int textViewResourceId, Location here, ArrayList<Bar> objects) {
             super(context, textViewResourceId, objects);
@@ -546,7 +547,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
                 boolean done = false;
                 for (Price p : bar.prices) {
                     if (p.drinkTypeId == desiredPriceType) {
-                        holder.priceView.setText(String.format("%4.2f", p.avgPrice));
+                        holder.priceView.setText(df.format(p.avgPrice));
                         done = true;
                     }
                 }
