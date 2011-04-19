@@ -24,9 +24,8 @@
 
     <!-- put a spinny arrow here, showing the direction of thebar? like in osmand? -->
     <ImageView a:id="@+id/bar_direction"
-               a:layout_width="24sp"
-               a:layout_height="24sp"
-               a:src="@drawable/ic_menu_goto"
+               a:layout_width="24px"
+               a:layout_height="24px"
                a:layout_gravity="center_vertical"
                a:padding="2sp"
             />

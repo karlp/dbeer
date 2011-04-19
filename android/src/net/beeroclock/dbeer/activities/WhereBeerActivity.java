@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.*;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -555,8 +554,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
                     holder.priceView.setText("???");
                 }
 
-//                DirectedArrow da = new DirectedArrow(getDirection(here, bar) - mCurrentOrientation);
-                Drawable da = makeArrowToBar(here, bar);
+                DirectedArrow da = new DirectedArrow(getDirection(here, bar) - mCurrentOrientation);
                 holder.arrowView.setImageDrawable(da);
             }
             return view;
@@ -625,28 +623,8 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
     }
 
     /**
-     * Create a drawable pointed in the heading from "here" to the bar.
-     * Ignores the orientation of the device.
-     * This is actually not the performance hog you'd think.  Tested with traceview...
-     * @param here where we are
-     * @param bar the bar of interest
-     * @return a correctly oriented iamge
+     * Return the bearing from here to the bar.
      */
-    private Drawable makeArrowToBar(Location here, Bar bar) {
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_menu_goto);
-        // Getting width & height of the given image.
-        int w1 = bmp.getWidth();
-        int h1 = bmp.getHeight();
-        // Setting post rotate to 90
-        Matrix mtx = new Matrix();
-        // TODO - this doesn't take into account the current heading of the phone. :(
-        float bearingToBar = getDirection(here, bar);
-        mtx.postRotate(bearingToBar - mCurrentOrientation - 135); // image is naturally pointing to 135
-        // Rotating Bitmap
-        Bitmap rotatedBMP = Bitmap.createBitmap(bmp, 0, 0, w1, h1, mtx, true);
-        return new BitmapDrawable(rotatedBMP);
-    }
-
     private static float getDirection(Location here, Bar bar) {
         float[] ret = new float[2];
         Location.distanceBetween(here.getLatitude(), here.getLongitude(), bar.lat, bar.lon, ret);
