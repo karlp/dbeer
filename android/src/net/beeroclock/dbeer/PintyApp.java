@@ -53,11 +53,13 @@ public class PintyApp extends Application {
     public static final String APP_HOME_PAGE = "http://dbeer.ekta.is";
     public static final String APP_HELP_PAGE = "http://dbeer.ekta.is/screenshots";
     public boolean ads_test_mode = true;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate() {
         this.knownBars = new TreeSet<Bar>();
         this.hiddenBars = new TreeSet<Long>();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         PackageInfo pi;
         try {
             pi = getPackageManager().getPackageInfo(getClass().getPackage().getName(), 0);
@@ -190,13 +192,11 @@ public class PintyApp extends Application {
      * @return the external id of their saved favourite drink
      */
     public int getFavouriteDrink() {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        return Integer.valueOf(pref.getString(PREF_FAVOURITE_DRINK, drinkExternalIds.get(0).toString()));
+        return Integer.valueOf(sharedPreferences.getString(PREF_FAVOURITE_DRINK, drinkExternalIds.get(0).toString()));
     }
 
     public String getServer() {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        return pref.getString(PREF_SERVER, DEFAULT_SERVER);
+        return sharedPreferences.getString(PREF_SERVER, DEFAULT_SERVER);
     }
 
     /**
