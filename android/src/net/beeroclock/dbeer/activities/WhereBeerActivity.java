@@ -55,12 +55,11 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
     PintyApp pinty;
     LocationManager locationManager;
     private static final int DELETE_ID = Menu.FIRST + 1;
-    private ArrayList<Bar> currentlyDisplayedBars;
     private static final int DIALOG_HELP = 1;
     private static final int DIALOG_ABOUT = 2;
     private static final int DIALOG_NO_BARS = 3;
-    private static final int ONE_MINUTE = 60 * 1000;
     private ProgressDialog lostDialog;
+    BarArrayAdapter arrayAdapter;
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -77,9 +76,9 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
         switch (item.getItemId()) {
             case DELETE_ID:
                 AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                Bar toRemove = currentlyDisplayedBars.get((int) info.id);
+                Bar toRemove = arrayAdapter.getItem((int) info.id);
+                arrayAdapter.remove(toRemove);
                 pinty.hideBar(toRemove);
-                redrawBarList();
                 return true;
         }
         return super.onContextItemSelected(item);
@@ -195,6 +194,8 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
 
         // load up current hidden bars...
         pinty.loadHiddenBars();
+        arrayAdapter = new BarArrayAdapter(this, R.layout.where_row_item, null, new ArrayList<Bar>());
+        setListAdapter(arrayAdapter);
 
         registerForContextMenu(getListView());
     }
@@ -430,11 +431,16 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
             // move a long long way, we'll still know about the bars at your old location.
             showDialog(DIALOG_NO_BARS);
         }
-        currentlyDisplayedBars = recalculateDistances(location, bars);
-        Collections.sort(currentlyDisplayedBars, Bar.makeDistanceComparator());
-        BarArrayAdapter arrayAdapter = new BarArrayAdapter(this, R.layout.where_row_item, location, currentlyDisplayedBars);
-        ListView lv = getListView();
-        lv.setAdapter(arrayAdapter);
+        arrayAdapter.setNotifyOnChange(false);
+        arrayAdapter.here = location;
+        arrayAdapter.clear();
+        // TODO - recalc could return a sorted set....
+        ArrayList<Bar> recalc = recalculateDistances(location,  bars);
+        for (Bar b : recalc) {
+            arrayAdapter.add(b);
+        }
+        arrayAdapter.sort(Bar.makeDistanceComparator());
+        arrayAdapter.notifyDataSetChanged();
     }
 
     private ArrayList<Bar> recalculateDistances(Location location, Set<Bar> bars) {
@@ -457,16 +463,12 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
 
     public class BarArrayAdapter extends ArrayAdapter<Bar> {
         private Context context;
-        private ArrayList<Bar> items;
         private Location here;
-        private NumberFormat integerInstance;
 
         public BarArrayAdapter(Context context, int textViewResourceId, Location here, ArrayList<Bar> objects) {
             super(context, textViewResourceId, objects);
             this.context = context;
-            this.items = objects;
             this.here = here;
-            integerInstance = NumberFormat.getIntegerInstance();
         }
 
         @Override
@@ -480,7 +482,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener 
                 view = inflater.inflate(R.layout.where_row_item, null);
             }
 
-            Bar bar = items.get(position);
+            Bar bar = getItem(position);
 
             if (bar != null) {
                 TextView distanceView = (TextView) view.findViewById(R.id.bar_distance);
