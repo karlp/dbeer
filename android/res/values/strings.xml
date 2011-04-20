@@ -28,7 +28,7 @@
     <string name="dialog_help_title">Help</string>
     <string name="menu_where_preferences">Preferences</string>
 
-    <string name="bar_detail_btn_get_directions">Get directions</string>
+    <string name="bar_detail_no_prices">No price history available for this bar.</string>
     <string name="bar_detail_btn_show_on_map">Show on map</string>
     <string name="bar_detail_btn_add_pricing">Add a pricing</string>
     <string name="bar_detail_btn_hide_bar">Hide this bar</string>

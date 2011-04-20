@@ -15,16 +15,16 @@
               a:textSize="25sp"
               />
     <RelativeLayout a:layout_height="wrap_content" a:layout_width="wrap_content">
-        <Button a:id="@+id/bar_get_directions_btn"
-                a:layout_height="wrap_content"
+        <Button a:id="@+id/bar_toggle_hidden"
                 a:layout_width="wrap_content"
-                a:text="@string/bar_detail_btn_get_directions"
-                a:enabled="false"
+                a:layout_height="wrap_content"
+                a:onClick="onClick_toggleHidden"
+                a:text="@string/bar_detail_btn_hide_bar"
                 />
         <Button a:id="@+id/bar_show_on_map_btn"
                 a:layout_height="wrap_content"
                 a:layout_width="wrap_content"
-                a:layout_toRightOf="@id/bar_get_directions_btn"
+                a:layout_toRightOf="@id/bar_toggle_hidden"
                 a:text="@string/bar_detail_btn_show_on_map"
                 a:onClick="onClick_showOnMap"
                 />
@@ -37,18 +37,17 @@
                 a:onClick="onClick_addPrice"
                 />
     </RelativeLayout>
-    <ListView a:id="@+id/android:list"
+    <ListView a:id="@android:id/list"
               a:layout_height="wrap_content"
               a:layout_width="fill_parent"
               a:layout_weight="1"
             />
-    <Button a:id="@+id/bar_toggle_hidden"
-            a:layout_width="wrap_content"
-            a:layout_height="wrap_content"
-            a:onClick="onClick_toggleHidden"
-            a:text="@string/bar_detail_btn_hide_bar"
-            />
-
+    <TextView a:id="@android:id/empty"
+              a:layout_height="wrap_content"
+              a:layout_width="fill_parent"
+              a:text="@string/bar_detail_no_prices"
+              a:layout_weight="1"
+              />
     <com.google.ads.AdView a:id="@+id/bar_detail_ad_view"
                            a:layout_width="fill_parent"
                            a:layout_height="50px"
