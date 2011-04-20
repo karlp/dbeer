@@ -85,15 +85,13 @@ public class BarDetailActivity extends ListActivity {
 
         Long barId = getIntent().getExtras().getLong(Bar.PKUID);
         if (barId == null) {
-            fail_go_boom();
-            return;
+            throw new IllegalStateException("Tried to create a bar detail activity without a barid?!");
         }
         bar = pinty.getBar(barId);
         if (bar == null) {
             // TODO You can get hereby clicking on a "hidden" bar in preferences, that is not currently in pinty's brane.
             // should fetch that bar on demand?  (use a progress dialog with a bar fetcher!)
-            fail_go_boom();
-            return;
+            throw new IllegalStateException("Tried to view a hidden bar that we have forgotten about!");
         }
     }
 
