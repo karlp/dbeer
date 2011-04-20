@@ -22,6 +22,8 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import com.google.ads.Ad;
+import com.google.ads.AdListener;
 import com.google.ads.AdRequest;
 import com.google.ads.AdView;
 import net.beeroclock.dbeer.models.Bar;
@@ -65,6 +67,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
     private Sensor oSensor;
     private Handler uiHandler;
     private static final int MSG_TYPE_ROTATE = 99;
+    private AdView adView;
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -212,13 +215,25 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
     @Override
     protected void onResume() {
         super.onResume();
-        AdView adView = (AdView)this.findViewById(R.id.where_beer_ad_view);
+        adView = (AdView)this.findViewById(R.id.where_beer_ad_view);
         AdRequest adRequest = new AdRequest();
         Location lastLocation = pinty.getLastLocation();
         if (lastLocation != null) {
             adRequest.setLocation(lastLocation);
         }
         adRequest.setTesting(pinty.ads_test_mode);
+        adView.setAdListener(new AdListener() {
+            public void onReceiveAd(Ad ad) {
+                adView.setVisibility(View.VISIBLE);
+            }
+            public void onFailedToReceiveAd(Ad ad, AdRequest.ErrorCode errorCode) { }
+
+            public void onPresentScreen(Ad ad) { }
+
+            public void onDismissScreen(Ad ad) { }
+
+            public void onLeaveApplication(Ad ad) { }
+        });
         adView.loadAd(adRequest);
 
         // Register ourselves for any sort of location update
@@ -570,6 +585,9 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
         }
     }
 
+    /**
+     * A performance tuning class, as recommended in some "efficient list view" slides from google.
+     */
     private static class ViewHolder {
         ImageView arrowView;
         TextView priceView;
@@ -595,24 +613,13 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
         @Override
         public void draw(Canvas canvas) {
             Paint paint = mPaint;
-
             canvas.drawColor(Color.TRANSPARENT);
-
             paint.setAntiAlias(true);
             paint.setColor(Color.WHITE);
             paint.setStyle(Paint.Style.FILL);
-
-//            int w = canvas.getWidth();
-//            int h = canvas.getHeight();
-//            int cx = w / 2;
-//            int cy = h / 2;
-
             canvas.translate(12, 12);
-//            canvas.rotate(-currentBearing, cx, cy);
-//            canvas.rotate(-currentBearing, 12, 12);
             canvas.rotate(currentBearing);
             canvas.drawPath(mPath, mPaint);
-
         }
 
         @Override
