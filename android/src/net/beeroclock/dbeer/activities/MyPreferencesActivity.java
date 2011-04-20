@@ -53,8 +53,6 @@ public class MyPreferencesActivity extends PreferenceActivity {
         ListPreference lp = (ListPreference) findPreference("server");
         lp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             public boolean onPreferenceChange(Preference preference, Object o) {
-                // FIXME - this does _NOT_ correctly restart the whole app cleanly :(
-                Toast.makeText(MyPreferencesActivity.this, "need to dump and load :(", Toast.LENGTH_SHORT).show();
                 pinty.getKnownBars().clear();
                 Log.i("prefs", "cleared out pinty's brannne!");
                 return true;
