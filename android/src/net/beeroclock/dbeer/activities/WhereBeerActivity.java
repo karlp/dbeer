@@ -507,6 +507,9 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
         private Context context;
         private Location here;
         private DecimalFormat df = new DecimalFormat("#.00");
+        private DecimalFormat metersFormat = new DecimalFormat("##,###m");
+        private DecimalFormat milesFormat = new DecimalFormat("#.0m");
+        private DecimalFormat feetFormat = new DecimalFormat("@@@ft");
 
         public BarArrayAdapter(Context context, int textViewResourceId, Location here, ArrayList<Bar> objects) {
             super(context, textViewResourceId, objects);
@@ -536,10 +539,16 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
             Bar bar = getItem(position);
 
             if (bar != null) {
-                // Don't use string format on android, just truncate distance to whole meters
-                // TODO - could use a custom number formatter to display km instead of m?  (geeky overload)
-                holder.distanceView.setText(String.valueOf(bar.distance.intValue()));
-                holder.distanceView.append("m");
+                int distanceInMetres = bar.distance.intValue();
+                if (pinty.isMetric()) {
+                    holder.distanceView.setText(metersFormat.format(distanceInMetres));
+                } else {
+                    if (distanceInMetres < PintyApp.THRESHOLD_MILES_TO_FEET) {
+                        holder.distanceView.setText(feetFormat.format(distanceInMetres * PintyApp.METRES_TO_FEET));
+                    } else {
+                        holder.distanceView.setText(milesFormat.format(distanceInMetres * PintyApp.METRES_TO_MILES));
+                    }
+                }
                 holder.nameView.setText(bar.name);
 
                 int desiredPriceType = pinty.getFavouriteDrink();

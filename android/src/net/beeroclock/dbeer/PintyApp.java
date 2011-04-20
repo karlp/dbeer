@@ -41,6 +41,10 @@ public class PintyApp extends Application {
     public static final String PREF_FAVOURITE_DRINK = "favourite_drink";
     public static final String PREF_SERVER = "server";
     public static final String PREF_SHOW_CAFES = "show_cafes";
+    public static final String PREF_METRIC = "use_metric";
+    public static final int THRESHOLD_MILES_TO_FEET = 160;  // 0.1 miles
+    public static final float METRES_TO_MILES = 0.000621371192f;
+    public static final double METRES_TO_FEET = 3.2808399;
     // Probably should become a map, or at least provide ways of getting certain bars back out again...
     private Set<Bar> knownBars;
     private Set<Long> hiddenBars;
@@ -197,6 +201,10 @@ public class PintyApp extends Application {
 
     public String getServer() {
         return sharedPreferences.getString(PREF_SERVER, DEFAULT_SERVER);
+    }
+
+    public boolean isMetric() {
+        return sharedPreferences.getBoolean(PREF_METRIC, true);
     }
 
     /**

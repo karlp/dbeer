@@ -75,4 +75,6 @@
     <string name="dialog_lost_message">No idea where we are right now, waiting for better information on our location.</string>
     <string name="dialog_upload_title">Uploading...</string>
     <string name="dialog_upload_message">Sending price data</string>
+    <string name="preferences_use_metric">Use metric units</string>
+    <string name="preferences_use_metric_summary">Show distances in metric units</string>
 </resources>
