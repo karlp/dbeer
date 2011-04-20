@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.widget.Toast;
 import com.google.android.maps.*;
 import net.beeroclock.dbeer.models.Bar;
 import net.beeroclock.dbeer.PintyApp;
@@ -20,14 +19,6 @@ import java.util.List;
  * Time: 12:03 PM
  */
 public class ActivityGoogleMap extends MapActivity {
-
-    // FIXME - how do I share this?
-    private void fail_go_boom() {
-        Toast t = Toast.makeText(getApplicationContext(), R.string.toast_wtf, Toast.LENGTH_SHORT);
-        t.show();
-        setResult(RESULT_CANCELED);
-        finish();
-    }
 
     @Override
     protected boolean isRouteDisplayed() {
@@ -45,8 +36,7 @@ public class ActivityGoogleMap extends MapActivity {
         Bundle extras = getIntent().getExtras();
         Long barId = extras.getLong(Bar.PKUID);
         if (barId == null) {
-            fail_go_boom();
-            return;
+            throw new IllegalStateException("It should be impossible to get here: 'show on map' with no barid");
         }
         PintyApp pinty = (PintyApp)getApplication();
         Bar bar = pinty.getBar(barId);
@@ -77,7 +67,7 @@ public class ActivityGoogleMap extends MapActivity {
 
         public void addBar(Bar bar) {
             GeoPoint geoPoint = makeGeoPoint(bar);
-            OverlayItem i = new OverlayItem(geoPoint, bar.name, "I hear it's a cool place...");
+            OverlayItem i = new OverlayItem(geoPoint, bar.name, bar.type);
             items.add(i);
             populate();
         }
