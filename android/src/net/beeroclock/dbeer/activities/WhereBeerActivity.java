@@ -426,7 +426,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
             qparams.add(new BasicNameValuePair("lon", String.valueOf(location.getLongitude())));
             URI uri;
             try {
-                uri = URIUtils.createURI("http", pinty.getServer(), -1, "/nearest.xml/10", URLEncodedUtils.format(qparams, "UTF-8"), null);
+                uri = URIUtils.createURI("http", pinty.getServer(), -1, "/nearest.xml/20", URLEncodedUtils.format(qparams, "UTF-8"), null);
             } catch (URISyntaxException e) {
                 Log.e(TAG, "how did this happen?!", e);
                 return new BarServiceFetcherResult("How did this happen? URI Syntax exception?!", e);
