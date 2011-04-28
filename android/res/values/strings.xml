@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Beer Finder</string>
-    <string name="app_about_text">This app helps you find bars in any part of the world, that are near you, and
-        shows their latest bar prices.  Perhaps you never knew that Bar X had such cheap drinks, so you try somewhere new.
-    Perhaps you\'re in a new city, and don\'t even know what direction the bars are.  This can help with both.\n
+    <string name="app_name">BarFinder</string>
+    <string name="app_about_text">This app helps you find bars nearby bars, and their latest bar prices, in any part of the world.
+        Perhaps you never knew that Bar X had such cheap drinks, so you try somewhere new.
+    Perhaps you\'re in a new city, and don\'t even know where the bars are.  BarFinder can help with both!\n
     \n
     The bar lists come from the great OpenStreetMap, and the pricings come from all the users in the world! If you
         don\'t see a bar on the list, visit www.openstreetmap.org and add it!\n
@@ -18,8 +18,7 @@
     The bar name, distance to the bar and the current average price for your favourite drink are shown.
         \n\n
     If you don\'t have a favourite drink, go to the preferences and choose one!  If you click on a bar, you can see more
-        detailed price history, add a drink price, or show the bar on a map.\n
-        \nLong clicking on a bar will let you hide that bar forever.
+        detailed price history, add a drink price, show the bar on a map, or hide a bar you never want to visit.
     </string>
 
     <!--<string name="menu_where_drinks">Drinks</string>-->
@@ -42,7 +41,7 @@
     <string name="toast_wtf">Something\'s wrong, hope you didn\'t see this :(</string>
     <string name="toast_add_price_thanks">Done! Thanks!</string>
 
-    <string name="add_pricing_instructions_initial">Adding a beer helps keep the pricing information up to date for everyone!</string>
+    <string name="add_pricing_instructions_initial">Adding a current drink price helps keep the price information up to date for everyone!</string>
     <string name="add_beer_btn_confirm">Send pricing!</string>
     <string name="add_beer_btn_retry">Retry</string>
     <string name="add_pricing_price_label">Price\n(local currency)</string>
