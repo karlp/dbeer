@@ -55,7 +55,7 @@ public class PintyApp extends Application {
     public String userAgent;
     public static final String APP_HOME_PAGE = "http://dbeer.ekta.is";
     public static final String APP_HELP_PAGE = "http://dbeer.ekta.is/screenshots";
-    public boolean ads_test_mode = true;
+    public boolean ads_test_mode = false;
     private SharedPreferences sharedPreferences;
 
     @Override
