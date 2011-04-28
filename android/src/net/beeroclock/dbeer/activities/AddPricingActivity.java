@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -103,7 +102,6 @@ public class AddPricingActivity extends Activity {
         uploadDialog = ProgressDialog.show(this, getResources().getString(R.string.dialog_upload_title), 
                         getResources().getString(R.string.dialog_upload_message), true, false);
         
-        Log.i(TAG, "Submitting a price for " + barId + ", drink=" + pinty.drinkExternalIds.get(chosenDrink) + ", price=" + text);
         // Make sure to update our local pricings?
         // Could get an intent here and add info to return with..
         PricingReport pricingReport = new PricingReport(barId, 
@@ -139,11 +137,9 @@ public class AddPricingActivity extends Activity {
             try {
                 xmlr = client.execute(request, new BasicResponseHandler());
             } catch (HttpResponseException e) {
-                Log.e(TAG, e.getStatusCode() + "-" + e.getMessage(), e);
                 ErrorReporter.getInstance().handleException(e);
                 return new ReportStatus(false, e.getMessage());
             } catch (IOException e) {
-                Log.e(TAG, "Crazy error" + e.getMessage(), e);
                 ErrorReporter.getInstance().handleException(e);
                 return new ReportStatus(false, e.getMessage());
             }

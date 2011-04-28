@@ -19,7 +19,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.*;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import com.google.ads.Ad;
@@ -247,7 +246,6 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
         // if we do, make sure to update our display!
         Set<Bar> allowedBars = pinty.getAllowedBars();
         if (!isOldLocation(lastLocation) && !allowedBars.isEmpty()) {
-            Log.i(TAG, "resuming and reusing cached location and bars");
             displayBarsForLocation(pinty.getLastLocation(), allowedBars);
             return;
         }
@@ -305,7 +303,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
         if (isBetterLocation(location, lastLocation)) {
             useGoodNewLocation(location);
         } else {
-            Log.i(TAG, "ignoring new location, it's not as good as the old one: " + location);
+            //Log.i(TAG, "ignoring new location, it's not as good as the old one: " + location);
         }
     }
 
@@ -414,7 +412,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
                 return new BarServiceFetcherResult("No locations given to search for");
             }
             if (locations.length > 1) {
-                Log.w(TAG, "ignoring request to fetch multiple locations!");
+                //Log.w(TAG, "ignoring request to fetch multiple locations!");
             }
             location = locations[0];
             String xmlr;
@@ -428,7 +426,6 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
             try {
                 uri = URIUtils.createURI("http", pinty.getServer(), -1, "/nearest.xml/20", URLEncodedUtils.format(qparams, "UTF-8"), null);
             } catch (URISyntaxException e) {
-                Log.e(TAG, "how did this happen?!", e);
                 return new BarServiceFetcherResult("How did this happen? URI Syntax exception?!", e);
             }
             HttpGet request = new HttpGet(uri);
@@ -437,11 +434,9 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
                 xmlr = client.execute(request, new BasicResponseHandler());
             } catch (HttpResponseException e) {
                 // TODO - should invalidate the position somehow, so it gets refetched?
-                Log.e(TAG, e.getStatusCode() + "-" + e.getMessage(), e);
                 ErrorReporter.getInstance().handleException(e);
                 return new BarServiceFetcherResult("invalid response from the server: " + e.getStatusCode(), e);
             } catch (IOException e) {
-                Log.e(TAG, "Crazy error" + e.getMessage(), e);
                 ErrorReporter.getInstance().handleException(e);
                 return new BarServiceFetcherResult("Craziness? " + e.getMessage(), e);
             }
@@ -501,7 +496,6 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
     }
 
     private ArrayList<Bar> recalculateDistances(Location location, Set<Bar> bars) {
-        Log.d(TAG, "recalculating distances...");
         ArrayList<Bar> ret = new ArrayList<Bar>();
         for (Bar b : bars) {
             b.distance = (double) location.distanceTo(b.toLocation());
@@ -512,7 +506,6 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
 
 
     private void useGoodNewLocation(Location location) {
-        Log.i(TAG, "updating location and fetching for:" + location);
         pinty.setLastLocation(location);
         setProgressBarIndeterminateVisibility(true);
         new BarServiceFetcher().execute(location);

@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import net.beeroclock.dbeer.models.Bar;
 import net.beeroclock.dbeer.models.Price;
 import net.beeroclock.dbeer.models.PricingReport;
@@ -217,7 +216,6 @@ public class PintyApp extends Application {
         cur.moveToFirst();
         while (!cur.isAfterLast()) {
             long hiddenBarId = cur.getLong(0);
-            Log.d("pinty", "loaded hidden barid: " + hiddenBarId);
             hiddenBars.add(hiddenBarId);
        	    cur.moveToNext();
         }
