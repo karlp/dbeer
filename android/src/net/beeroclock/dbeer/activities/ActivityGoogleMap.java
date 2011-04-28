@@ -49,8 +49,7 @@ public class ActivityGoogleMap extends MapActivity {
         bar = pinty.getBar(barId);
 
         List<Overlay> existingMapOverlays = mapView.getOverlays();
-        // FIXME - again with the whole artwork thing, a bar icon...
-        Drawable drawable = this.getResources().getDrawable(R.drawable.ic_menu_goto);
+        Drawable drawable = this.getResources().getDrawable(R.drawable.red_pushpin);
         BarItemizedOverlay barOverlay = new BarItemizedOverlay(drawable, this);
         barOverlay.addBar(bar);
 
