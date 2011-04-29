@@ -486,7 +486,9 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
             // replace entire list view with a centered blob of text saying no bars nearby?
             // Note: this is only shown if you start up fresh with no bars.  Because we cache bars locally, if you simply
             // move a long long way, we'll still know about the bars at your old location.
-            showDialog(DIALOG_NO_BARS);
+            if (!isFinishing()) {
+                showDialog(DIALOG_NO_BARS);
+            }
         }
         arrayAdapter.setNotifyOnChange(false);
         arrayAdapter.here = location;
