@@ -33,7 +33,6 @@
                 a:layout_width="wrap_content"
                 a:layout_toRightOf="@id/bar_show_on_map_btn"
                 a:text="@string/bar_detail_btn_add_pricing"
-                a:enabled="false"
                 a:onClick="onClick_addPrice"
                 />
     </RelativeLayout>

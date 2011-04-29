@@ -30,6 +30,7 @@
     <string name="bar_detail_no_prices">No price history available for this bar.</string>
     <string name="bar_detail_btn_show_on_map">Show on map</string>
     <string name="bar_detail_btn_add_pricing">Add a pricing</string>
+    <string name="bar_detail_out_of_range">You\'re not at this bar!</string>
     <string name="bar_detail_btn_hide_bar">Hide this bar</string>
     <string name="bar_detail_btn_show_bar">Reshow this bar</string>
     <string name="bar_detail_help_text">This screen shows the full bar details, with average prices for all drinks on

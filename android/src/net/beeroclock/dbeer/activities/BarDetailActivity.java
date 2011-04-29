@@ -36,6 +36,7 @@ public class BarDetailActivity extends ListActivity {
     private static final int BAR_ENABLED_DISTANCE = 150;
     public static final int REQUEST_ADD_PRICE = 1;
     private static final int DIALOG_HELP = 1;
+    private Location lastLocation;
 
 
     /**
@@ -98,19 +99,13 @@ public class BarDetailActivity extends ListActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Location lastLocation = pinty.getLastLocation();
+        lastLocation = pinty.getLastLocation();
         AdView adView = (AdView) findViewById(R.id.bar_detail_ad_view);
         AdRequest adRequest = new AdRequest();
         adRequest.setLocation(lastLocation);
         adRequest.setTesting(pinty.ads_test_mode);
         adView.loadAd(adRequest);
 
-        // TODO - or, let them click it, but make toast to say why it's off...
-        if (lastLocation.distanceTo(bar.toLocation()) < BAR_ENABLED_DISTANCE) {
-            addPriceButton.setEnabled(true);
-        } else {
-            addPriceButton.setEnabled(false);
-        }
         if (pinty.isAllowed(bar.pkuid)) {
             toggleHiddenButton.setText(R.string.bar_detail_btn_hide_bar);
         } else {
@@ -131,9 +126,13 @@ public class BarDetailActivity extends ListActivity {
     }
 
     public void onClick_addPrice(View view) {
-        Intent i = new Intent(this, AddPricingActivity.class);
-        i.putExtra(Bar.PKUID, bar.pkuid);
-        startActivityForResult(i, REQUEST_ADD_PRICE);
+        if (withinRange(lastLocation)) {
+            Intent i = new Intent(this, AddPricingActivity.class);
+            i.putExtra(Bar.PKUID, bar.pkuid);
+            startActivityForResult(i, REQUEST_ADD_PRICE);
+        } else {
+            Toast.makeText(this, R.string.bar_detail_out_of_range, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onClick_toggleHidden(View view) {
@@ -200,5 +199,9 @@ public class BarDetailActivity extends ListActivity {
             return view;
         }
 
+    }
+
+    private boolean withinRange(Location lastLocation) {
+        return lastLocation.distanceTo(bar.toLocation()) < BAR_ENABLED_DISTANCE;
     }
 }
