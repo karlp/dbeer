@@ -63,18 +63,26 @@
     <string name="preference_category_developer">Developer Settings</string>
     <string name="preference_dev_server_list">Remote Server</string>
     <string name="preference_developer_mode">Enable developer mode</string>
-    <string name="crash_toast_text">Ooooops ! I crashed, but a report has been sent to my developer to help him fix the issue !</string>
+    <string name="crash_toast_text">Ooops ! Something went wrong, but it has been reported to be fixed!</string>
     <string name="btn_help_view_online_manual">Online Manual</string>
     <string name="dialog_no_bars_title">No bars!</string>
     <string name="dialog_no_bars_message">No bars found anywhere near your location :(\n
         \n
-        Head for civilisation!</string>
+        \nVisit www.OpenStreetMap.org to add more local bars, or...
+        \n
+        \nHead for civilisation!</string>
     <string name="preference_show_cafes">Show cafes</string>
     <string name="preference_show_cafes_summary">Should cafes be included in the list of bars?</string>
     <string name="dialog_lost_title">Lost</string>
-    <string name="dialog_lost_message">No idea where we are right now, waiting for better information on our location.
-    \n
-    \nBeing out on the street, with the GPS enabled certainly helps, but we try our best to use cell phone positioning as well</string>
+    <string name="dialog_lost_message">Not sure where we are right now.  Press "back" to use the last known location.
+        \n
+        \nWe will keep updating in the background anyway.
+    </string>
+    <string name="dialog_lost_message_fallback">\n
+        Not sure where we are right now, waiting for updates from the phone.
+        \n
+        \nTry turning on the GPS, or moving outside, or just waiting a little while.
+    </string>
     <string name="dialog_upload_title">Uploading...</string>
     <string name="dialog_upload_message">Sending price data</string>
     <string name="preferences_use_metric">Use metric units</string>

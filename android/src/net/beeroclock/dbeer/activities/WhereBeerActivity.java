@@ -264,7 +264,12 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
             // oh well, nothing viable...  FIXME - should update this periodically, letting them know we're still trying...
             // Can we even do that? we're registered for updates, that's about as good as we can do!
             lostDialog = ProgressDialog.show(this, getResources().getString(R.string.dialog_lost_title),
-                    getResources().getString(R.string.dialog_lost_message), true, true);
+                    getResources().getString(R.string.dialog_lost_message), true, true, new DialogInterface.OnCancelListener() {
+                        public void onCancel(DialogInterface dialogInterface) {
+                            TextView emptyView = (TextView) getListView().getEmptyView();
+                            emptyView.setText(R.string.dialog_lost_message_fallback);
+                        }
+                    });
         }
     }
 
