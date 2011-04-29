@@ -221,6 +221,7 @@ public class WhereBeerActivity extends ListActivity implements LocationListener,
         if (lastLocation != null) {
             adRequest.setLocation(lastLocation);
         }
+        adRequest.setKeywords(pinty.advertisingKeywords);
         adRequest.setTesting(pinty.ads_test_mode);
         adView.setAdListener(new AdListener() {
             public void onReceiveAd(Ad ad) {

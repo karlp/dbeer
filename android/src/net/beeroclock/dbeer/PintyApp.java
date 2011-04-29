@@ -21,6 +21,7 @@ import org.acra.annotation.ReportsCrashes;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -58,12 +59,16 @@ public class PintyApp extends Application {
     public static final String APP_HELP_PAGE = "http://dbeer.ekta.is/screenshots";
     public boolean ads_test_mode = true;
     private SharedPreferences sharedPreferences;
+    public Set<String> advertisingKeywords;
 
     @Override
     public void onCreate() {
         this.knownBars = new TreeSet<Bar>();
         this.hiddenBars = new TreeSet<Long>();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        advertisingKeywords = new TreeSet<String>(Arrays.asList(getResources().getStringArray(R.array.advertising_keywords)));
+
         PackageInfo pi;
         try {
             pi = getPackageManager().getPackageInfo(getClass().getPackage().getName(), 0);

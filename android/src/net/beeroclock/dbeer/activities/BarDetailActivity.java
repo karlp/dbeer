@@ -104,6 +104,8 @@ public class BarDetailActivity extends ListActivity {
         AdRequest adRequest = new AdRequest();
         adRequest.setLocation(lastLocation);
         adRequest.setTesting(pinty.ads_test_mode);
+        adRequest.setKeywords(pinty.advertisingKeywords);
+        adRequest.addKeyword(bar.name);
         adView.loadAd(adRequest);
 
         if (pinty.isAllowed(bar.pkuid)) {

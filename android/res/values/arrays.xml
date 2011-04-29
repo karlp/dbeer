@@ -33,4 +33,11 @@
         <item>dbeer-services.beeroclock.net</item>
         <item>tera.beeroclock.net</item>
     </string-array>
+    <string-array name="advertising_keywords">
+        <item>beer</item>
+        <item>wine</item>
+        <item>bar</item>
+        <item>pub</item>
+        <item>nightclub</item>
+    </string-array>
 </resources>
