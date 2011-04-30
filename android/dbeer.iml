@@ -28,7 +28,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Android 2.2 Google APIs" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
       <library>
@@ -41,7 +41,6 @@
     </orderEntry>
     <orderEntry type="library" name="commons-lang" level="project" />
     <orderEntry type="library" name="htmlcleaner" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="google-Android 2.1-update1 Platform" level="application" />
     <orderEntry type="library" name="acra" level="project" />
     <orderEntry type="library" name="admob" level="project" />
   </component>
