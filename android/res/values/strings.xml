@@ -78,8 +78,7 @@
         \n
         \nWe will keep updating in the background anyway.
     </string>
-    <string name="dialog_lost_message_fallback">\n
-        Not sure where we are right now, waiting for updates from the phone.
+    <string name="dialog_lost_message_fallback">\nNot sure where we are right now, waiting for updates from the phone.
         \n
         \nTry turning on the GPS, or moving outside, or just waiting a little while.
     </string>
