@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import net.beeroclock.dbeer.models.Bar;
 import net.beeroclock.dbeer.models.Price;
 import net.beeroclock.dbeer.models.PricingReport;
@@ -57,7 +56,7 @@ public class PintyApp extends Application {
     public String userAgent;
     public static final String APP_HOME_PAGE = "http://dbeer.ekta.is";
     public static final String APP_HELP_PAGE = "http://dbeer.ekta.is/screenshots";
-    public boolean ads_test_mode = true;
+    public boolean ads_test_mode = false;
     private SharedPreferences sharedPreferences;
     public Set<String> advertisingKeywords;
 
@@ -222,7 +221,6 @@ public class PintyApp extends Application {
         cur.moveToFirst();
         while (!cur.isAfterLast()) {
             long hiddenBarId = cur.getLong(0);
-            Log.d("pinty", "loaded hidden barid: " + hiddenBarId);
             hiddenBars.add(hiddenBarId);
        	    cur.moveToNext();
         }

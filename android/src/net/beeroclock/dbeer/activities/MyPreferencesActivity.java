@@ -7,13 +7,10 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.util.Log;
-import android.widget.Toast;
 import net.beeroclock.dbeer.PintyApp;
 import net.beeroclock.dbeer.R;
 import net.beeroclock.dbeer.Utils;
 import net.beeroclock.dbeer.ws.DBeerServiceStatus;
-import org.acra.ErrorReporter;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpGet;
@@ -54,7 +51,6 @@ public class MyPreferencesActivity extends PreferenceActivity {
         lp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             public boolean onPreferenceChange(Preference preference, Object o) {
                 pinty.getKnownBars().clear();
-                Log.i("prefs", "cleared out pinty's brannne!");
                 return true;
             }
         });
