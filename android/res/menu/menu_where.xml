@@ -7,7 +7,7 @@
           />
     <item a:id="@+id/menu_where_hidden_bars"
           a:title="@string/menu_where_hidden_bars"
-          a:icon="@drawable/db_ic_menu_block"
+          a:icon="@drawable/ic_menu_block"
           />
     <item a:id="@+id/menu_where_preferences"
           a:title="@string/menu_where_preferences"
