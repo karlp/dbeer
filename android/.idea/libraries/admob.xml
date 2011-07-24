@@ -1,10 +1,10 @@
 <component name="libraryTable">
   <library name="admob">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libs/GoogleAdMobAdsSdk-4.0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/GoogleAdMobAdsSdk-4.1.1.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="file://$USER_HOME$/Downloads/GoogleAdMobAdsSdkAndroid-4.0.4/docs" />
+      <root url="file://$USER_HOME$/Downloads/GoogleAdMobAdsSdkAndroid-4.1.1/docs" />
     </JAVADOC>
     <SOURCES />
   </library>
