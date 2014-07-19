@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">BarFinder</string>
+    <string name="app_name">BeerFinder</string>
     <string name="app_about_text">This app helps you find bars nearby bars, and their latest bar prices, in any part of the world.
         Perhaps you never knew that Bar X had such cheap drinks, so you try somewhere new.
-    Perhaps you\'re in a new city, and don\'t even know where the bars are.  BarFinder can help with both!\n
+    Perhaps you\'re in a new city, and don\'t even know where the bars are.  BeerFinder can help with both!\n
     \n
     The bar lists come from the great OpenStreetMap, and the pricings come from all the users in the world! If you
         don\'t see a bar on the list, visit www.openstreetmap.org and add it!\n
@@ -86,4 +86,5 @@
     <string name="dialog_upload_message">Sending price data</string>
     <string name="preferences_use_metric">Use metric units</string>
     <string name="preferences_use_metric_summary">Show distances in metric units</string>
+    <string name="bar_detail_btn_correction">Something Wrong?</string>
 </resources>
