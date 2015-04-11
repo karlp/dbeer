@@ -1,0 +1,22 @@
+BarFinder
+
+This was an android app that used OpenStreetMap data to show all nearby
+bars/cafes/nightclubs and, if you were "in" (very close) to one, it allowed you
+to enter the price of drinks.  The idea was that with enough crowdsourced data,
+you could get actually reliable pricings, including detecting happy hours.
+Existing custom city apps were always notoriously out of date on pricing, with
+prices often entered by bar owners themselves, with no relationship to actual
+prices at the bar.
+
+The use of OpenStreetMap for the data was the other major benefit, as bars
+close and open far more regularly than other businesses, and google location
+data is/was appallingly low quality.  It would have high rankings for bars that
+had closed, from old google juice, and was very slow to detect new bars.
+
+The death of this project really came in Feb 2012, when the daily OpenStreetMap
+export format changed, and I never quite got around to finding the time to
+fixing the data import.
+
+More information at http://dbeer.ekta.is/
+
+License: GPLv2+ (Contact for commercial licensing if desired)
