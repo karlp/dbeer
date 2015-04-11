@@ -1,0 +1,17 @@
+<VirtualHost *:80>
+	ServerName dbeer-services.ekta.is
+	DocumentRoot /home/ekta.is/dbeer-services/site
+	ErrorLog /home/ekta.is/dbeer-services/logs/error.log
+	CustomLog /home/ekta.is/dbeer-services/logs/access.log combined
+	
+
+    WSGIDaemonProcess dbeer.beeroclock.net processes=2 threads=5 display-name=%{GROUP} home=/home/ekta.is/dbeer-services/web-services/src python-path=/home/ekta.is/dbeer-services/web-services/src
+    WSGIProcessGroup dbeer.beeroclock.net
+    WSGIScriptAlias / /home/ekta.is/dbeer-services/web-services/src/run_flask.py
+
+    <Directory /home/ekta.is/dbeer-services/web-services/src>
+        Order deny,allow
+        Allow from all
+    </Directory>
+
+</VirtualHost>
